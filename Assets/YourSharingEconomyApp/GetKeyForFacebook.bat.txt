@@ -1,0 +1,8 @@
+rem .
+rem CONVERT THIS FILE TO .BAT TO GET THE ANDROID KEY HASH FOR FACEBOOK
+rem .
+rem DOWNLOAD SSL: https://code.google.com/archive/p/openssl-for-windows/downloads?authuser=1
+rem .
+
+keytool -exportcert -alias androidreleasekey -keystore YOUR_OWN_KEY_STORE.keystore | openssl sha1 -binary | openssl base64
+pause

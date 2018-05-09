@@ -1,0 +1,1114 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<texts>
+
+  <!-- APP NAME -->
+  <text id="message.your.sharingeconomyapp.title">
+    <en>Your DressMakers</en>
+    <es>Tus Modistas</es>
+  </text>
+
+  <!-- COMMON TEXTS -->
+  <text id="message.cancel">
+    <en>Cancel</en>
+    <es>Cancelar</es>
+  </text>
+  
+  <text id="message.error">
+    <en>Error</en>
+    <es>Error</es>
+  </text>
+
+  <text id="message.warning">
+    <en>Warning</en>
+    <es>Alerta</es>
+  </text>
+
+  <text id="message.info">
+    <en>Information</en>
+    <es>Informacion</es>
+  </text>
+
+  <text id="message.loading">
+    <en>Loading...</en>
+    <es>Cargando...</es>
+  </text>
+
+  <text id="message.no.records">
+    <en>No records</en>
+    <es>Sin registros</es>
+  </text>
+  
+  <text id="message.operation.canceled">
+    <en>Operation canceled</en>
+    <es>Operacion cancelada</es>
+  </text>
+
+  <text id="message.do.you.want.exit">
+    <en>Do you want to exit the app?</en>
+    <es>Desea salir de la aplicacion?</es>
+  </text>
+  
+  <text id="message.consumer.rating">
+    <en>Customer Rating</en>
+    <es>Valoración de Cliente</es>
+  </text>
+
+  <text id="message.provider.rating">
+    <en>Tailor Rating</en>
+    <es>Valoración de Costurero</es>
+  </text>
+  
+  <text id="message.error.server">
+    <en>Error in the connection with the server</en>
+    <es>Error en la conexion con el servidor</es>
+  </text>
+
+  <text id="message.apply.changes">
+    <en>Do you want to apply changes?</en>
+    <es>Desea aplicar los cambios</es>
+  </text>
+
+  <text id="message.please.wait">
+    <en>Working. Please, wait...</en>
+    <es>Trabajando. Por favor, espere...</es>
+  </text>
+
+  <text id="screen.validation.title">
+    <en>Validation</en>
+    <es>Validacion</es>
+  </text>
+
+  <text id="screen.validation.enter.password">
+    <en>Enter your password to validate the operation</en>
+    <es>Entrar tu contraseña para validar la operacion</es>
+  </text>
+
+  <text id="message.user.not.validated">
+    <en>Please, check your email and validate your account in order to use the app</en>
+    <es>Por favor, comprueba tu correo para validar tu cuenta para poder usar la app</es>
+  </text>  
+
+  <text id="message.connect.with.facebook">
+    <en>Connect with Facebook</en>
+    <es>Conectar con Facebook</es>
+  </text>
+
+  <text id="message.connected.facebook.success">
+    <en>Connected with Facebook Success</en>
+    <es>Conectado con Facebook correctamente</es>
+  </text>
+
+  <text id="message.slot.image.delete.confirmation">
+    <en>Do you want to delete this image?</en>
+    <es>Desea eliminar esta imagen</es>
+  </text>
+
+  <text id="message.request.not.found">
+    <en>Request not found</en>
+    <es>Encargo no encontrado</es>
+  </text>
+
+    <text id="message.search.work">
+    <en>Search Work</en>
+    <es>Buscar Encargos</es>
+  </text>
+
+  <text id="message.work.finished">
+    <en>Finished!</en>
+    <es>Finalizado!</es>
+  </text>
+
+  <text id="message.exit.without.apply.changes">
+    <en>Do you want to exit without save the changes?</en>
+    <es>Deseas salir sin guardar los cambios?</es>
+  </text>
+
+  <text id="message.score.1">
+    <en>Failing</en>
+    <es>Suspendido</es>
+  </text>
+
+  <text id="message.score.2">
+    <en>Passing</en>
+    <es>Suficiente</es>
+  </text>
+
+  <text id="message.score.3">
+    <en>Good</en>
+    <es>Notable</es>
+  </text>
+
+  <text id="message.score.4">
+    <en>Excellent</en>
+    <es>Excelente</es>
+  </text>
+
+  <text id="message.score.5">
+    <en>Outstanding</en>
+    <es>Matricula de Honor</es>
+  </text>
+
+  <text id="message.request.declared.toxic">
+    <en>This request has been declared as toxic by the admin.++ Do you want to proceed to check it out?</en>
+    <es>Este encargo ha sido declarado como tóxico por el administrador.++ Desea proceder a verlo?</es>
+  </text>
+
+  <text id="message.request.possible.toxic">
+    <en>This request has been reported as a possible toxic by some users, but it hasn't been verified by the admin.++Do you want to check it out?</en>
+    <es>Este encargo ha sido denunciado como posible tóxico por algunos usuarios, pero todavía no ha sido verificado por el administrador++Desea proceder a verlo?</es>
+  </text>
+
+  <text id="message.user.banned">
+    <en>We are sorry++You have been banned from the system.++ You can no longer make any operation.</en>
+    <es>Lo sentimos++Has sido prohibido del sistema++ No puedes realizar ninguna operación.</es>
+  </text>
+
+  <text id="message.show.nothing.of.user.banned">
+    <en>We are sorry++This user has been banned forever for innapropiate behavior++We apologize for the inconvinience.</en>
+    <es>Lo sentimos++Este usuario ha sido prohibido para siempre por comportamiento inapropiado++Sentimos las inconveniencias.</es>
+  </text>
+  
+  <text id="message.title.toxic.banner.user">
+    <en>Banned Profile</en>
+    <es>Perfil Prohibido</es>
+  </text>
+
+  <!-- SCREEN TYPE MEDIA -->
+  <text id="screen.type.media.title">
+    <en>Select the type of media to upload</en>
+    <es>Selecciona el tipo de media a subir</es>
+  </text>
+
+  <text id="screen.type.media.add.image">
+    <en>Add an image</en>
+    <es>Añadir una imagen</es>
+  </text>  
+
+  <text id="screen.type.media.add.url">
+    <en>Add a link</en>
+    <es>Añadir un enlace</es>
+  </text>  
+
+  <!-- SCREEN TYPE MEDIA -->
+  <text id="screen.enter.url.title">
+    <en>Enter the URL</en>
+    <es>Escribe el enlace</es>
+  </text>
+
+  <text id="screen.enter.url.empty.data">
+    <en>The URL should not be empty</en>
+    <es>El enlace no debe estar vacio</es>
+  </text>  
+
+  <text id="screen.media.type.no.filesystem.available">
+    <en>In the browser you don't have access to the filesystem. Write an URL address of the picture instead.</en>
+    <es>En el navegador no tienes acceso al sistema de ficheros. Escribe una direccion web de la fotografia.</es>
+  </text>
+
+  <text id="screen.create.request.no.add.media.on.web">
+    <en>You can only upload images and link in the mobile version. Web version helps the tailor to manages fast the request.</en>
+    <es>Solo puedes subir fotos en la version mobil de la aplicaión. La versión web de la aplicacion ayuda a los modista a gestionar rapido los encargos.</es>
+  </text>
+  
+  
+  <!-- SCREEN INITIAL -->
+  <text id="screen.initial.welcome">
+    <en>Welcome to </en>
+    <es>Bienvenido a </es>
+  </text>
+
+  <text id="screen.initial.enter.mail">
+    <en>Enter with email address</en>
+    <es>Entrar con correo electrónico</es>
+  </text>
+
+  <text id="screen.initial.enter.facebook">
+    <en>Enter with Facebook</en>
+    <es>Entrar con Facebook</es>
+  </text>
+
+  <text id="screen.message.facebook.error.register">
+    <en>It was not possible to log in with Facebook</en>
+    <es>No fue posible registrarse con Facebook</es>
+  </text>
+
+  <text id="screen.initial.login.welcome">
+    <en>Welcome to % ++Log in. Please, wait...</en>
+    <es>Bienvenido a % ++Entrando. Por favor, espere...</es>
+  </text>
+  
+  
+  <!-- SCREEN LOGIN -->
+  <text id="screen.login.title">
+    <en>Login</en>
+    <es>Entrar</es>
+  </text>
+
+  <text id="screen.login.email">
+    <en>Write your email</en>
+    <es>Escribe tu correo</es>
+  </text>
+
+  <text id="screen.login.password">
+    <en>Write your password</en>
+    <es>Escribe tu contraseña</es>
+  </text>
+
+  <text id="screen.login.register">
+    <en>Not a user?+Press here to register</en>
+    <es>No eres ususario?+Apreta aquí para registrarte</es>
+  </text>
+
+  <text id="screen.login.forget.mail">
+    <en>Forget your password?+Press here to reset it</en>
+    <es>Olvidaste tu contraseña?+Apreta aquí para resetarlo.</es>
+  </text>
+  
+  <text id="screen.wait.logging.title">
+    <en>Checking...</en>
+    <es>Comprobando...</es>
+  </text>
+
+  <text id="screen.wait.logging.description">
+    <en>Checking your user. Please wait...</en>
+    <es>Comprobando tu usuario. Por favor espere...</es>
+  </text>
+
+  <text id="screen.message.logging.error">
+    <en>You should fill the email and password</en>
+    <es>Debes escribir tu correo y contraseña</es>
+  </text>
+
+  <text id="screen.message.logging.wrong.user">
+    <en>Email and password not found</en>
+    <es>Correo y contraseña no encontrados</es>
+  </text>    
+
+  <!-- SCREEN REGISTER -->
+  <text id="screen.register.email">
+    <en>Write your email</en>
+    <es>Escribe tu correo</es>
+  </text>
+  
+  <text id="screen.register.password">
+    <en>Write your password</en>
+    <es>Escribe tu contraseña</es>
+  </text>
+
+  <text id="screen.register.confirm">
+    <en>Confirm your password</en>
+    <es>Confirma tu contraseña</es>
+  </text>
+
+  <text id="screen.register.word">
+    <en>Register</en>
+    <es>Registrar</es>
+  </text>  
+
+  <text id="screen.register.mistmatch.password">
+    <en>Password mistmatch confirmation</en>
+    <es>Contraseña diferente de la confirmation</es>
+  </text>    
+
+  <text id="screen.wait.register.title">
+    <en>Registering...</en>
+    <es>Registrando...</es>
+  </text>
+
+  <text id="screen.wait.register.description">
+    <en>Registering your user. Please wait...</en>
+    <es>Registrando tu usuario. Por favor espere...</es>
+  </text>
+
+  <text id="screen.register.wrong.register">
+    <en>Register couldn't be completed</en>
+    <es>El registro no se pudo completar</es>
+  </text>
+
+  <!-- SCREEN VALIDATION CONFIRMATION -->
+  <text id="screen.validation.confirmation.title">
+    <en>Validation</en>
+    <es>Valoración</es>
+  </text>
+
+  <text id="screen.validation.confirmation.description">
+    <en>I've validated the email. Please take me to the app.</en>
+    <es>He confirmado el correo. Por favor llevamé a la aplicación.</es>
+  </text>
+
+  <!-- SCREEN MAIN -->
+  <text id="screen.main.provider">
+    <en>I'm a Tailor</en>
+    <es>Soy un modista</es>
+  </text>
+
+  <text id="screen.main.consumer.">
+    <en>I'm a Customer</en>
+    <es>Soy un cliente</es>
+  </text>
+
+  <text id="screen.main.profile">
+    <en>My profile</en>
+    <es>Mi perfil</es>
+  </text>
+
+  <!-- SCREEN PROFILE -->
+  <text id="screen.profile.title">
+    <en>Profile</en>
+    <es>Perfil</es>
+  </text>
+
+  <text id="screen.profile.your.email">
+    <en>Your Email</en>
+    <es>Tu Correo</es>
+  </text>
+
+  <text id="screen.profile.your.name">
+    <en>Your Name</en>
+    <es>Tu Nombre</es>
+  </text>
+
+    <text id="screen.profile.your.password">
+    <en>Your Password</en>
+    <es>Tu Contraseña</es>
+  </text>
+
+  <text id="screen.profile.update.confirmation">
+    <en>Your data has been updated correctly</en>
+    <es>Tus datos se han actualizado correctamente</es>
+  </text>
+
+  <text id="screen.profile.update.failed">
+    <en>Failed to udpate the data</en>
+    <es>Error al actualizar tus datos</es>
+  </text>
+  
+  <text id="message.profile.reset.password">
+    <en>Do you want to reset your password?</en>
+    <es>Deseas resetear tu contraseña?</es>
+  </text>
+
+  <text id="message.profile.check.email.to.reset">
+    <en>Check your email to reset your password</en>
+    <es>Comprueba tu correo para resetear tu contraseña</es>
+  </text>  
+
+  <text id="message.profile.changed.password.success">
+    <en>Changed password success!!</en>
+    <es>Cambiada contraseña correctamente!!</es>
+  </text>  
+
+  <text id="screen.profile.area.maps">
+    <en>Area of action</en>
+    <es>Area de accion</es>
+  </text>
+
+  <text id="screen.profile.village.not.defined">
+    <en>Not defined</en>
+    <es>No definido</es>
+  </text>
+
+  <text id="screen.profile.consumer.profile">
+    <en>Customer Profile</en>
+    <es>Perfil Cliente</es>
+  </text>
+  
+  <text id="screen.profile.provider.profile">
+    <en>Tailor Profile</en>
+    <es>Perfil Modista</es>
+  </text>
+
+  <text id="screen.profile.skill.name.first">
+    <en>Experience in Design</en>
+    <es>Experiencia en Diseño</es>
+  </text>
+
+    <text id="screen.profile.skill.name.second">
+    <en>Experience in Patterns</en>
+    <es>Experiencia en Patronaje</es>
+  </text>
+
+  <text id="screen.profile.skill.name.third">
+    <en>Experience in Confection</en>
+    <es>Experiencia en Confeccion</es>
+  </text>
+
+  <text id="screen.profile.skill.name.fourth">
+    <en>Experience in Embroider</en>
+    <es>Experiencia en Bordado</es>
+  </text>
+
+  <text id="screen.profile.provider.related.works">
+    <en>Works' History</en>
+    <es>Historia de Trabajos</es>
+  </text>
+  
+  <text id="screen.profile.provider.a.few.words.about">
+    <en>A few words about tailor's experience</en>
+    <es>Unas palabras sobre la experiencia del modista</es>
+  </text>
+  
+  <text id="screen.profile.provider.images.experience">
+    <en>Images of works done</en>
+    <es>Imagenes de trabajos realizados</es>
+  </text>  
+
+  <text id="screen.profile.provider.add.image.experience">
+    <en>Add Image Job Done</en>
+    <es>Añadir Imagen Trabajos Realizados</es>
+  </text>      
+
+  <text id="screen.profile.provider.maximum.number.images">
+    <en>You have reached the maximum number of available % images for the tailor profile</en>
+    <es>Has llegado al máximo numero de % images para el perfil del modista</es>
+  </text>
+
+  <text id="message.profile.provider.save.confirmation">
+    <en>Do you want to save the changes done in your profile?</en>
+    <es>Quieres guardar los cambios hechos en tu perfil?</es>
+  </text>  
+
+  <text id="message.profile.provider.exit.without.saving">
+    <en>Do you want to exit without saving the changes?</en>
+    <es>Quieres salir sin guardar los cambios en tu perfil perfil?</es>
+  </text>    
+
+  <text id="message.profile.users.requested.works">
+    <en>User Requests</en>
+    <es>Encargos del usuario</es>
+  </text>    
+  
+  <!-- SCREEN GOOGLE MAPS -->
+  <text id="screen.googlemap.title">
+    <en>Maps</en>
+    <es>Mapas</es>
+  </text>  
+
+  <text id="screen.googlemap.description">
+    <en>Select the action's area</en>
+    <es>Selecciona la area de accion</es>
+  </text> 
+
+  <text id="message.map.not.available.in.facebook">
+    <en>Your location is only available in the mobile version. Once you define your position you will be able to search requests.</en>
+    <es>Tu localización solo esta disponible en la versión mobil. Una vez definida podrás acceder a esta aplicación a buscar encargos.</es>
+  </text> 
+  
+  <!-- SCREEN CREATE REQUEST -->
+  <text id="screen.create.request.title">
+    <en>Dress Request</en>
+    <es>Petición de Vestido</es>
+  </text>
+
+  <text id="screen.create.request.name.dress">
+    <en>Dress Name</en>
+    <es>Nombre del Vestido</es>
+  </text>   
+
+  <text id="screen.create.request.description.dress">
+    <en>Dress Description</en>
+    <es>Descripcion del Vestido</es>
+  </text>   
+
+  <text id="screen.create.request.price">
+    <en>Estimated Budget</en>
+    <es>Presupuesto Estimado</es>
+  </text>
+  
+  <text id="screen.create.request.area.search">
+    <en>Search area</en>
+    <es>Area de busqueda</es>
+  </text>
+
+  <text id="screen.create.request.can.travel">
+    <en>Can travel to tailor's place</en>
+    <es>Puede viajar a casa del modista</es>
+  </text>
+
+  <text id="screen.create.request.provide.material">
+    <en>Customer provides materials</en>
+    <es>El cliente trae los materiales</es>
+  </text>
+
+  <text id="screen.create.request.notify.by.email">
+    <en>Activate notifications when new offers</en>
+    <es>Activar notificaciones de nueva ofertas</es>
+  </text>
+  
+  <text id="screen.create.request.distance.search">
+    <en>Distance Search</en>
+    <es>Distancia Buscada</es>
+  </text>
+
+  <text id="message.create.request.exit.without.saving">
+    <en>Do you want to exit without creating the job request?</en>
+    <es>Deseas salir sin crear la peticion de trabajo?</es>
+  </text>
+  
+  <text id="message.create.request.confirmation">
+    <en>Do you want to create this job request?</en>
+    <es>Deseas crear este encargo?</es>
+  </text>
+
+  <text id="message.create.request.save.confirmation">
+    <en>Do you want to save the changes to this job request?</en>
+    <es>Deseas guardar los cambios hechos a este encargo?</es>
+  </text>
+  
+  <text id="message.create.request.server.confirmation">
+    <en>The job request has been created correctly</en>
+    <es>El encargo de trabajo ha sido creado correctamente</es>
+  </text>
+
+  <text id="message.create.request.server.changes.confirmation">
+    <en>The changes has been saved correctly</en>
+    <es>Los cambios han sido guardados correctamente</es>
+  </text>
+  
+  <text id="message.create.request.server.error">
+    <en>It was not possible to create the job request</en>
+    <es>No fue posible crear el encargo de trabajo</es>
+  </text>
+
+  <text id="screen.create.request.add.new.image">
+    <en>Add new image</en>
+    <es>Añadir nueva imagen</es>
+  </text>
+
+  <text id="message.create.request.want.to.edit">
+    <en>Do you want to edit this request?</en>
+    <es>Quieres editar este encargo?</es>
+  </text>
+
+    <text id="message.create.request.want.to.remove">
+    <en>Do you want to delete this request?</en>
+    <es>Quieres eliminar este encargo?</es>
+  </text>          
+
+  <text id="screen.create.request.delete.success">
+    <en>Request Deleted successfully</en>
+    <es>Encargo Eliminado</es>
+  </text>
+
+  <text id="screen.create.maximum.number.images">
+    <en>You can use up to % images</en>
+    <es>Puedes usar hasta % imagenes</es>
+  </text>
+  
+  <text id="screen.create.request.delete.failure">
+    <en>Failed to delete</en>
+    <es>Fallo en borrado</es>
+  </text>
+
+  <text id="screen.create.request.offers.proposed">
+    <en>Proposed Offers</en>
+    <es>Ofertas Propuestas</es>
+  </text>
+
+  <text id="screen.create.you.are.not.a.provider">
+    <en>You are not a tailor, you can't make offer proposal. Do you want to become a tailor?</en>
+    <es>No eres un modista, no puedes hacer propuestas. Quieres ser un modista?</es>
+  </text>
+
+  <text id="screen.create.request.referenced.images">
+    <en>Reference Images</en>
+    <es>Imagenes de referencia</es>
+  </text>
+
+  <text id="screen.create.request.finished.images">
+    <en>Finished Images</en>
+    <es>Imagenes Acabadas</es>
+  </text>  
+
+  <text id="message.create.request.remove.with.penalty">
+    <en>You made a deal with a tailor for the request. If you delete this you will receive a penalty of 0 points in your score. Do you want to proceed?</en>
+    <es>Llegaste a un acuerdo para este encargo con un modista. Si eliminas este encargo recibirás una penalizacion de 0 puntos. Quieres proceder?</es>
+  </text>    
+
+  <text id="screen.create.request.add.finished.image">
+    <en>Add Finished Images</en>
+    <es>Añadir Imagenes Acabado</es>
+  </text>
+
+  <text id="screen.create.request.make.offer">
+    <en>Make New Offer or Question or Report</en>
+    <es>Hacer Nueva Propuesta o Pregunta o Denuncia</es>
+  </text>
+  
+  <text id="screen.create.request.reply.to.offers">
+    <en>Answer to questions</en>
+    <es>Responder a preguntas</es>
+  </text>
+  
+  <text id="screen.create.request.add.final.image">
+    <en>By uploading the image you both, customer and tailor, agree with the result, the job will be considered finished and you will be able to score each other. Do you want to proceed?</en>
+    <es>Al subir la imagen vosotros, client y modista, estais de acuerdo con el resultado. Entonces el trabajo se considerará acabado y podreis puntuaros mutuamente. Desea continuar?</es>
+  </text>
+
+  <text id="screen.create.request.success.finish.job">
+    <en>The job has been marked as finished!! Now the customer must agree with the picture by scoring your work. After that you will be able to score the costumer behavior.</en>
+    <es>El trabajo has sido finalizado existosamente!! Ahora el consumidor debe aceptar las fotos puntuandote. Después de ello podrás puntuar el comportamiento del cliente.</es>
+  </text>
+
+  <text id="screen.create.request.failure.finish.job">
+    <en>Failure to mark the job as finished</en>
+    <es>Fallo al marcar el trabajo como acabado.</es>
+  </text>
+
+  <text id="screen.create.request.are.you.sure.feedback">
+    <en>This feedback text is final, you won't be able to change it once you aprove it. Are you sure you want to give this feedback?</en>
+    <es>Este comentario es final, no podrás cambiarlo una vez lo apruebes. Deseas aprobar este comentario?</es>
+  </text>
+
+  <text id="screen.create.request.are.you.sure.score">
+    <en>Are you sure you want to give % starts score?</en>
+    <es>Este comentario es final, no podrás cambiarlo una vez lo apruebes. Deseas aprobar este comentario?</es>
+  </text>
+  
+  
+  <text id="message.consumer.rating.to.provider">
+    <en>Score from the user to the tailor</en>
+    <es>Puntuacion del usuario al modista</es>
+  </text>  
+
+  <text id="message.consumer.rating.to.consumer.">
+    <en>Score from the tailor to the user</en>
+    <es>Puntuacion del modista al usuario</es>
+  </text>
+
+  <text id="message.create.request.invalidate.if.edit">
+    <en>There are offers for this request. If you proceed to edit the request the offers would have to be revalited by the people who made them. Proceed with the edition?</en>
+    <es>Existen ofertas para este encargo. Si deseas proceder a editar este encargo las ofertas tendras que ser revalidadas por quienes las hicieron. Deseas editar el encargo?</es>
+  </text>
+
+  <text id="message.create.request.failure.reset.proposals">
+    <en>It was not possible to reset the proposals linked to this request. The edition of the request is not possible.</en>
+    <es>No fue possible resetear las ofertas vinculadas a este encargo. La edicion de este encargo no es posible.</es>
+  </text>  
+  
+  <text id="screen.create.request.break.deal">
+    <en>Break the deal</en>
+    <es>Romper el contrato</es>
+  </text>  
+  
+  <text id="screen.create.request.confirmation.break.deal">
+    <en>Are you sure that you want to break the deal? If something has happened with you both you should explain in the feedback what has happened. Continue?</en>
+    <es>Estas seguro que deseas romper el contrato? Si ha sucedido algo se preguntará a ambos que es lo que ha pasado para que quede constancia. Continuar?</es>
+  </text>    
+  
+  <text id="screen.create.request.success.broken.job">
+    <en>Deal successfully broken. Now you should provide feeback of what has happened.</en>
+    <es>Acuerdo roto. Ahora debe escribir un comentario explicando que ha ocurrido.</es>
+  </text>  
+  
+  <text id="screen.create.request.failure.broken.job">
+    <en>Failure to break the deal.</en>
+    <es>Fallo al romper el acuerdo.</es>
+  </text>    
+
+  <text id="screen.create.request.deal.broken">
+    <en>Deal broken</en>
+    <es>Acuerdo roto</es>
+  </text>    
+
+  <text id="screen.create.request.no.score.consumer.deal.broken">
+    <en>No score available. Feedback from Customer.</en>
+    <es>Sin puntuacion. Comentarios del Cliente.</es>
+  </text>        
+
+  <text id="screen.create.request.no.score.provider.deal.broken">
+    <en>No score available. Feedback from Tailor.</en>
+    <es>Sin puntuacion. Comentarios del Modista.</es>
+  </text>        
+  
+  <text id="screen.create.request.broken">
+    <en>Broken</en>
+    <es>Roto</es>
+  </text>    
+
+  <text id="screen.create.request.toxic">
+    <en>Toxic</en>
+    <es>Toxico</es>
+  </text>      
+  
+  <text id="screen.create.request.check.consumer.profile">
+    <en>Check Customer Profile</en>
+    <es>Mirar Perfil del Cliente</es>
+  </text>
+
+  <text id="screen.create.request.wait.until.loaded.information">
+    <en>Wait until loaded information</en>
+    <es>Espera a que se haya cargado toda la información</es>
+  </text>
+
+  <text id="screen.create.request.you.already.reported">
+    <en>You already reporte this request</en>
+    <es>Ya has denunciado este encargo</es>
+  </text>  
+  
+  <text id="screen.create.request.has.been.flagged">
+    <en>Due to a high number of reports from the users this request has been flagged as inappropiate</en>
+    <es>Debido al alto numero de denuncias este encargo has sido marcado como inapropiado</es>
+  </text>  
+
+  <text id="screen.create.request.only.create.in.mobile">
+    <en>You can only create request in the mobile version of the app. You can use this version to reply and look for requests.</en>
+    <es>Solo pueden crearse encargos en la versión mobile de la aplicación. Puede user esta versión para responder y buscar encargos.</es>
+  </text>  
+  
+  <!-- CONSULT REQUESTS -->
+  <text id="screen.main.request.title">
+    <en>Requested Dresses</en>
+    <es>Vestidos Encargados</es>
+  </text>
+
+  <text id="screen.main.request.new.dress">
+    <en>Request new dress</en>
+    <es>Encargar nuevo vestido</es>
+  </text>
+
+  <text id="screen.main.request.active.jobs">
+    <en>Jobs without dressmaker</en>
+    <es>Encargos sin modista</es>
+  </text>  
+
+  <text id="screen.main.request.on.going.jobs">
+    <en>Ongoing Jobs</en>
+    <es>Encargos en curso</es>
+  </text>    
+
+  <!-- OFFERS -->
+  <text id="screen.offers.search.request">
+    <en>Look for job requests</en>
+    <es>Buscar por trabajos encargados</es>
+  </text>
+  
+  <text id="screen.offers.following.works">
+    <en>Following these works</en>
+    <es>Siguiendo estos encargos</es>
+  </text>
+  
+  <text id="screen.offers.active.works.in.progress">
+    <en>Acepted jobs in progress</en>
+    <es>Trabajos aceptados en progreso</es>
+  </text>
+
+  <text id="screen.offers.active.works.finished">
+    <en>Works Finished</en>
+    <es>Encargos Finalizados</es>
+  </text>
+  
+  <!-- SEARCH REQUEST -->
+  <text id="screen.search.requests.choose.area">
+    <en>Choose the area you want to look for jobs</en>
+    <es>Elige el area que deseas buscar trabajos</es>
+  </text>
+
+  <text id="screen.search.requests.search.now">
+    <en>Search jobs now!!</en>
+    <es>Busca encargos ahora!!</es>
+  </text>
+
+  <text id="message.search.requests.specify.location">
+    <en>Please, specify area to search for work</en>
+    <es>Por favor, especifique el area donde buscar trabajo</es>
+  </text>
+  
+  <!-- SEARCH RESULT -->
+  <text id="screen.search.work.description">
+    <en>Results for desired area</en>
+    <es>Resultados para el area buscada</es>
+  </text>  
+
+  <!-- PROPOSAL -->
+  <text id="screen.proposal.title">
+    <en>Proposal</en>
+    <es>Propuesta</es>
+  </text>  
+
+  <text id="screen.proposal.label.title">
+    <en>Write a title for your proposal</en>
+    <es>Escribe un titulo para tu propuesta</es>
+  </text>  
+
+  <text id="screen.proposal.label.description">
+    <en>Write a description for your proposal</en>
+    <es>Escribe una descripcion para tu propuesta</es>
+  </text>  
+
+  <text id="screen.proposal.type.label">
+    <en>What kind of message do you want to create?</en>
+    <es>Que tipo de mensaje deseas crear?</es>
+  </text>  
+  
+  <text id="screen.proposal.type.option.information">
+    <en>Question</en>
+    <es>Pregunta</es>
+  </text>  
+
+  <text id="screen.proposal.type.option.proposal">
+    <en>Offer</en>
+    <es>Oferta</es>
+  </text>  
+
+  <text id="screen.proposal.type.option.report">
+    <en>Report</en>
+    <es>Denunciar</es>
+  </text>  
+  
+  <text id="screen.proposal.offer.price">
+    <en>Price Offered</en>
+    <es>Precio Ofertado</es>
+  </text>    
+
+  <text id="message.proposal.create.confirmation">
+    <en>Do you want to create this offer?</en>
+    <es>Deseas ofrecer esta propuesta?</es>
+  </text>    
+
+  <text id="message.proposal.request.exit.without.saving">
+    <en>Do you want to exit without sending the offer?</en>
+    <es>Deseas ofrecer salir sin enviar la propuesta?</es>
+  </text>      
+
+  <text id="message.proposal.want.to.remove">
+    <en>Do you want to remove this offer?</en>
+    <es>Deseas eliminar esta propuesta?</es>
+  </text>  
+
+  <text id="message.proposal.warning.penalty">
+    <en>This offer was accepted by the customer. If you delete this offer you will receive a penalty of 0 score. Proceed?</en>
+    <es>Esta oferta fue acceptada por el cliente. Si deseas eliminar la oferta recibiras una penalizacion de 0 puntos. Continuar?</es>
+  </text>  
+
+  <text id="message.proposals.created.server.confirmation">
+    <en>The proposal was successfully created</en>
+    <es>La propuesta fue creada exitosamente</es>
+  </text>  
+
+  <text id="message.proposals.created.question.confirmation">
+    <en>The question was successfully created</en>
+    <es>La pregunta fue creada exitosamente</es>
+  </text>  
+  
+  <text id="message.proposals.has.been.flagged.succesfully">
+    <en>Request reported with success.</en>
+    <es>Encargo denunciado con éxito.</es>
+  </text>
+  
+  <text id="screen.proposal.request.delete.success">
+    <en>The proposal was eliminated successfully</en>
+    <es>La propuesta fue eliminada exitosamente</es>
+  </text>    
+  
+  <text id="screen.proposal.request.delete.failure">
+    <en>Failure in the delete of the proposal</en>
+    <es>Fallo en la eliminacion de la propuesta</es>
+  </text>    
+
+  <text id="message.proposal.insert.server.error">
+    <en>Failure in the creation of the proposal</en>
+    <es>Fallo en la creacion de la propuesta</es>
+  </text>  
+
+  <text id="message.proposal.check.provider.profile">
+    <en>Check Tailor Profile</en>
+    <es>Visitar Perfil del modista</es>
+  </text>  
+
+  <text id="message.proposal.accept.and.look">
+    <en>Accept the offer and keep looking</en>
+    <es>Aceptar la oferta y seguir buscando</es>
+  </text>  
+
+  <text id="message.proposal.close.deal">
+    <en>Accept the offer and close the deal</en>
+    <es>Aceptar la oferta y cerrar el trato</es>
+  </text>  
+
+  <text id="message.proposal.confirmation.to.close.deal">
+    <en>By accepting the deal you compromise with the agreed terms. Do you agree to close the deal?</en>
+    <es>Al acceptar la oferta te comprometes a cumplir con la oferta. Deseas cerrar el acuerdo?</es>
+  </text>  
+
+  <text id="message.proposal.confirmation.email">
+    <en>We have sent the email of the tailor to your email. You can contact with her directly.</en>
+    <es>Te hemos enviado el correo de la modista a tu correo. Ya puedes contactar con ella directamente.</es>
+  </text>  
+
+  <text id="message.proposal.confirmation.update.temporal">
+    <en>You have accepted the offer but you still need time to keep looking for other offers</en>
+    <es>Has aceptado la oferta pero todavia necesitas tiempo para seguir buscando otras ofertas</es>
+  </text>    
+
+  <text id="message.proposal.ask.a.question">
+    <en>Do you want to ask this question?</en>
+    <es>Deseas realizar esta pregunta?</es>
+  </text>      
+
+    <text id="message.proposal.report.a.request">
+    <en>Do you want to report this request?++Remember that you will suffer a penalty in your score if the report is false</en>
+    <es>Deseas denunciar esta peticion?++Recuerda que si la denuncia es falsa sufrirás unas penalización en tu puntuación</es>
+  </text>      
+
+  <text id="message.proposal.confirmation.removed.succesfully">
+    <en>Offer removed succesfully</en>
+    <es>Oferta eliminada satisfactoriamente</es>
+  </text>
+  
+  <text id="message.proposal.confirmation.removed.failure">
+    <en>Offer failed to remove</en>
+    <es>Fallo al eliminar la oferta</es>
+  </text>  
+
+  <text id="message.create.request.updated.success.score.feedback">
+    <en>Success to update the score and feedback data</en>
+    <es>Exito para actualizar la puntuación y los comentarios</es>
+  </text>  
+
+  <text id="message.create.request.updated.failure.score.feedback">
+    <en>Failed to update the score and feedback data</en>
+    <es>Fallo al actlizar la puntuación y los comentarios</es>
+  </text>
+
+ <text id="screen.proposal.offer.outdated.by.edit">
+    <en>This offer is outdated because you changed the initial request. Now the tailor should update this proposal.</en>
+    <es>Esta oferta ha caducado porque has cambiado el encargo inicial. Ahora el modista debe actualizar su propuesta.</es>
+  </text>  
+
+ <text id="screen.proposal.offer.reactive.it">
+    <en>Reactivate Offer</en>
+    <es>Reactivar Oferta</es>
+  </text>  
+
+ <text id="message.proposal.successfully.reactivated">
+    <en>Proposal succesfully activated</en>
+    <es>Oferta reactivada exitosamente</es>
+  </text>
+
+ <text id="message.proposal.failure.reactivated">
+    <en>Failure in proposal reactivation</en>
+    <es>Fallo en reactivación de oferta</es>
+  </text>
+
+ <text id="message.proposal.warning.wait.time">
+    <en>You must wait % hours in order to post a new proposal</en>
+    <es>Debes esperar % horas para poder crear una nueva propuesta</es>
+  </text>
+
+ <text id="message.proposal.want.to.report.provider">
+    <en>Do you want to report this offer?++Remember that if the report is false there will be a penalization in your customer score</en>
+    <es>Deseas denunciar esta oferta?++Recuerda que si la denuncia es falsa recibirás una penalización en tu puntuación de cliente</es>
+  </text>
+  
+ <text id="message.proposal.succes.reported.provider.proposal">
+    <en>The proposal has been succesfully reported</en>
+    <es>La propuesta ha sido exitosamente denunciada</es>
+  </text>
+
+   <text id="message.proposal.failure.reported.provider.proposal">
+    <en>Failure in the proposal report</en>
+    <es>Fallo en la denuncia de la oferta</es>
+  </text>
+
+   <text id="message.proposal.you.have.reported.this.offer">
+    <en>There is a report pending of review for this offer</en>
+    <es>Hay una denuncia pendiente de revisión para esta oferta</es>
+  </text>
+  
+  <!-- IAP BECOME PROVIDER -->
+  <text id="message.iap.become.provider">
+    <en>Become an authorized tailor and offer your services Now!!</en>
+    <es>Conviertete en un modista autorizado y ofrecer tus servicios ahora!!</es>
+  </text>  
+
+  <text id="message.iap.rent.provider.1">
+    <en>Energy for 1 Month!!</en>
+    <es>Energia para 1 Mes!!</es>
+  </text>  
+
+    <text id="message.iap.rent.provider.2">
+    <en>Energy for 3 Month!!</en>
+    <es>Energia para 3 Meses!!</es>
+  </text>  
+
+  <text id="message.iap.rent.provider.3">
+    <en>Energy for 6 Month!!</en>
+    <es>Energia para 6 Meses!!</es>
+  </text>  
+
+  <text id="message.iap.rent.provider.4">
+    <en>Energy for 1 Year!!</en>
+    <es>Energia para 1 Año!!</es>
+  </text>  
+
+  <text id="message.iap.congratulations.provider">
+    <en>Congratulations!!++You have become an authorized tailor!!++Now you can offer your services.</en>
+    <es>Felicidades!!++Te has convertido en un modista autorizado!!++Ahora puedes ofrecer tus servicios.</es>
+  </text>  
+
+  <text id="message.iap.failure.become.provider">
+    <en>It was not possible to register as a provider.++No charge has been produced.++Please try again later.</en>
+    <es>No fue posible registrarte como modista.++Ningún cargo ha sido producido.++Por favor, prueba mas tarde.</es>
+  </text>  
+
+  <!-- IAP PREMIUM POST -->
+  <text id="message.iap.premium.post">
+    <en>You should wait % hours to post for free or you can post right now</en>
+    <es>Debes esperar % horas para publicar gratis o puedes publicar ahora</es>
+  </text>  
+
+  <text id="message.iap.premim.button.now">
+    <en>Don't wait an post an offer to get the deal!!</en>
+    <es>No esperes y publica una oferta!!</es>
+  </text>  
+  
+  <text id="message.iap.congratulations.premium.post">
+    <en>Congratulations!!++You can post right now and offer and get ahead the competition.</en>
+    <es>Felicidades!!++Puedes publicar ahora tu oferta y adelantarte a la competencia</es>
+  </text>  
+
+  <text id="message.iap.failure.premium.post">
+    <en>It was not possible to create the premium post.++No charge has been produced.++Please try again later.</en>
+    <es>No fue posible crear la oferta premium.++Ningún cargo ha sido producido.++Por favor, prueba mas tarde.</es>
+  </text>  
+  
+  <!-- IAP PREMIUM POST -->
+  <text id="message.iap.premium.request">
+    <en>You can have up to % active requests for free, but you can have more extra active request.</en>
+    <es>Puedes tener hasta % encargos activos gratuitos, pero también tienes la opción de tener mas encargos extra.</es>
+  </text>  
+
+  <text id="message.iap.premium.no.free.request">
+    <en>Create right now your request to look for talent!!!</en>
+    <es>Crea ahora tu encargo para buscar talento!!!</es>
+  </text>  
+
+  <text id="message.iap.premium.button.add.request">
+    <en>Create an additional extra request now!!</en>
+    <es>Crear un encargo adicional ahora!!</es>
+  </text>  
+
+    <text id="message.iap.premium.button.add.no.free.request">
+    <en>Create an request now!!</en>
+    <es>Crear un encargo ahora!!</es>
+  </text>  
+
+  <text id="message.iap.congratulations.premium.request">
+    <en>Congratulations!!++Now You can create a new additional request!!.</en>
+    <es>Felicidades!!++Ahora puedes crear un encargo adicional!!</es>
+  </text>  
+
+  <text id="message.iap.failure.premium.request">
+    <en>It was not possible to create the additional request.++No charge has been produced.++Please try again later.</en>
+    <es>No fue posible crear un encargo addicional.++Ningún cargo ha sido producido.++Por favor, prueba mas tarde.</es>
+  </text>
+
+  <text id="message.iap.failure.any.operation">
+    <en>It was not possible to perform the operation.++No charge has been produced.++Please try again later.</en>
+    <es>No fue posible realizar la operación.++Ningún cargo ha sido producido.++Por favor, prueba mas tarde.</es>
+  </text>
+  
+</texts>
+
+
