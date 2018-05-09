@@ -12,23 +12,31 @@ https://www.youtube.com/playlist?list=PLviCMQdRMJhMJjEyUu3PoumsSTCAG2S4M
 This package has dependencies with the next SDK/Plugins so in order for the project to work you should download them by your own:
 
 Unity Facebook SDK:
+
 https://developers.facebook.com/docs/unity/downloads
 
-Flat Calendar
+Flat Calendar:
+
 https://assetstore.unity.com/packages/tools/gui/flat-calendar-59431
 
-XAMPP
+XAMPP:
+
 https://www.apachefriends.org/download.html
 
 By default the mail verification code is disable so it's easy for any programmer to run the project without the need of the configuration of the email. When you are ready to enable the email, make the next changes
 
 FILE: ConfigurationYourSharingEconomyApp.php
+
 FUNCTION: SendGlobalEmail
+
 TO DO: Uncomment the commeted code for the email to work
 
 FILE: UserRegisterByEmail.php
+
 LINE: 102
+
 TODO: Uncomment the commented line so it's necessary for the register user the email verification process to access the system
+
 
 For More information about us:
 
