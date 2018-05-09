@@ -4,3 +4,51 @@ If you’re interested in sharing economy apps, you’ve come to the right place
 YourSharingEconomyApp is a project with a goal in mind. To make easy to entrepreneurs to start their own business. With that goal in mind, our solution offers a unique feature: it needs no management, no maintenance. It works by itself. Once you release the app, the whole community of users will control by themselves thanks to a fair reputation system that offers protection for consumers and providers of services. 
 
 With YourSharingEconomyApp you can create you own app easily in an extremely short amount of time. Don’t waste time and money, just take this opportunity and hit the world fast with your huge idea.
+
+---------
+
+You will find all the tutorials you need to implent your solution using this template:
+
+https://www.youtube.com/playlist?list=PLviCMQdRMJhMJjEyUu3PoumsSTCAG2S4M
+
+---------
+
+This package has dependencies with the next SDK/Plugins so in order for the project to work you should download them by your own:
+
+Unity Facebook SDK:
+
+https://developers.facebook.com/docs/unity/downloads
+
+Flat Calendar:
+
+https://assetstore.unity.com/packages/tools/gui/flat-calendar-59431
+
+XAMPP:
+
+https://www.apachefriends.org/download.html
+
+---------
+
+By default the mail verification code is disable so it's easy for any programmer to run the project without the need of the configuration of the email. When you are ready to enable the email, make the next changes:
+
+---------
+
+FILE: ConfigurationYourSharingEconomyApp.php
+
+FUNCTION: SendGlobalEmail
+
+TO DO: Uncomment the commeted code for the email to work
+
+---------
+
+FILE: UserRegisterByEmail.php
+
+LINE: 102
+
+TODO: Uncomment the commented line so it's necessary for the register user the email verification process to access the system
+
+---------
+
+For More information about us:
+
+http://www.yoursharingeconomyapp.com
