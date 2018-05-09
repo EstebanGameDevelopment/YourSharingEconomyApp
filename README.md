@@ -5,9 +5,13 @@ YourSharingEconomyApp is a project with a goal in mind. To make easy to entrepre
 
 With YourSharingEconomyApp you can create you own app easily in an extremely short amount of time. Don’t waste time and money, just take this opportunity and hit the world fast with your huge idea.
 
+---------
+
 You will find all the tutorials you need to implent your solution using this template:
 
 https://www.youtube.com/playlist?list=PLviCMQdRMJhMJjEyUu3PoumsSTCAG2S4M
+
+---------
 
 This package has dependencies with the next SDK/Plugins so in order for the project to work you should download them by your own:
 
