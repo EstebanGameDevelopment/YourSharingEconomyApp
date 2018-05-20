@@ -5,46 +5,50 @@ using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
 
-public class ProposalReportToxicHTTP : BaseDataHTTP, IHTTPComms
+namespace YourSharingEconomyApp
 {
-    private string m_urlRequest = ScreenController.URL_BASE_PHP + "ProposalReportToxic.php";
 
-    private string m_proposalID;
-    private string m_reporterID;
-    private string m_requestID;
+	public class ProposalReportToxicHTTP : BaseDataHTTP, IHTTPComms
+	{
+		private string m_urlRequest = ScreenController.URL_BASE_PHP + "ProposalReportToxic.php";
 
-    public string UrlRequest
-    {
-        get { return m_urlRequest; }
-    }
+		private string m_proposalID;
+		private string m_reporterID;
+		private string m_requestID;
 
-    public string Build(params object[] _list)
-    {
-        m_proposalID = (string)_list[2];
-        m_reporterID = (string)_list[3];
-        m_requestID = (string)_list[4];
+		public string UrlRequest
+		{
+			get { return m_urlRequest; }
+		}
 
-        return "?id=" + (string)_list[0] + "&password=" + (string)_list[1] + "&proposal=" + m_proposalID + "&reporter=" + m_reporterID + "&request=" + m_requestID;
-    }
+		public string Build(params object[] _list)
+		{
+			m_proposalID = (string)_list[2];
+			m_reporterID = (string)_list[3];
+			m_requestID = (string)_list[4];
 
-    public override void Response(byte[] _response)
-    {
-        if (!ResponseCode(_response))
-        {
-            CommController.Instance.DisplayLog(m_jsonResponse);
-            BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, false);
-            return;
-        }
+			return "?id=" + (string)_list[0] + "&password=" + (string)_list[1] + "&proposal=" + m_proposalID + "&reporter=" + m_reporterID + "&request=" + m_requestID;
+		}
 
-        string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
-        if (bool.Parse(data[0]))
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, true, long.Parse(m_proposalID), int.Parse(m_reporterID));
-        }
-        else
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, false);
-        }
-    }
+		public override void Response(byte[] _response)
+		{
+			if (!ResponseCode(_response))
+			{
+				CommController.Instance.DisplayLog(m_jsonResponse);
+				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, false);
+				return;
+			}
+
+			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
+			if (bool.Parse(data[0]))
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, true, long.Parse(m_proposalID), int.Parse(m_reporterID));
+			}
+			else
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, false);
+			}
+		}
+	}
+
 }
-

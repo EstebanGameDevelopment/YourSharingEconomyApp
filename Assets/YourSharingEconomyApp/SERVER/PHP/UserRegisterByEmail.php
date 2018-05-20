@@ -99,8 +99,14 @@
 			$ipadress_new_user = $_SERVER['REMOTE_ADDR'];
 	
 			// UNCOMMENT THIS LIKE WHEN YOU ARE WORKING WITH A VALID MAIL SERVER ABLE TO DISPATCH EMAILS
-			// $query_insert = "INSERT INTO users VALUES ($user_id_new, '$email_encrypted', -1, '', '$password_encrypted', '$name_temp_user_new', '', '', -1, -1, '', $current_time_registered, $current_time_registered, -1, -1, 0, 0, 0, 0, -1, '$random_code_validate','','',0,0, '', '$ipadress_new_user', 0)";
-			$query_insert = "INSERT INTO users VALUES ($user_id_new, '$email_encrypted', 1, '', '$password_encrypted', '$name_temp_user_new', '', '', -1, -1, '', $current_time_registered, $current_time_registered, -1, -1, 0, 0, 0, 0, -1, '','','',0,0, '', '$ipadress_new_user', 0)";
+			if ($GLOBALS['ENABLE_EMAIL_SERVER'] == 1)
+			{
+				$query_insert = "INSERT INTO users VALUES ($user_id_new, '$email_encrypted', -1, '', '$password_encrypted', '$name_temp_user_new', '', '', -1, -1, '', $current_time_registered, $current_time_registered, -1, -1, 0, 0, 0, 0, -1, '$random_code_validate','','',0,0, '', '$ipadress_new_user', 0, '')";	
+			}
+			else
+			{
+				$query_insert = "INSERT INTO users VALUES ($user_id_new, '$email_encrypted', 1, '', '$password_encrypted', '$name_temp_user_new', '', '', -1, -1, '', $current_time_registered, $current_time_registered, -1, -1, 0, 0, 0, 0, -1, '','','',0,0, '', '$ipadress_new_user', 0, '')";	
+			}
 			
 			$result_insert = mysqli_query($GLOBALS['LINK_DATABASE'],$query_insert) or die("Query Error::UserRegisterByEmail::Insert users failed");
 			
@@ -125,7 +131,8 @@
 				$additionalrequest_user = 0;
 				$additionaloffer_user = 0;
 				$banned_user = 0;
-				print "true" . $GLOBALS['PARAM_SEPARATOR'] .  $user_id_new . $GLOBALS['PARAM_SEPARATOR'] .  $name_user. $GLOBALS['PARAM_SEPARATOR'] .  $village_user. $GLOBALS['PARAM_SEPARATOR'] .  $mapdata_user . $GLOBALS['PARAM_SEPARATOR'] . $registerdate_user . $GLOBALS['PARAM_SEPARATOR'] . $lastlogin_user . $GLOBALS['PARAM_SEPARATOR'] . $rentstart_user . $GLOBALS['PARAM_SEPARATOR'] . $rentdays_user . $GLOBALS['PARAM_SEPARATOR'] . $scoreuser_user . $GLOBALS['PARAM_SEPARATOR'] . $scoreprovider_user . $GLOBALS['PARAM_SEPARATOR'] . $votesuser_user . $GLOBALS['PARAM_SEPARATOR'] . $votesprovider_user . $GLOBALS['PARAM_SEPARATOR'] . $validated_user . $GLOBALS['PARAM_SEPARATOR'] . $skills_user . $GLOBALS['PARAM_SEPARATOR'] . $description_user . $GLOBALS['PARAM_SEPARATOR'] . $additionalrequest_user . $GLOBALS['PARAM_SEPARATOR'] . $additionaloffer_user . $GLOBALS['PARAM_SEPARATOR'] . $banned_user;
+				$publickey_user = "";
+				print "true" . $GLOBALS['PARAM_SEPARATOR'] .  $user_id_new . $GLOBALS['PARAM_SEPARATOR'] .  $name_user. $GLOBALS['PARAM_SEPARATOR'] .  $village_user. $GLOBALS['PARAM_SEPARATOR'] .  $mapdata_user . $GLOBALS['PARAM_SEPARATOR'] . $registerdate_user . $GLOBALS['PARAM_SEPARATOR'] . $lastlogin_user . $GLOBALS['PARAM_SEPARATOR'] . $rentstart_user . $GLOBALS['PARAM_SEPARATOR'] . $rentdays_user . $GLOBALS['PARAM_SEPARATOR'] . $scoreuser_user . $GLOBALS['PARAM_SEPARATOR'] . $scoreprovider_user . $GLOBALS['PARAM_SEPARATOR'] . $votesuser_user . $GLOBALS['PARAM_SEPARATOR'] . $votesprovider_user . $GLOBALS['PARAM_SEPARATOR'] . $validated_user . $GLOBALS['PARAM_SEPARATOR'] . $skills_user . $GLOBALS['PARAM_SEPARATOR'] . $description_user . $GLOBALS['PARAM_SEPARATOR'] . $additionalrequest_user . $GLOBALS['PARAM_SEPARATOR'] . $additionaloffer_user . $GLOBALS['PARAM_SEPARATOR'] . $banned_user . $GLOBALS['PARAM_SEPARATOR'] . $publickey_user;
 			}
 		}
 	 
