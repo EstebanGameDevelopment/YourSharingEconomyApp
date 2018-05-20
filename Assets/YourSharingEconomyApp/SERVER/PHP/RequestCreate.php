@@ -118,7 +118,7 @@
 			$feedbackcustomer_par_f = SpecialCharacters($feedbackcustomer_par);
 			$feedbackprovider_par_f = SpecialCharacters($feedbackprovider_par);
 
-			$query_insert = "INSERT INTO requests VALUES ($request_id_new, $customer_par, $provider_par,	'$title_par_f', '$description_par_f', $images_par, $referenceimg_par, '$village_par_f', '$mapdata_par', $latitude_par, $longitude_par, $price_par, '$currency_par', $distance_par, '$flags_par', $notifications_par, $creationdate_par, $deadline_par, -1, -1, 0, -1, '$feedbackcustomer_par_f', $scorecustomer_par, '$feedbackprovider_par_f', $scoreprovider_par, '', 0, 0)";
+			$query_insert = "INSERT INTO requests VALUES ($request_id_new, $customer_par, $provider_par,	'$title_par_f', '$description_par_f', $images_par, $referenceimg_par, '$village_par_f', '$mapdata_par', $latitude_par, $longitude_par, $price_par, '$currency_par', $distance_par, '$flags_par', $notifications_par, $creationdate_par, $deadline_par, -1, -1, 0, -1, '$feedbackcustomer_par_f', $scorecustomer_par, '$feedbackprovider_par_f', $scoreprovider_par, '', 0, 0, '', '', '')";
 			$result_insert = mysqli_query($GLOBALS['LINK_DATABASE'],$query_insert) or die("Query Error::RequestCreate::CreateRequest::Insert failed");
 			
 			// Free resultset

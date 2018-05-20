@@ -5,829 +5,833 @@ using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
 
-/******************************************
- * 
- * ScreenProposalView
- * 
- * It allows the provider to do 3 different operations:
- * 
- *      1.The provider can make an offer to the owner of the request to consider to get the job
- *      2.The provider can ask a question to the owner of the request.
- *      3.The provider can report the request as inaproppiate
- * 
- * @author Esteban Gallardo
- */
-public class ScreenProposalView : ScreenBaseView, IBasicScreenView
+namespace YourSharingEconomyApp
 {
-    public const string SCREEN_CREATE_PROPOSAL    = "SCREEN_CREATE_PROPOSAL";
-    public const string SCREEN_DISPLAY_PROPOSAL   = "SCREEN_DISPLAY_PROPOSAL";
-    public const string SCREEN_QUESTION_PROPOSAL  = "SCREEN_QUESTION_PROPOSAL";
 
-    // ----------------------------------------------
-    // SUBS
-    // ----------------------------------------------	
-    public const string SUB_EVENT_SCREENPROPOSAL_CONFIRMATION               = "SUB_EVENT_SCREENPROPOSAL_CONFIRMATION";
-    public const string SUB_EVENT_SCREENPROPOSAL_EXIT_WITHOUT_SAVING        = "SUB_EVENT_SCREENPROPOSAL_EXIT_WITHOUT_SAVING";
-    public const string SUB_EVENT_SCREENPROPOSAL_WANT_TO_REMOVE             = "SUB_EVENT_SCREENPROPOSAL_WANT_TO_REMOVE";
-    public const string SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_OK = "SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_OK";
-    public const string SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_KO = "SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_KO";
-    public const string SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_DEAL  = "SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_DEAL";
-    public const string SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT  = "SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT";
-    public const string SUB_EVENT_SCREENPROPOSAL_REPORT_TOXIC_OFFER         = "SUB_EVENT_SCREENPROPOSAL_REPORT_TOXIC_OFFER";
-
-    // ----------------------------------------------
-    // PRIVATE MEMBERS
-    // ----------------------------------------------	
-    private GameObject m_root;
-    private Transform m_container;
-    private ProposalModel m_proposalData;
-    private RequestModel m_requestData;
-    private bool m_isReadyToPublish = false;
-    private bool m_hasChanged = false;
-
-    private bool m_isDisplayInfo = false;
-    private bool m_hasBeenInited = false;
-
-    private Transform m_offerExclusiveContent;
-
-    private GameObject m_buttonSave;
-
-    private Transform m_buttonReport;
-
-    private GameObject m_buttonAcceptAndKeepLooking = null;
-    private GameObject m_buttonCloseDeal = null;
-
-    public bool IsReadyToPublish
-    {
-        get { return m_isReadyToPublish; }
-        set
-        {
-            if (!m_isDisplayInfo)
-            {
-                m_hasChanged = true;
-                if (m_proposalData.AllDataFilled())
-                {
-                    m_isReadyToPublish = value;
-                }
-                m_buttonSave.SetActive(m_isReadyToPublish);
-            }
-        }
-    }
-
-    // -------------------------------------------
-    /* 
-	 * Constructor
+	/******************************************
+	 * 
+	 * ScreenProposalView
+	 * 
+	 * It allows the provider to do 3 different operations:
+	 * 
+	 *      1.The provider can make an offer to the owner of the request to consider to get the job
+	 *      2.The provider can ask a question to the owner of the request.
+	 *      3.The provider can report the request as inaproppiate
+	 * 
+	 * @author Esteban Gallardo
 	 */
-    public void Initialize(params object[] _list)
-    {
-        m_root = this.gameObject;
-        m_container = m_root.transform.Find("Content");
+	public class ScreenProposalView : ScreenBaseView, IBasicScreenView
+	{
+		public const string SCREEN_CREATE_PROPOSAL = "SCREEN_CREATE_PROPOSAL";
+		public const string SCREEN_DISPLAY_PROPOSAL = "SCREEN_DISPLAY_PROPOSAL";
+		public const string SCREEN_QUESTION_PROPOSAL = "SCREEN_QUESTION_PROPOSAL";
 
-        m_proposalData = new ProposalModel();
-        bool isOnlyQuestion = false;
-        if (_list.Length > 0)
-        {
-            if (_list[0] != null)
-            {
-                // DISPLAY EXISTING PROPOSAL
-                if (_list[0] is ProposalModel)
-                {
-                    m_proposalData = ((ProposalModel)_list[0]).Clone();
-                    m_requestData = ((RequestModel)_list[1]).Clone();
-                }
-                // NEW PROPOSAL FOR THE REQUEST ID
-                if (_list[0] is RequestModel)
-                {
-                    m_proposalData.User = UsersController.Instance.CurrentUser.Id;
-                    m_requestData = ((RequestModel)_list[0]);
-                    m_proposalData.Request = m_requestData.Id;
-                    m_proposalData.Deadline = m_requestData.Deadline;
-                    if (_list.Length > 1)
-                    {
-                        isOnlyQuestion = true;
-                    }
-                }
-            }
-        }
+		// ----------------------------------------------
+		// SUBS
+		// ----------------------------------------------	
+		public const string SUB_EVENT_SCREENPROPOSAL_CONFIRMATION = "SUB_EVENT_SCREENPROPOSAL_CONFIRMATION";
+		public const string SUB_EVENT_SCREENPROPOSAL_EXIT_WITHOUT_SAVING = "SUB_EVENT_SCREENPROPOSAL_EXIT_WITHOUT_SAVING";
+		public const string SUB_EVENT_SCREENPROPOSAL_WANT_TO_REMOVE = "SUB_EVENT_SCREENPROPOSAL_WANT_TO_REMOVE";
+		public const string SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_OK = "SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_OK";
+		public const string SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_KO = "SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_KO";
+		public const string SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_DEAL = "SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_DEAL";
+		public const string SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT = "SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT";
+		public const string SUB_EVENT_SCREENPROPOSAL_REPORT_TOXIC_OFFER = "SUB_EVENT_SCREENPROPOSAL_REPORT_TOXIC_OFFER";
 
-        if (m_container.Find("Button_Back/Icon") != null)
-        {
-            m_isDisplayInfo = true;
-        }
-        else
-        {
-            m_isDisplayInfo = false;
-        }
+		// ----------------------------------------------
+		// PRIVATE MEMBERS
+		// ----------------------------------------------	
+		private GameObject m_root;
+		private Transform m_container;
+		private ProposalModel m_proposalData;
+		private RequestModel m_requestData;
+		private bool m_isReadyToPublish = false;
+		private bool m_hasChanged = false;
 
-        m_container.Find("Button_Back").GetComponent<Button>().onClick.AddListener(BackPressed);
-        if (!m_isDisplayInfo)
-        {
-            m_buttonSave = m_container.Find("Button_Save").gameObject;
-            m_buttonSave.GetComponent<Button>().onClick.AddListener(SavePressed);
-        }
+		private bool m_isDisplayInfo = false;
+		private bool m_hasBeenInited = false;
 
-        IsReadyToPublish = false;
+		private Transform m_offerExclusiveContent;
 
-        if (m_container.Find("TypeDropdown") != null)
-        {
-            m_container.Find("TypeDropdown").GetComponent<Dropdown>().onValueChanged.AddListener(OnTypeMessage);
-            m_container.Find("TypeDropdown").GetComponent<Dropdown>().itemText.text = LanguageController.Instance.GetText("screen.proposal.type.option.proposal");
-            m_container.Find("TypeDropdown").GetComponent<Dropdown>().options[0].text = LanguageController.Instance.GetText("screen.proposal.type.option.proposal");
-            m_container.Find("TypeDropdown").GetComponent<Dropdown>().options[1].text = LanguageController.Instance.GetText("screen.proposal.type.option.information");
-            m_container.Find("TypeDropdown").GetComponent<Dropdown>().options[2].text = LanguageController.Instance.GetText("screen.proposal.type.option.report");
-            m_container.Find("TypeDropdown").GetComponent<Dropdown>().value = 2;
-            if (m_container.Find("TypeLabel") != null)
-            {
-                m_container.Find("TypeLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.type.label");
-            }
-            if (isOnlyQuestion)
-            {
-                m_proposalData.Type = ProposalModel.TYPE_INFO;
-                m_container.Find("TypeDropdown").GetComponent<Dropdown>().interactable = false;                
-            }
-        }
+		private GameObject m_buttonSave;
 
-        if (m_isDisplayInfo)
-        {
-            Transform buttonRemove = m_root.transform.Find("Content/Button_Remove");
-            if (buttonRemove != null)
-            {
-                buttonRemove.gameObject.SetActive(false);
-                if ((m_proposalData.User == UsersController.Instance.CurrentUser.Id) && m_proposalData.CanBeRemoved())
-                {
-                    buttonRemove.gameObject.SetActive(true);
-                    buttonRemove.GetComponent<Button>().onClick.AddListener(RemovePressed);
-                }
-                if (m_requestData.Provider != -1)
-                {
-                    buttonRemove.gameObject.SetActive(false);
-                }
-            }
+		private Transform m_buttonReport;
 
-            // BUTTON REACTIVATE OFFER
-            Transform buttonReactivateOffer = m_root.transform.Find("Content/Button_Reactivate");
-            if (buttonReactivateOffer != null)
-            {
-                buttonReactivateOffer.gameObject.SetActive(false);
-                if (!m_proposalData.IsActiveOffer() &&
-                    (m_proposalData.User == UsersController.Instance.CurrentUser.Id))
-                {
-                    buttonReactivateOffer.gameObject.SetActive(true);
-                    buttonReactivateOffer.Find("Text").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.offer.reactive.it");
-                    buttonReactivateOffer.GetComponent<Button>().onClick.AddListener(OnClickReactivateOffer);
-                }
-            }
+		private GameObject m_buttonAcceptAndKeepLooking = null;
+		private GameObject m_buttonCloseDeal = null;
 
-            m_buttonReport = m_root.transform.Find("Content/Button_Report");
-            if (m_buttonReport != null)
-            {
-                m_buttonReport.gameObject.SetActive(false);
-                if ((m_requestData.Customer == UsersController.Instance.CurrentUser.Id) && m_proposalData.CanBeReported() && !m_proposalData.IsSelected())
-                {
-                    m_buttonReport.gameObject.SetActive(true);
-                    m_buttonReport.GetComponent<Button>().onClick.AddListener(ReportPressed);
-                }
-                if (m_requestData.Provider != -1)
-                {
-                    m_buttonReport.gameObject.SetActive(false);
-                }
-            }
-        }
+		public bool IsReadyToPublish
+		{
+			get { return m_isReadyToPublish; }
+			set
+			{
+				if (!m_isDisplayInfo)
+				{
+					m_hasChanged = true;
+					if (m_proposalData.AllDataFilled())
+					{
+						m_isReadyToPublish = value;
+					}
+					m_buttonSave.SetActive(m_isReadyToPublish);
+				}
+			}
+		}
 
-        m_container.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.title");
+		// -------------------------------------------
+		/* 
+		 * Constructor
+		 */
+		public void Initialize(params object[] _list)
+		{
+			m_root = this.gameObject;
+			m_container = m_root.transform.Find("Content");
 
-        if (m_container.Find("TitleLabel") != null)
-        {
-            m_container.Find("TitleLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.label.title");
-        }
-        if (!m_isDisplayInfo)
-        {
-            m_container.Find("TitleValue").GetComponent<InputField>().text = m_proposalData.Title;
-            m_container.Find("TitleValue").GetComponent<InputField>().onEndEdit.AddListener(OnProposalTitle);
-        }
-        else
-        {
-            m_container.Find("TitleValue").GetComponent<Text>().text = m_proposalData.Title;
-        }
+			m_proposalData = new ProposalModel();
+			bool isOnlyQuestion = false;
+			if (_list.Length > 0)
+			{
+				if (_list[0] != null)
+				{
+					// DISPLAY EXISTING PROPOSAL
+					if (_list[0] is ProposalModel)
+					{
+						m_proposalData = ((ProposalModel)_list[0]).Clone();
+						m_requestData = ((RequestModel)_list[1]).Clone();
+					}
+					// NEW PROPOSAL FOR THE REQUEST ID
+					if (_list[0] is RequestModel)
+					{
+						m_proposalData.User = UsersController.Instance.CurrentUser.Id;
+						m_requestData = ((RequestModel)_list[0]);
+						m_proposalData.Request = m_requestData.Id;
+						m_proposalData.Deadline = m_requestData.Deadline;
+						if (_list.Length > 1)
+						{
+							isOnlyQuestion = true;
+						}
+					}
+				}
+			}
 
-        if (m_container.Find("DescriptionLabel") != null)
-        {
-            m_container.Find("DescriptionLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.label.description");
-        }        
-        if (!m_isDisplayInfo)
-        {
-            m_container.Find("DescriptionValue").GetComponent<InputField>().text = m_proposalData.Description;
-            m_container.Find("DescriptionValue").GetComponent<InputField>().onEndEdit.AddListener(OnProposalDescription);
-        }
-        else
-        {
-            m_container.Find("ScrollDescriptionValue/DescriptionValue").GetComponent<Text>().text = m_proposalData.Description;
-        }
+			if (m_container.Find("Button_Back/Icon") != null)
+			{
+				m_isDisplayInfo = true;
+			}
+			else
+			{
+				m_isDisplayInfo = false;
+			}
 
-        // BUTTON CHECK PROVIDER PROFILE        
-        GameObject buttonCheckProviderProfile = null;
-        if (m_container.Find("Button_CheckProviderProfile") != null) buttonCheckProviderProfile = m_container.Find("Button_CheckProviderProfile").gameObject;
-        if (buttonCheckProviderProfile != null)
-        {
-            buttonCheckProviderProfile.gameObject.SetActive(true);
-            buttonCheckProviderProfile.transform.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.proposal.check.provider.profile");
-            buttonCheckProviderProfile.GetComponent<Button>().onClick.AddListener(OnCheckProviderProfile);
-            if ((GameObject.FindObjectOfType<ScreenProviderProfileView>()!=null) ||  (m_proposalData.User == UsersController.Instance.CurrentUser.Id))
-            {
-                buttonCheckProviderProfile.gameObject.SetActive(false);
-            }            
-        }
+			m_container.Find("Button_Back").GetComponent<Button>().onClick.AddListener(BackPressed);
+			if (!m_isDisplayInfo)
+			{
+				m_buttonSave = m_container.Find("Button_Save").gameObject;
+				m_buttonSave.GetComponent<Button>().onClick.AddListener(SavePressed);
+			}
 
-        m_offerExclusiveContent = m_container.Find("OfferExclusive");
-        if (m_offerExclusiveContent != null)
-        {
-            // ACCEPTING BUTTONS
-            m_offerExclusiveContent.Find("PriceLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.offer.price");
-            if (!m_isDisplayInfo)
-            {
-                m_offerExclusiveContent.Find("PriceValue").GetComponent<InputField>().text = m_proposalData.Price.ToString();
-                m_offerExclusiveContent.Find("PriceValue").GetComponent<InputField>().onEndEdit.AddListener(OnProposalPrice);
-            }
-            else
-            {
-                m_offerExclusiveContent.Find("PriceValue").GetComponent<Text>().text = m_proposalData.Price.ToString();
-            }
-            m_offerExclusiveContent.Find("PriceCurrency").GetComponent<Text>().text = RequestsController.Instance.LastRequestConsulted.Currency.ToString();
+			IsReadyToPublish = false;
 
-            m_offerExclusiveContent.Find("DeadlineLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.create.request.description.dress");
-            m_offerExclusiveContent.Find("Button_DeadlineCalendar/Title").GetComponent<Text>().text = DateConverter.TimeStampToDateTimeString(m_proposalData.Deadline);
-            m_offerExclusiveContent.Find("Button_DeadlineCalendar").GetComponent<Button>().onClick.AddListener(OnCalendarClick);
+			if (m_container.Find("TypeDropdown") != null)
+			{
+				m_container.Find("TypeDropdown").GetComponent<Dropdown>().onValueChanged.AddListener(OnTypeMessage);
+				m_container.Find("TypeDropdown").GetComponent<Dropdown>().itemText.text = LanguageController.Instance.GetText("screen.proposal.type.option.proposal");
+				m_container.Find("TypeDropdown").GetComponent<Dropdown>().options[0].text = LanguageController.Instance.GetText("screen.proposal.type.option.proposal");
+				m_container.Find("TypeDropdown").GetComponent<Dropdown>().options[1].text = LanguageController.Instance.GetText("screen.proposal.type.option.information");
+				m_container.Find("TypeDropdown").GetComponent<Dropdown>().options[2].text = LanguageController.Instance.GetText("screen.proposal.type.option.report");
+				m_container.Find("TypeDropdown").GetComponent<Dropdown>().value = 2;
+				if (m_container.Find("TypeLabel") != null)
+				{
+					m_container.Find("TypeLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.type.label");
+				}
+				if (isOnlyQuestion)
+				{
+					m_proposalData.Type = ProposalModel.TYPE_INFO;
+					m_container.Find("TypeDropdown").GetComponent<Dropdown>().interactable = false;
+				}
+			}
 
-            if (m_offerExclusiveContent.Find("Button_AcceptKeepLooking") != null) m_buttonAcceptAndKeepLooking = m_offerExclusiveContent.Find("Button_AcceptKeepLooking").gameObject;
-            if (m_offerExclusiveContent.Find("Button_AcceptCloseDeal") != null) m_buttonCloseDeal = m_offerExclusiveContent.Find("Button_AcceptCloseDeal").gameObject;
+			if (m_isDisplayInfo)
+			{
+				Transform buttonRemove = m_root.transform.Find("Content/Button_Remove");
+				if (buttonRemove != null)
+				{
+					buttonRemove.gameObject.SetActive(false);
+					if ((m_proposalData.User == UsersController.Instance.CurrentUser.Id) && m_proposalData.CanBeRemoved())
+					{
+						buttonRemove.gameObject.SetActive(true);
+						buttonRemove.GetComponent<Button>().onClick.AddListener(RemovePressed);
+					}
+					if (m_requestData.Provider != -1)
+					{
+						buttonRemove.gameObject.SetActive(false);
+					}
+				}
 
-            if (m_buttonAcceptAndKeepLooking != null) m_buttonAcceptAndKeepLooking.SetActive(false);
-            if (m_buttonCloseDeal != null) m_buttonCloseDeal.SetActive(false);
+				// BUTTON REACTIVATE OFFER
+				Transform buttonReactivateOffer = m_root.transform.Find("Content/Button_Reactivate");
+				if (buttonReactivateOffer != null)
+				{
+					buttonReactivateOffer.gameObject.SetActive(false);
+					if (!m_proposalData.IsActiveOffer() &&
+						(m_proposalData.User == UsersController.Instance.CurrentUser.Id))
+					{
+						buttonReactivateOffer.gameObject.SetActive(true);
+						buttonReactivateOffer.Find("Text").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.offer.reactive.it");
+						buttonReactivateOffer.GetComponent<Button>().onClick.AddListener(OnClickReactivateOffer);
+					}
+				}
 
-            if (m_isDisplayInfo)
-            {
-                bool enableButtonsAccept = false;
-                if (m_proposalData.User != UsersController.Instance.CurrentUser.Id)
-                {
-                    if (m_requestData.Customer == UsersController.Instance.CurrentUser.Id)
-                    {
-                        enableButtonsAccept = true;
-                    }
-                }
+				m_buttonReport = m_root.transform.Find("Content/Button_Report");
+				if (m_buttonReport != null)
+				{
+					m_buttonReport.gameObject.SetActive(false);
+					if ((m_requestData.Customer == UsersController.Instance.CurrentUser.Id) && m_proposalData.CanBeReported() && !m_proposalData.IsSelected())
+					{
+						m_buttonReport.gameObject.SetActive(true);
+						m_buttonReport.GetComponent<Button>().onClick.AddListener(ReportPressed);
+					}
+					if (m_requestData.Provider != -1)
+					{
+						m_buttonReport.gameObject.SetActive(false);
+					}
+				}
+			}
 
-                if (m_requestData.Provider == -1)
-                {
-                    if (enableButtonsAccept)
-                    {
-                        if (m_proposalData.Type == ProposalModel.TYPE_OFFER)
-                        {
-                            switch (m_proposalData.Accepted)
-                            {
-                                case ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_KEEP_LOOKING:
-                                    m_buttonCloseDeal.gameObject.SetActive(true);
-                                    break;
+			m_container.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.title");
 
-                                case ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_FIXED:
-                                    m_buttonAcceptAndKeepLooking.gameObject.SetActive(false);
-                                    m_buttonCloseDeal.gameObject.SetActive(false);
-                                    break;
+			if (m_container.Find("TitleLabel") != null)
+			{
+				m_container.Find("TitleLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.label.title");
+			}
+			if (!m_isDisplayInfo)
+			{
+				m_container.Find("TitleValue").GetComponent<InputField>().text = m_proposalData.Title;
+				m_container.Find("TitleValue").GetComponent<InputField>().onEndEdit.AddListener(OnProposalTitle);
+			}
+			else
+			{
+				m_container.Find("TitleValue").GetComponent<Text>().text = m_proposalData.Title;
+			}
 
-                                default:
-                                    m_buttonAcceptAndKeepLooking.gameObject.SetActive(true);
-                                    m_buttonCloseDeal.gameObject.SetActive(true);
-                                    break;
-                            }
+			if (m_container.Find("DescriptionLabel") != null)
+			{
+				m_container.Find("DescriptionLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.label.description");
+			}
+			if (!m_isDisplayInfo)
+			{
+				m_container.Find("DescriptionValue").GetComponent<InputField>().text = m_proposalData.Description;
+				m_container.Find("DescriptionValue").GetComponent<InputField>().onEndEdit.AddListener(OnProposalDescription);
+			}
+			else
+			{
+				m_container.Find("ScrollDescriptionValue/DescriptionValue").GetComponent<Text>().text = m_proposalData.Description;
+			}
 
-                            m_buttonAcceptAndKeepLooking.transform.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.proposal.accept.and.look");
-                            m_buttonCloseDeal.transform.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.proposal.close.deal");
+			// BUTTON CHECK PROVIDER PROFILE        
+			GameObject buttonCheckProviderProfile = null;
+			if (m_container.Find("Button_CheckProviderProfile") != null) buttonCheckProviderProfile = m_container.Find("Button_CheckProviderProfile").gameObject;
+			if (buttonCheckProviderProfile != null)
+			{
+				buttonCheckProviderProfile.gameObject.SetActive(true);
+				buttonCheckProviderProfile.transform.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.proposal.check.proovider.profile");
+				buttonCheckProviderProfile.GetComponent<Button>().onClick.AddListener(OnCheckProviderProfile);
+				if ((GameObject.FindObjectOfType<ScreenProviderProfileView>() != null) || (m_proposalData.User == UsersController.Instance.CurrentUser.Id))
+				{
+					buttonCheckProviderProfile.gameObject.SetActive(false);
+				}
+			}
 
-                            m_buttonAcceptAndKeepLooking.GetComponent<Button>().onClick.AddListener(OnAcceptAndKeepLooking);
-                            m_buttonCloseDeal.GetComponent<Button>().onClick.AddListener(OnAcceptAndCloseDeal);
+			m_offerExclusiveContent = m_container.Find("OfferExclusive");
+			if (m_offerExclusiveContent != null)
+			{
+				// ACCEPTING BUTTONS
+				m_offerExclusiveContent.Find("PriceLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.offer.price");
+				if (!m_isDisplayInfo)
+				{
+					m_offerExclusiveContent.Find("PriceValue").GetComponent<InputField>().text = m_proposalData.Price.ToString();
+					m_offerExclusiveContent.Find("PriceValue").GetComponent<InputField>().onEndEdit.AddListener(OnProposalPrice);
+				}
+				else
+				{
+					m_offerExclusiveContent.Find("PriceValue").GetComponent<Text>().text = m_proposalData.Price.ToString();
+				}
+				m_offerExclusiveContent.Find("PriceCurrency").GetComponent<Text>().text = RequestsController.Instance.LastRequestConsulted.Currency.ToString();
 
-                            if (m_proposalData.Reported.Length > 0)
-                            {
-                                m_buttonAcceptAndKeepLooking.gameObject.SetActive(false);
-                                m_buttonCloseDeal.gameObject.SetActive(false);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        m_buttonAcceptAndKeepLooking.gameObject.SetActive(false);
-                        m_buttonCloseDeal.gameObject.SetActive(false);
-                    }
-                }
-                else
-                {
-                    m_buttonAcceptAndKeepLooking.gameObject.SetActive(false);
-                    m_buttonCloseDeal.gameObject.SetActive(false);
-                }
-            }
-        }
+				m_offerExclusiveContent.Find("DeadlineLabel").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.create.request.description.dress");
+				m_offerExclusiveContent.Find("Button_DeadlineCalendar/Title").GetComponent<Text>().text = DateConverter.TimeStampToDateTimeString(m_proposalData.Deadline);
+				m_offerExclusiveContent.Find("Button_DeadlineCalendar").GetComponent<Button>().onClick.AddListener(OnCalendarClick);
 
-        // OUTDATED OFFER
-        Transform labelOfferToRevalidate = m_container.Find("OfferToRevalidate");
-        if (labelOfferToRevalidate != null)
-        {
-            labelOfferToRevalidate.gameObject.SetActive(false);
-            if (m_proposalData.Reported.Length > 0)
-            {
-                if (m_buttonAcceptAndKeepLooking != null) m_buttonAcceptAndKeepLooking.SetActive(false);
-                if (m_buttonCloseDeal != null) m_buttonCloseDeal.SetActive(false);
-                labelOfferToRevalidate.gameObject.SetActive(true);
-                labelOfferToRevalidate.GetComponent<Text>().text = LanguageController.Instance.GetText("message.proposal.you.have.reported.this.offer");
-            }
-            else
-            {
-                if (!m_proposalData.IsActiveOffer())
-                {
-                    if (m_buttonAcceptAndKeepLooking != null) m_buttonAcceptAndKeepLooking.SetActive(false);
-                    if (m_buttonCloseDeal != null) m_buttonCloseDeal.SetActive(false);
-                    if (m_proposalData.User != UsersController.Instance.CurrentUser.Id)
-                    {
-                        labelOfferToRevalidate.gameObject.SetActive(true);
-                        labelOfferToRevalidate.GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.offer.outdated.by.edit");
-                    }
-                }
-            }
-        }
+				if (m_offerExclusiveContent.Find("Button_AcceptKeepLooking") != null) m_buttonAcceptAndKeepLooking = m_offerExclusiveContent.Find("Button_AcceptKeepLooking").gameObject;
+				if (m_offerExclusiveContent.Find("Button_AcceptCloseDeal") != null) m_buttonCloseDeal = m_offerExclusiveContent.Find("Button_AcceptCloseDeal").gameObject;
 
-        m_hasBeenInited = true;
-        SelectTypeMessage(m_proposalData.Type);
+				if (m_buttonAcceptAndKeepLooking != null) m_buttonAcceptAndKeepLooking.SetActive(false);
+				if (m_buttonCloseDeal != null) m_buttonCloseDeal.SetActive(false);
 
-        BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
-    }
+				if (m_isDisplayInfo)
+				{
+					bool enableButtonsAccept = false;
+					if (m_proposalData.User != UsersController.Instance.CurrentUser.Id)
+					{
+						if (m_requestData.Customer == UsersController.Instance.CurrentUser.Id)
+						{
+							enableButtonsAccept = true;
+						}
+					}
 
-    // -------------------------------------------
-    /* 
-     * Destroy
-     */
-    public void Destroy()
-    {
-        m_proposalData = null;
-        BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-        GameObject.DestroyObject(this.gameObject);
-    }
+					if (m_requestData.Provider == -1)
+					{
+						if (enableButtonsAccept)
+						{
+							if (m_proposalData.Type == ProposalModel.TYPE_OFFER)
+							{
+								switch (m_proposalData.Accepted)
+								{
+									case ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_KEEP_LOOKING:
+										m_buttonCloseDeal.gameObject.SetActive(true);
+										break;
 
-    // -------------------------------------------
-    /* 
-	 * BackPressed
-	 */
-    private void BackPressed()
-    {
-        if (m_isDisplayInfo)
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
-        }
-        else
-        {
-            if (m_hasChanged)
-            {
-                string warning = LanguageController.Instance.GetText("message.warning");
-                string description = LanguageController.Instance.GetText("message.proposal.request.exit.without.saving");
-                ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_EXIT_WITHOUT_SAVING);
-            }
-            else
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
-            }
-        }
-    }
+									case ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_FIXED:
+										m_buttonAcceptAndKeepLooking.gameObject.SetActive(false);
+										m_buttonCloseDeal.gameObject.SetActive(false);
+										break;
 
-    // -------------------------------------------
-    /* 
-	 * SavePressed
-	 */
-    private void SavePressed()
-    {
-        if (IsReadyToPublish)
-        {
-            string warning = LanguageController.Instance.GetText("message.warning");
-            string description = LanguageController.Instance.GetText("message.proposal.ask.a.question");
-            switch (m_proposalData.Type)
-            {
-                case ProposalModel.TYPE_INFO:
-                    description = LanguageController.Instance.GetText("message.proposal.ask.a.question");
-                    break;
+									default:
+										m_buttonAcceptAndKeepLooking.gameObject.SetActive(true);
+										m_buttonCloseDeal.gameObject.SetActive(true);
+										break;
+								}
 
-                case ProposalModel.TYPE_OFFER:
-                    description = LanguageController.Instance.GetText("message.proposal.create.confirmation");
-                    break;
+								m_buttonAcceptAndKeepLooking.transform.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.proposal.accept.and.look");
+								m_buttonCloseDeal.transform.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.proposal.close.deal");
 
-                case ProposalModel.TYPE_REPORT:
-                    description = LanguageController.Instance.GetText("message.proposal.report.a.request");
-                    break;
-            }
-            ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_CONFIRMATION);
-        }
-    }
+								m_buttonAcceptAndKeepLooking.GetComponent<Button>().onClick.AddListener(OnAcceptAndKeepLooking);
+								m_buttonCloseDeal.GetComponent<Button>().onClick.AddListener(OnAcceptAndCloseDeal);
 
-    // -------------------------------------------
-    /* 
-	 * OnTypeMessage
-	 */
-    private void OnTypeMessage(int _index)
-    {
-        if (!m_hasBeenInited) return;
+								if (m_proposalData.Reported.Length > 0)
+								{
+									m_buttonAcceptAndKeepLooking.gameObject.SetActive(false);
+									m_buttonCloseDeal.gameObject.SetActive(false);
+								}
+							}
+						}
+						else
+						{
+							m_buttonAcceptAndKeepLooking.gameObject.SetActive(false);
+							m_buttonCloseDeal.gameObject.SetActive(false);
+						}
+					}
+					else
+					{
+						m_buttonAcceptAndKeepLooking.gameObject.SetActive(false);
+						m_buttonCloseDeal.gameObject.SetActive(false);
+					}
+				}
+			}
 
-        switch (_index)
-        {
-            case 0:
-                m_proposalData.Type = ProposalModel.TYPE_OFFER;
-                if (m_offerExclusiveContent != null) m_offerExclusiveContent.gameObject.SetActive(true);
-                break;
+			// OUTDATED OFFER
+			Transform labelOfferToRevalidate = m_container.Find("OfferToRevalidate");
+			if (labelOfferToRevalidate != null)
+			{
+				labelOfferToRevalidate.gameObject.SetActive(false);
+				if (m_proposalData.Reported.Length > 0)
+				{
+					if (m_buttonAcceptAndKeepLooking != null) m_buttonAcceptAndKeepLooking.SetActive(false);
+					if (m_buttonCloseDeal != null) m_buttonCloseDeal.SetActive(false);
+					labelOfferToRevalidate.gameObject.SetActive(true);
+					labelOfferToRevalidate.GetComponent<Text>().text = LanguageController.Instance.GetText("message.proposal.you.have.reported.this.offer");
+				}
+				else
+				{
+					if (!m_proposalData.IsActiveOffer())
+					{
+						if (m_buttonAcceptAndKeepLooking != null) m_buttonAcceptAndKeepLooking.SetActive(false);
+						if (m_buttonCloseDeal != null) m_buttonCloseDeal.SetActive(false);
+						if (m_proposalData.User != UsersController.Instance.CurrentUser.Id)
+						{
+							labelOfferToRevalidate.gameObject.SetActive(true);
+							labelOfferToRevalidate.GetComponent<Text>().text = LanguageController.Instance.GetText("screen.proposal.offer.outdated.by.edit");
+						}
+					}
+				}
+			}
 
-            case 1:
-                m_proposalData.Type = ProposalModel.TYPE_INFO;
-                if (m_offerExclusiveContent!=null) m_offerExclusiveContent.gameObject.SetActive(false);
-                break;
+			m_hasBeenInited = true;
+			SelectTypeMessage(m_proposalData.Type);
 
-            case 2:
-                m_proposalData.Type = ProposalModel.TYPE_REPORT;
-                if (m_offerExclusiveContent != null) m_offerExclusiveContent.gameObject.SetActive(false);
-                break;
-        }
-        IsReadyToPublish = true;
-    }
+			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+		}
 
-    // -------------------------------------------
-    /* 
-	 * SelectTypeMessage
-	 */
-    private void SelectTypeMessage(int _type)
-    {        
-        switch (_type)
-        {
-            case ProposalModel.TYPE_OFFER:
-                if (m_container.Find("TypeDropdown")!=null) m_container.Find("TypeDropdown").GetComponent<Dropdown>().value = 0;
-                break;
+		// -------------------------------------------
+		/* 
+		 * Destroy
+		 */
+		public void Destroy()
+		{
+			m_proposalData = null;
+			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			GameObject.DestroyObject(this.gameObject);
+		}
 
-            case ProposalModel.TYPE_INFO:
-                if (m_container.Find("TypeDropdown") != null) m_container.Find("TypeDropdown").GetComponent<Dropdown>().value = 1;
-                break;
+		// -------------------------------------------
+		/* 
+		 * BackPressed
+		 */
+		private void BackPressed()
+		{
+			if (m_isDisplayInfo)
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+			}
+			else
+			{
+				if (m_hasChanged)
+				{
+					string warning = LanguageController.Instance.GetText("message.warning");
+					string description = LanguageController.Instance.GetText("message.proposal.request.exit.without.saving");
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_EXIT_WITHOUT_SAVING);
+				}
+				else
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+				}
+			}
+		}
 
-            case ProposalModel.TYPE_REPORT:
-                if (m_container.Find("TypeDropdown") != null) m_container.Find("TypeDropdown").GetComponent<Dropdown>().value = 2;
-                break;
-        }
-    }
+		// -------------------------------------------
+		/* 
+		 * SavePressed
+		 */
+		private void SavePressed()
+		{
+			if (IsReadyToPublish)
+			{
+				string warning = LanguageController.Instance.GetText("message.warning");
+				string description = LanguageController.Instance.GetText("message.proposal.ask.a.question");
+				switch (m_proposalData.Type)
+				{
+					case ProposalModel.TYPE_INFO:
+						description = LanguageController.Instance.GetText("message.proposal.ask.a.question");
+						break;
 
-    // -------------------------------------------
-    /* 
-	 * RemovePressed
-	 */
-    private void RemovePressed()
-    {
-        string warning = LanguageController.Instance.GetText("message.warning");
-        string description = LanguageController.Instance.GetText("message.proposal.want.to.remove");
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_WANT_TO_REMOVE);
-    }
+					case ProposalModel.TYPE_OFFER:
+						description = LanguageController.Instance.GetText("message.proposal.create.confirmation");
+						break;
 
-    // -------------------------------------------
-    /* 
-	 * ReportPressed
-	 */
-    private void ReportPressed()
-    {
-        string warning = LanguageController.Instance.GetText("message.warning");
-        string description = LanguageController.Instance.GetText("message.proposal.want.to.report.provider");
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_REPORT_TOXIC_OFFER);
-    }
+					case ProposalModel.TYPE_REPORT:
+						description = LanguageController.Instance.GetText("message.proposal.report.a.request");
+						break;
+				}
+				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_CONFIRMATION);
+			}
+		}
 
-    // -------------------------------------------
-    /* 
-	 * OnRequestTitle
-	 */
-    private void OnProposalTitle(string _data)
-    {
-        m_proposalData.Title = _data;
-        IsReadyToPublish = true;
-    }
+		// -------------------------------------------
+		/* 
+		 * OnTypeMessage
+		 */
+		private void OnTypeMessage(int _index)
+		{
+			if (!m_hasBeenInited) return;
 
-    // -------------------------------------------
-    /* 
-	 * OnRequestDescription
-	 */
-    private void OnProposalDescription(string _data)
-    {
-        m_proposalData.Description = _data;
-        IsReadyToPublish = true;
-    }
+			switch (_index)
+			{
+				case 0:
+					m_proposalData.Type = ProposalModel.TYPE_OFFER;
+					if (m_offerExclusiveContent != null) m_offerExclusiveContent.gameObject.SetActive(true);
+					break;
+
+				case 1:
+					m_proposalData.Type = ProposalModel.TYPE_INFO;
+					if (m_offerExclusiveContent != null) m_offerExclusiveContent.gameObject.SetActive(false);
+					break;
+
+				case 2:
+					m_proposalData.Type = ProposalModel.TYPE_REPORT;
+					if (m_offerExclusiveContent != null) m_offerExclusiveContent.gameObject.SetActive(false);
+					break;
+			}
+			IsReadyToPublish = true;
+		}
+
+		// -------------------------------------------
+		/* 
+		 * SelectTypeMessage
+		 */
+		private void SelectTypeMessage(int _type)
+		{
+			switch (_type)
+			{
+				case ProposalModel.TYPE_OFFER:
+					if (m_container.Find("TypeDropdown") != null) m_container.Find("TypeDropdown").GetComponent<Dropdown>().value = 0;
+					break;
+
+				case ProposalModel.TYPE_INFO:
+					if (m_container.Find("TypeDropdown") != null) m_container.Find("TypeDropdown").GetComponent<Dropdown>().value = 1;
+					break;
+
+				case ProposalModel.TYPE_REPORT:
+					if (m_container.Find("TypeDropdown") != null) m_container.Find("TypeDropdown").GetComponent<Dropdown>().value = 2;
+					break;
+			}
+		}
+
+		// -------------------------------------------
+		/* 
+		 * RemovePressed
+		 */
+		private void RemovePressed()
+		{
+			string warning = LanguageController.Instance.GetText("message.warning");
+			string description = LanguageController.Instance.GetText("message.proposal.want.to.remove");
+			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_WANT_TO_REMOVE);
+		}
+
+		// -------------------------------------------
+		/* 
+		 * ReportPressed
+		 */
+		private void ReportPressed()
+		{
+			string warning = LanguageController.Instance.GetText("message.warning");
+			string description = LanguageController.Instance.GetText("message.proposal.want.to.report.proovider");
+			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_REPORT_TOXIC_OFFER);
+		}
+
+		// -------------------------------------------
+		/* 
+		 * OnRequestTitle
+		 */
+		private void OnProposalTitle(string _data)
+		{
+			m_proposalData.Title = _data;
+			IsReadyToPublish = true;
+		}
+
+		// -------------------------------------------
+		/* 
+		 * OnRequestDescription
+		 */
+		private void OnProposalDescription(string _data)
+		{
+			m_proposalData.Description = _data;
+			IsReadyToPublish = true;
+		}
 
 
-    // -------------------------------------------
-    /* 
-	 * OnRequestPrice
-	 */
-    private void OnProposalPrice(string _data)
-    {
-        int priceRequest = -1;
-        if (!int.TryParse(_data, out priceRequest))
-        {
-            priceRequest = -1;
-        }
-        m_proposalData.Price = priceRequest;
-        IsReadyToPublish = true;
-    }
+		// -------------------------------------------
+		/* 
+		 * OnRequestPrice
+		 */
+		private void OnProposalPrice(string _data)
+		{
+			int priceRequest = -1;
+			if (!int.TryParse(_data, out priceRequest))
+			{
+				priceRequest = -1;
+			}
+			m_proposalData.Price = priceRequest;
+			IsReadyToPublish = true;
+		}
 
-    // -------------------------------------------
-    /* 
-	 * OnCalendarClick
-	 */
-    private void OnCalendarClick()
-    {
-        ScreenController.Instance.CreateNewScreen(ScreenCalendarView.SCREEN_CALENDAR, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, m_proposalData.Deadline.ToString());
-    }
+		// -------------------------------------------
+		/* 
+		 * OnCalendarClick
+		 */
+		private void OnCalendarClick()
+		{
+			ScreenController.Instance.CreateNewScreen(ScreenCalendarView.SCREEN_CALENDAR, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, m_proposalData.Deadline.ToString());
+		}
 
 
-    // -------------------------------------------
-    /* 
-	 * MessageConfirmationServer
-	 */
-    private void MessageConfirmationServer()
-    {
-        BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-        string warning = LanguageController.Instance.GetText("message.info");
-        string description = LanguageController.Instance.GetText("message.proposals.created.server.confirmation");
+		// -------------------------------------------
+		/* 
+		 * MessageConfirmationServer
+		 */
+		private void MessageConfirmationServer()
+		{
+			BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+			string warning = LanguageController.Instance.GetText("message.info");
+			string description = LanguageController.Instance.GetText("message.proposals.created.server.confirmation");
 
-        switch (m_proposalData.Type)
-        {
-            case ProposalModel.TYPE_INFO:
-                description = LanguageController.Instance.GetText("message.proposals.created.question.confirmation");
-                break;
+			switch (m_proposalData.Type)
+			{
+				case ProposalModel.TYPE_INFO:
+					description = LanguageController.Instance.GetText("message.proposals.created.question.confirmation");
+					break;
 
-            case ProposalModel.TYPE_OFFER:
-                description = LanguageController.Instance.GetText("message.proposals.created.server.confirmation");
-                break;
+				case ProposalModel.TYPE_OFFER:
+					description = LanguageController.Instance.GetText("message.proposals.created.server.confirmation");
+					break;
 
-            case ProposalModel.TYPE_REPORT:
-                description = LanguageController.Instance.GetText("message.proposals.has.been.flagged.succesfully");
-                break;
-        }
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_OK);
-    }
+				case ProposalModel.TYPE_REPORT:
+					description = LanguageController.Instance.GetText("message.proposals.has.been.flagged.succesfully");
+					break;
+			}
+			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_OK);
+		}
 
-    // -------------------------------------------
-    /* 
-	 * OnAcceptAndKeepLooking
-	 */
-    private void OnAcceptAndKeepLooking()
-    {
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-        m_proposalData.Accepted = ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_KEEP_LOOKING;
-        BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_UPDATE_PROPOSAL, m_proposalData);
-    }
+		// -------------------------------------------
+		/* 
+		 * OnAcceptAndKeepLooking
+		 */
+		private void OnAcceptAndKeepLooking()
+		{
+			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+			m_proposalData.Accepted = ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_KEEP_LOOKING;
+			BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_UPDATE_PROPOSAL, m_proposalData);
+		}
 
-    // -------------------------------------------
-    /* 
-	 * OnAcceptAndCloseDeal
-	 */
-    private void OnAcceptAndCloseDeal()
-    {
-        string warning = LanguageController.Instance.GetText("message.info");
-        string description = LanguageController.Instance.GetText("message.proposal.confirmation.to.close.deal");
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_DEAL);
-    }
+		// -------------------------------------------
+		/* 
+		 * OnAcceptAndCloseDeal
+		 */
+		private void OnAcceptAndCloseDeal()
+		{
+			string warning = LanguageController.Instance.GetText("message.info");
+			string description = LanguageController.Instance.GetText("message.proposal.confirmation.to.close.deal");
+			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_DEAL);
+		}
 
-    // -------------------------------------------
-    /* 
-	 * OnCheckProviderProfile
-	 */
-    private void OnCheckProviderProfile()
-    {
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
-        BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, m_proposalData.User);
-    }
+		// -------------------------------------------
+		/* 
+		 * OnCheckProviderProfile
+		 */
+		private void OnCheckProviderProfile()
+		{
+			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
+			BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, m_proposalData.User);
+		}
 
-    // -------------------------------------------
-    /* 
-	 * OnClickReactivateOffer
-	 */
-    private void OnClickReactivateOffer()
-    {
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-        BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_REACTIVATE_PROPOSAL, m_proposalData.Id);
-    }
-    
-    // -------------------------------------------
-    /* 
-	 * OnBasicEvent
-	 */
-    private void OnBasicEvent(string _nameEvent, params object[] _list)
-    {
-        if (!this.gameObject.activeSelf) return;
+		// -------------------------------------------
+		/* 
+		 * OnClickReactivateOffer
+		 */
+		private void OnClickReactivateOffer()
+		{
+			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+			BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_REACTIVATE_PROPOSAL, m_proposalData.Id);
+		}
 
-        if (_nameEvent == ScreenCalendarView.EVENT_SCREENCALENDAR_SELECT_DAY)
-        {
-            m_proposalData.Deadline = (long)_list[0];
-            m_offerExclusiveContent.Find("Button_DeadlineCalendar/Title").GetComponent<Text>().text = DateConverter.TimeStampToDateTimeString(m_proposalData.Deadline);
-            IsReadyToPublish = true;
-        }
-        if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
-        {
-            string subEvent = (string)_list[2];
-            BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-            if (subEvent == SUB_EVENT_SCREENPROPOSAL_CONFIRMATION)
-            {
-                if ((bool)_list[1])
-                {
-                    RequestsController.Instance.MustReloadRequests = true;
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-                    BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_INSERT_NEW_PROPOSAL, m_proposalData);
-                }
-                else
-                {
-                    string warning = LanguageController.Instance.GetText("message.warning");
-                    string description = LanguageController.Instance.GetText("message.operation.canceled");
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
-                }
-            }
-            if (subEvent == SUB_EVENT_SCREENPROPOSAL_EXIT_WITHOUT_SAVING)
-            {
-                if ((bool)_list[1])
-                {
-                    BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
-                }
-            }
-            if (subEvent == SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_OK)
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
-            }
-            if (subEvent == SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_KO)
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
-            }            
-            if (subEvent == SUB_EVENT_SCREENPROPOSAL_WANT_TO_REMOVE)
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-                if ((bool)_list[1])
-                {
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-                    BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_DELETE_PROPOSAL, m_proposalData.Id);
-                }
-            }
-            if (subEvent == SUB_EVENT_SCREENPROPOSAL_REPORT_TOXIC_OFFER)
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-                if ((bool)_list[1])
-                {
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-                    BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_REPORT_PROPOSAL, m_proposalData.Id, UsersController.Instance.CurrentUser.Id, m_requestData.Id);
-                }
-            }
-            if (subEvent == SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_DEAL)
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-                if ((bool)_list[1])
-                {
-                    m_proposalData.Accepted = ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_FIXED;
-                    RequestsController.Instance.MustReloadRequests = true;
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-                    BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_UPDATE_PROPOSAL, m_proposalData);
-                }
-            }
-            if (subEvent == SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT)
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
-            }
-        }
-        if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_DELETE_RECORDS)
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
-            if ((bool)_list[0])
-            {
-                ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.proposal.request.delete.success"), null, "");
-            }
-            else
-            {
-                ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.proposal.request.delete.failure"), null, "");
-            }
-        }
-        if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL)
-        {
-            if ((bool)_list[0])
-            {
-                long proposalType = (int)_list[2];
-                long requestID = (long)_list[3];
-                string reportedByUsersID = (string)_list[4];
+		// -------------------------------------------
+		/* 
+		 * OnBasicEvent
+		 */
+		private void OnBasicEvent(string _nameEvent, params object[] _list)
+		{
+			if (!this.gameObject.activeSelf) return;
 
-                if (proposalType == ProposalModel.TYPE_REPORT)
-                {
-                    if (m_requestData.Id == requestID)
-                    {
-                        m_requestData.Reported = reportedByUsersID;
-                    }
-                }
+			if (_nameEvent == ScreenCalendarView.EVENT_SCREENCALENDAR_SELECT_DAY)
+			{
+				m_proposalData.Deadline = (long)_list[0];
+				m_offerExclusiveContent.Find("Button_DeadlineCalendar/Title").GetComponent<Text>().text = DateConverter.TimeStampToDateTimeString(m_proposalData.Deadline);
+				IsReadyToPublish = true;
+			}
+			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			{
+				string subEvent = (string)_list[2];
+				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				if (subEvent == SUB_EVENT_SCREENPROPOSAL_CONFIRMATION)
+				{
+					if ((bool)_list[1])
+					{
+						RequestsController.Instance.MustReloadRequests = true;
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_INSERT_NEW_PROPOSAL, m_proposalData);
+					}
+					else
+					{
+						string warning = LanguageController.Instance.GetText("message.warning");
+						string description = LanguageController.Instance.GetText("message.operation.canceled");
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+					}
+				}
+				if (subEvent == SUB_EVENT_SCREENPROPOSAL_EXIT_WITHOUT_SAVING)
+				{
+					if ((bool)_list[1])
+					{
+						BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+					}
+				}
+				if (subEvent == SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_OK)
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+				}
+				if (subEvent == SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_KO)
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+				}
+				if (subEvent == SUB_EVENT_SCREENPROPOSAL_WANT_TO_REMOVE)
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					if ((bool)_list[1])
+					{
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_DELETE_PROPOSAL, m_proposalData.Id);
+					}
+				}
+				if (subEvent == SUB_EVENT_SCREENPROPOSAL_REPORT_TOXIC_OFFER)
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					if ((bool)_list[1])
+					{
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_REPORT_PROPOSAL, m_proposalData.Id, UsersController.Instance.CurrentUser.Id, m_requestData.Id);
+					}
+				}
+				if (subEvent == SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_DEAL)
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					if ((bool)_list[1])
+					{
+						m_proposalData.Accepted = ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_FIXED;
+						RequestsController.Instance.MustReloadRequests = true;
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_UPDATE_PROPOSAL, m_proposalData);
+					}
+				}
+				if (subEvent == SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT)
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+				}
+			}
+			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_DELETE_RECORDS)
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+				if ((bool)_list[0])
+				{
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.proposal.request.delete.success"), null, "");
+				}
+				else
+				{
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.proposal.request.delete.failure"), null, "");
+				}
+			}
+			if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL)
+			{
+				if ((bool)_list[0])
+				{
+					long proposalType = (int)_list[2];
+					long requestID = (long)_list[3];
+					string reportedByUsersID = (string)_list[4];
 
-                UsersController.Instance.CurrentUser.Additionaloffer = 0;
-                MessageConfirmationServer();
-            }
-            else
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-                string warning = LanguageController.Instance.GetText("message.error");
-                string description = LanguageController.Instance.GetText("message.proposal.insert.server.error");
-                ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_KO);
-            }
-        }
-        if (_nameEvent == UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD)
-        {
-            UserModel sUser = (UserModel)_list[0];
-            if (sUser != null)
-            {
-                BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-                ScreenController.Instance.CreateNewScreen(ScreenProviderProfileView.SCREEN_PROVIDER_PROFILE_DISPLAY, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, sUser);
-            }
-        }
-        if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_UPDATE_PROPOSAL)
-        {
-            if (m_proposalData.Accepted == ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_FIXED)
-            {
-                if ((bool)_list[0])
-                {
-                    BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-                    string info = LanguageController.Instance.GetText("message.info");
-                    string description = LanguageController.Instance.GetText("message.proposal.confirmation.email");
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
-                }
-            }
-            else
-            {
-                if ((bool)_list[0])
-                {
-                    BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-                    string info = LanguageController.Instance.GetText("message.info");
-                    string description = LanguageController.Instance.GetText("message.proposal.confirmation.update.temporal");
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
-                }
-            }
-        }
-        if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_DELETE_PROPOSAL)
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-            if ((bool)_list[0])
-            {
-                string info = LanguageController.Instance.GetText("message.info");
-                string description = LanguageController.Instance.GetText("message.proposal.confirmation.removed.succesfully");
-                ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
-            }
-            else
-            {
-                string info = LanguageController.Instance.GetText("message.erro");
-                string description = LanguageController.Instance.GetText("message.proposal.confirmation.removed.failure");
-                ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
-            }
-        }
-        if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_REACTIVATE_PROPOSAL)
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-            bool reactivated = (bool)_list[0];
-            if (reactivated)
-            {
-                long proposalID = (long)_list[1];
-                if (m_proposalData.Id == proposalID)
-                {
-                    string info = LanguageController.Instance.GetText("message.info");
-                    string description = LanguageController.Instance.GetText("message.proposal.successfully.reactivated");
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
-                }
-            }
-            else
-            {
-                string info = LanguageController.Instance.GetText("message.error");
-                string description = LanguageController.Instance.GetText("message.proposal.failure.reactivated");
-                ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
-            }
-        }
-        if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
-        {
-            BackPressed();
-        }
-        if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL)
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-            bool success = (bool)_list[0];
-            if (success)
-            {
-                long proposalID = (long)_list[1];
-                if (m_proposalData.Id == proposalID)
-                {
-                    int reporterID = (int)_list[2];
-                    m_proposalData.Reported = reporterID.ToString();
-                    if (m_buttonReport != null) m_buttonReport.gameObject.SetActive(false);
-                    if (m_buttonAcceptAndKeepLooking != null) m_buttonAcceptAndKeepLooking.SetActive(false);
-                    if (m_buttonCloseDeal != null) m_buttonCloseDeal.SetActive(false);
-                    string info = LanguageController.Instance.GetText("message.info");
-                    string description = LanguageController.Instance.GetText("message.proposal.succes.reported.provider.proposal");
-                    ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
-                }
-            }
-            else
-            {
-                string info = LanguageController.Instance.GetText("message.error");
-                string description = LanguageController.Instance.GetText("message.proposal.failure.reported.provider.proposal");
-                ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
-            }
-        }
-    }
+					if (proposalType == ProposalModel.TYPE_REPORT)
+					{
+						if (m_requestData.Id == requestID)
+						{
+							m_requestData.Reported = reportedByUsersID;
+						}
+					}
+
+					UsersController.Instance.CurrentUser.Additionaloffer = 0;
+					MessageConfirmationServer();
+				}
+				else
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					string warning = LanguageController.Instance.GetText("message.error");
+					string description = LanguageController.Instance.GetText("message.proposal.insert.server.error");
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CREATION_KO);
+				}
+			}
+			if (_nameEvent == UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD)
+			{
+				UserModel sUser = (UserModel)_list[0];
+				if (sUser != null)
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					ScreenController.Instance.CreateNewScreen(ScreenProviderProfileView.SCREEN_PROVIDER_PROFILE_DISPLAY, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, sUser);
+				}
+			}
+			if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_UPDATE_PROPOSAL)
+			{
+				if (m_proposalData.Accepted == ProposalModel.STATE_PROPOSAL_ACCEPTED_AND_FIXED)
+				{
+					if ((bool)_list[0])
+					{
+						BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+						string info = LanguageController.Instance.GetText("message.info");
+						string description = LanguageController.Instance.GetText("message.proposal.confirmation.email");
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
+					}
+				}
+				else
+				{
+					if ((bool)_list[0])
+					{
+						BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+						string info = LanguageController.Instance.GetText("message.info");
+						string description = LanguageController.Instance.GetText("message.proposal.confirmation.update.temporal");
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
+					}
+				}
+			}
+			if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_DELETE_PROPOSAL)
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				if ((bool)_list[0])
+				{
+					string info = LanguageController.Instance.GetText("message.info");
+					string description = LanguageController.Instance.GetText("message.proposal.confirmation.removed.succesfully");
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
+				}
+				else
+				{
+					string info = LanguageController.Instance.GetText("message.erro");
+					string description = LanguageController.Instance.GetText("message.proposal.confirmation.removed.failure");
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
+				}
+			}
+			if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_REACTIVATE_PROPOSAL)
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				bool reactivated = (bool)_list[0];
+				if (reactivated)
+				{
+					long proposalID = (long)_list[1];
+					if (m_proposalData.Id == proposalID)
+					{
+						string info = LanguageController.Instance.GetText("message.info");
+						string description = LanguageController.Instance.GetText("message.proposal.successfully.reactivated");
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
+					}
+				}
+				else
+				{
+					string info = LanguageController.Instance.GetText("message.error");
+					string description = LanguageController.Instance.GetText("message.proposal.failure.reactivated");
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, SUB_EVENT_SCREENPROPOSAL_RECONFIRMATION_CLOSE_EXIT);
+				}
+			}
+			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			{
+				BackPressed();
+			}
+			if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL)
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				bool success = (bool)_list[0];
+				if (success)
+				{
+					long proposalID = (long)_list[1];
+					if (m_proposalData.Id == proposalID)
+					{
+						int reporterID = (int)_list[2];
+						m_proposalData.Reported = reporterID.ToString();
+						if (m_buttonReport != null) m_buttonReport.gameObject.SetActive(false);
+						if (m_buttonAcceptAndKeepLooking != null) m_buttonAcceptAndKeepLooking.SetActive(false);
+						if (m_buttonCloseDeal != null) m_buttonCloseDeal.SetActive(false);
+						string info = LanguageController.Instance.GetText("message.info");
+						string description = LanguageController.Instance.GetText("message.proposal.succes.reported.proovider.proposal");
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
+					}
+				}
+				else
+				{
+					string info = LanguageController.Instance.GetText("message.error");
+					string description = LanguageController.Instance.GetText("message.proposal.failure.reported.proovider.proposal");
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
+				}
+			}
+		}
+	}
 }

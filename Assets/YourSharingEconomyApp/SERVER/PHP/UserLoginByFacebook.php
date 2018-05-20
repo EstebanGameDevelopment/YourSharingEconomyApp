@@ -130,7 +130,7 @@
 			$name_temp_user_new = substr($email_user_par,0,strrpos($email_user_par, '@'));
 			$ipadress_new_user = $_SERVER['REMOTE_ADDR'];
 			
-			$query_insert = "INSERT INTO users VALUES ($user_id_new, '$email_encrypted', 1, '$facebook_par', '$password_encrypted', '$name_temp_user_new', '', '', -1, -1, '$friends_par', $current_time_registered, $current_time_registered, -1, -1, 0, 0, 0, 0, -1, '', '', '',0,0, '', '$ipadress_new_user', 0)";
+			$query_insert = "INSERT INTO users VALUES ($user_id_new, '$email_encrypted', 1, '$facebook_par', '$password_encrypted', '$name_temp_user_new', '', '', -1, -1, '$friends_par', $current_time_registered, $current_time_registered, -1, -1, 0, 0, 0, 0, -1, '', '', '',0,0, '', '$ipadress_new_user', 0, '')";
 			$result_insert = mysqli_query($GLOBALS['LINK_DATABASE'],$query_insert) or die("Query Error::UserLoginByFacebook::Insert users failed");
 			
 			// Free resultset
@@ -150,11 +150,12 @@
 			$additionalrequest_user = 0;
 			$additionaloffer_user = 0;
 			$banned_user = 0;
+			$publickey_user = "";
 			
 			if (mysqli_affected_rows($GLOBALS['LINK_DATABASE']) == 1)
 			{
 				MailPassword($language_par, $email_user_par, $random_password_generated);
-				print "true" . $GLOBALS['PARAM_SEPARATOR'] . $email_user_par . $GLOBALS['PARAM_SEPARATOR'] . $random_password_generated . $GLOBALS['PARAM_SEPARATOR'] .  $user_id_new . $GLOBALS['PARAM_SEPARATOR'] .  $name_temp_user_new . $GLOBALS['PARAM_SEPARATOR'] .  $village_user. $GLOBALS['PARAM_SEPARATOR'] .  $mapdata_user . $GLOBALS['PARAM_SEPARATOR'] . $registerdate_user . $GLOBALS['PARAM_SEPARATOR'] . $lastlogin_user . $GLOBALS['PARAM_SEPARATOR'] . $rentstart_user . $GLOBALS['PARAM_SEPARATOR'] . $rentdays_user . $GLOBALS['PARAM_SEPARATOR'] . $scoreuser_user . $GLOBALS['PARAM_SEPARATOR'] . $scoreprovider_user . $GLOBALS['PARAM_SEPARATOR'] . $votesuser_user . $GLOBALS['PARAM_SEPARATOR'] . $votesprovider_user . $GLOBALS['PARAM_SEPARATOR'] . $validated_user . $GLOBALS['PARAM_SEPARATOR'] . $skills_user . $GLOBALS['PARAM_SEPARATOR'] . $description_user . $GLOBALS['PARAM_SEPARATOR'] . $additionalrequest_user . $GLOBALS['PARAM_SEPARATOR'] . $additionaloffer_user . $GLOBALS['PARAM_SEPARATOR'] . $banned_user;
+				print "true" . $GLOBALS['PARAM_SEPARATOR'] . $email_user_par . $GLOBALS['PARAM_SEPARATOR'] . $random_password_generated . $GLOBALS['PARAM_SEPARATOR'] .  $user_id_new . $GLOBALS['PARAM_SEPARATOR'] .  $name_temp_user_new . $GLOBALS['PARAM_SEPARATOR'] .  $village_user. $GLOBALS['PARAM_SEPARATOR'] .  $mapdata_user . $GLOBALS['PARAM_SEPARATOR'] . $registerdate_user . $GLOBALS['PARAM_SEPARATOR'] . $lastlogin_user . $GLOBALS['PARAM_SEPARATOR'] . $rentstart_user . $GLOBALS['PARAM_SEPARATOR'] . $rentdays_user . $GLOBALS['PARAM_SEPARATOR'] . $scoreuser_user . $GLOBALS['PARAM_SEPARATOR'] . $scoreprovider_user . $GLOBALS['PARAM_SEPARATOR'] . $votesuser_user . $GLOBALS['PARAM_SEPARATOR'] . $votesprovider_user . $GLOBALS['PARAM_SEPARATOR'] . $validated_user . $GLOBALS['PARAM_SEPARATOR'] . $skills_user . $GLOBALS['PARAM_SEPARATOR'] . $description_user . $GLOBALS['PARAM_SEPARATOR'] . $additionalrequest_user . $GLOBALS['PARAM_SEPARATOR'] . $additionaloffer_user . $GLOBALS['PARAM_SEPARATOR'] . $banned_user . $GLOBALS['PARAM_SEPARATOR'] . $publickey_user;
 			}
 			else
 			{

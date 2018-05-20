@@ -5,38 +5,42 @@ using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
 
-public class ProposalRemoveHTTP : BaseDataHTTP, IHTTPComms
+namespace YourSharingEconomyApp
 {
-    private string m_urlRequest = ScreenController.URL_BASE_PHP + "ProposalDelete.php";
 
-    public string UrlRequest
-    {
-        get { return m_urlRequest; }
-    }
+	public class ProposalRemoveHTTP : BaseDataHTTP, IHTTPComms
+	{
+		private string m_urlRequest = ScreenController.URL_BASE_PHP + "ProposalDelete.php";
 
-    public string Build(params object[] _list)
-    {
-        return "?id=" + (string)_list[0] + "&password=" + (string)_list[1] + "&proposal=" + (string)_list[2];
-    }
+		public string UrlRequest
+		{
+			get { return m_urlRequest; }
+		}
 
-    public override void Response(byte[] _response)
-    {
-        if (!ResponseCode(_response))
-        {
-            CommController.Instance.DisplayLog(m_jsonResponse);
-            BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_DELETE_PROPOSAL, false);
-            return;
-        }
+		public string Build(params object[] _list)
+		{
+			return "?id=" + (string)_list[0] + "&password=" + (string)_list[1] + "&proposal=" + (string)_list[2];
+		}
 
-        string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
-        if (bool.Parse(data[0]))
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_DELETE_PROPOSAL, true);
-        }
-        else
-        {
-            BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_DELETE_PROPOSAL, false);
-        }
-    }
+		public override void Response(byte[] _response)
+		{
+			if (!ResponseCode(_response))
+			{
+				CommController.Instance.DisplayLog(m_jsonResponse);
+				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_DELETE_PROPOSAL, false);
+				return;
+			}
+
+			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
+			if (bool.Parse(data[0]))
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_DELETE_PROPOSAL, true);
+			}
+			else
+			{
+				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_DELETE_PROPOSAL, false);
+			}
+		}
+	}
+
 }
-

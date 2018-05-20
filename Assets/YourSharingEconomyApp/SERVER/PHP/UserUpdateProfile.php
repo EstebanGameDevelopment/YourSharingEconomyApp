@@ -11,9 +11,10 @@
 	$mapdata = $_POST["mapdata"];
 	$skills = $_POST["skills"];
 	$description = $_POST["description"];
+	$publickey = $_POST["publickey"];
 
     // ++ LOGIN WITH email ++
-	UpdateProfile($iduser, $currpass, $password, $email, $nameuser, $village, $mapdata, $skills, $description);
+	UpdateProfile($iduser, $currpass, $password, $email, $nameuser, $village, $mapdata, $skills, $description, $publickey);
 
     // Closing connection
     mysqli_close($GLOBALS['LINK_DATABASE']);
@@ -30,7 +31,7 @@
      //-------------------------------------------------------------
      //  UpdateProfile
      //-------------------------------------------------------------
-     function UpdateProfile($iduser_par, $currpassword_par, $newpassword_par, $email_par, $nameuser_par, $village_par, $mapdata_par, $skills_par, $description_par)
+     function UpdateProfile($iduser_par, $currpassword_par, $newpassword_par, $email_par, $nameuser_par, $village_par, $mapdata_par, $skills_par, $description_par, $publickey_par)
      {
 		$new_email_encrypted = EncryptText($email_par);
 		$currpassword_encrypted = EncryptText($currpassword_par);
@@ -59,7 +60,7 @@
 			$village_par_f = SpecialCharacters($village_par);
 			
 			// UPDATE ENERGY
-			$query_update_user = "UPDATE users SET password = '$newpassword_encrypted', name = '$nameuser_par_f', email='$new_email_encrypted', village = '$village_par_f', mapdata = '$mapdata_par', latitude=$coordinates_map_latitude, longitude=$coordinates_map_longitude, skills = '$skills_par', description = '$description_par_f' WHERE id = $iduser_par";
+			$query_update_user = "UPDATE users SET password = '$newpassword_encrypted', name = '$nameuser_par_f', email='$new_email_encrypted', village = '$village_par_f', mapdata = '$mapdata_par', latitude=$coordinates_map_latitude, longitude=$coordinates_map_longitude, skills = '$skills_par', description = '$description_par_f', publickey = '$publickey_par' WHERE id = $iduser_par";
 			$result_update_user = mysqli_query($GLOBALS['LINK_DATABASE'],$query_update_user) or die("Query Error::UserUpdateProfile::Update users failed");
 			
 			print "true";
