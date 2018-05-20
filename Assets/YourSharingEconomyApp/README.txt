@@ -1,35 +1,37 @@
 ----------------------------------------------
         Your Sharing Economy App
-	Copyright © 2017 Esteban Gallardo
-            Version 1.0
+	Copyright © 2018 Esteban Gallardo
+            Version 2.0
    http://www.yoursharingeconomyapp.com
 	 info@yoursharingeconomyapp.com
 ----------------------------------------------
 
 -----------------------------------
 TUTORIAL INSTALLATION
-Video Tutorial: https://youtu.be/M43WPMU4fr8
+Video Tutorial: https://youtu.be/xRwAmkJTWVo
 -----------------------------------
 
 1. Import the package "Your Sharing Economy App" in a new Unity project
 
-2. Open the "Windows->Services" and activate Unity In-App Purchases
+2. Change Scripting Runtime to .NET 4.X Equivalent
+
+3. Import the free Facebook SDK.
+
+	https://developers.facebook.com/docs/unity/downloads
+
+4. Import the plugins Flat Calendar.
+	
+5. Open the "Windows->Services" and activate Unity In-App Purchases
 	2.1. Import fromm the submenu in this panel the package of the In-App Purchases
 	2.2. If there are compile error even in the IAPDemo then try to reload Services or Unity, or report a bug to Unity team.
 
-3. Import the plugins Flat Calendar.
+6. Download XAMMP, install it (https://www.apachefriends.org/download.html) and start it.
 
-4. Import the free Facebook SDK.
-
-	https://developers.facebook.com/docs/unity/downloads
-	
-4. Download XAMMP, install it (https://www.apachefriends.org/download.html) and start it.
-
-5. Open phpMyAdmin, create a database called (yoursharingeconomyapp) and import the database skeleton from the file:
+7. Open phpMyAdmin, create a database called (yoursharingeconomyapp) and import the database skeleton from the file:
 	
 	YourSharingEconomyApp\SERVER\DATABASE\yoursharingeconomyappdb.sql
 	
-6. Create a folder in your server and copy all PHP files and folders from this source folder in the package:
+8. Create a folder in your server and copy all PHP files and folders from this source folder in the package:
 
 		YourSharingEconomyApp\SERVER\PHP
 	
@@ -39,19 +41,9 @@ Video Tutorial: https://youtu.be/M43WPMU4fr8
 	
 	remember the folder in the server where are the PHP must be protected by some authentication method in order to prevent attacks.
 	
-7. Run the application and register a new user through email
+9. Run the application and register a new user through email
 
-8. If the register has been successfull you should receive an email with the confirmation link. Click on it and refresh the app to access to the system.
-
-9. BASIC TUTORIAL END. You should be able to create multiple users, create requests, all the functionality available for you to use.
-
-
------------------------------------
-TUTORIAL BASIC CUSTOMIZATION
-Video Tutorial: https://youtu.be/dbenS_wgJ8Q
------------------------------------
-
-In this tutorial it is shown how to easily customize the graphical part of the app to your needs.
+10. BASIC TUTORIAL END. You should be able to create multiple users, create requests, all the functionality available for you to use.
 
 
 -----------------------------------

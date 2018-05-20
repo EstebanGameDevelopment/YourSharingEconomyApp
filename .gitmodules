@@ -1,0 +1,3 @@
+[submodule "Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules"]
+	path = Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules
+	url = https://github.com/EstebanGameDevelopment/YourBitcoinController.git

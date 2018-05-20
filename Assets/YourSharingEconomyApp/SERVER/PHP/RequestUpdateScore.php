@@ -10,11 +10,13 @@
 	$feedbackcustomer = $_POST["feedbackcustomer"];
 	$scoreprovider = $_POST["scoreprovider"];
 	$feedbackprovider = $_POST["feedbackprovider"];
+	$signaturecustomer_req = $_POST["signaturecustomer"];
+	$signatureprovider_req = $_POST["signatureprovider"];	
 
     $email_db_user = ExistsUser($iduser, $password);
 	if (strlen($email_db_user) > 0)
 	{	
-		UpdateRequestScoreAndFeedback($requestid, $scorecustomer, $feedbackcustomer, $scoreprovider, $feedbackprovider);
+		UpdateRequestScoreAndFeedback($requestid, $scorecustomer, $feedbackcustomer, $scoreprovider, $feedbackprovider, $signaturecustomer_req, $signatureprovider_req);
 	}
 	else
 	{
@@ -35,7 +37,7 @@
 	 //-------------------------------------------------------------
      //  UpdateRequestAsFinished
      //-------------------------------------------------------------
-     function UpdateRequestScoreAndFeedback($requestid_par, $scorecustomer_par, $feedbackcustomer_par, $scoreprovider_par, $feedbackprovider_par)
+     function UpdateRequestScoreAndFeedback($requestid_par, $scorecustomer_par, $feedbackcustomer_par, $scoreprovider_par, $feedbackprovider_par, $signaturecustomer_par, $signatureprovider_par)
      {
 		$feedbackcustomer_res = SpecialCharacters($feedbackcustomer_par);
 		$feedbackprovider_res = SpecialCharacters($feedbackprovider_par);
@@ -66,7 +68,7 @@
 			}
 			
 			// UPDATE QUERY
-			$query_update_request = "UPDATE requests SET scorecustomer=$scorecustomer_par, scoreprovider=$scoreprovider_par, feedbackcustomer='$feedbackcustomer_res', feedbackprovider='$feedbackprovider_res' WHERE id = $requestid_par";
+			$query_update_request = "UPDATE requests SET scorecustomer=$scorecustomer_par, scoreprovider=$scoreprovider_par, feedbackcustomer='$feedbackcustomer_res', feedbackprovider='$feedbackprovider_res', signaturecustomer='$signaturecustomer_par', signatureprovider='$signatureprovider_par' WHERE id = $requestid_par";
 			$result_update_request = mysqli_query($GLOBALS['LINK_DATABASE'],$query_update_request) or die("Query Error::RequestUpdateScore::Update request failed");
 
 			// Free resultset

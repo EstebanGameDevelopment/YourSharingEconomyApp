@@ -1,13 +1,15 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2017
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.8
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourSharingEconomyApp", "YourSharingEconomyApp.csproj", "{73A32D7D-4E1A-D74A-A177-C9E2AEC10D82}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourSharingEconomyApp.Plugins", "YourSharingEconomyApp.Plugins.csproj", "{347B8299-62B0-33FC-F308-B1ED7B5C15DF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourSharingEconomyApp.Editor.Plugins", "YourSharingEconomyApp.Editor.Plugins.csproj", "{481C81D8-3DEB-C2E9-130F-23118DBA4239}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourSharingEconomyApp.Editor", "YourSharingEconomyApp.Editor.csproj", "{BC5A5DFF-051A-115D-87CD-28C05ABC9405}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YourSharingEconomyApp.Editor.Plugins", "YourSharingEconomyApp.Editor.Plugins.csproj", "{481C81D8-3DEB-C2E9-130F-23118DBA4239}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,16 +25,19 @@ Global
 		{347B8299-62B0-33FC-F308-B1ED7B5C15DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{347B8299-62B0-33FC-F308-B1ED7B5C15DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{347B8299-62B0-33FC-F308-B1ED7B5C15DF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{481C81D8-3DEB-C2E9-130F-23118DBA4239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{481C81D8-3DEB-C2E9-130F-23118DBA4239}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{481C81D8-3DEB-C2E9-130F-23118DBA4239}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{481C81D8-3DEB-C2E9-130F-23118DBA4239}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BC5A5DFF-051A-115D-87CD-28C05ABC9405}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BC5A5DFF-051A-115D-87CD-28C05ABC9405}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC5A5DFF-051A-115D-87CD-28C05ABC9405}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC5A5DFF-051A-115D-87CD-28C05ABC9405}.Release|Any CPU.Build.0 = Release|Any CPU
+		{481C81D8-3DEB-C2E9-130F-23118DBA4239}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{481C81D8-3DEB-C2E9-130F-23118DBA4239}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{481C81D8-3DEB-C2E9-130F-23118DBA4239}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{481C81D8-3DEB-C2E9-130F-23118DBA4239}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1F321C78-611B-462F-89FA-4AD103F97B90}
 	EndGlobalSection
 EndGlobal

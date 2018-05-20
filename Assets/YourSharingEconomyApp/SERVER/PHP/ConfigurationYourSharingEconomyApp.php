@@ -22,7 +22,7 @@
     $LINK_DATABASE = mysqli_connect("localhost", "root", "")
        or die("Could not connect");
     // print "Connected successfully<p>";
-    mysqli_select_db($LINK_DATABASE, "impaciencia") or die("Database Error::Could not select database)");
+    mysqli_select_db($LINK_DATABASE, "yoursharingeconomyapp") or die("Database Error::Could not select database)");
 
 	// RESPONSES WILL INCLUDE SPECIAL CHARACTERS BECAUSE THEY CONTAIN USERS' WORDS
 	mysqli_query ($LINK_DATABASE, "set character_set_client='utf8'"); 
@@ -33,7 +33,10 @@
 	$OFFICIAL_NAME_APPLICATION_GLOBAL = " Your Sharing Economy App ";
 	
 	// ADDRESS OF YOUR SERVER
-	$URL_BASE_SERVER = "http://localhost:8080/impaciencia/";
+	$URL_BASE_SERVER = "http://localhost:8080/yoursharingeconomyapp/";
+	
+	// WILL ENABLE THE EMAIL SYSTEM FOR ACCOUNT CONFIRMATION AND OTHER OPERATIONS
+	$ENABLE_EMAIL_SERVER = 0;
 	
 	// DATABASE ENCRYPTION
 	$private_key_aes = "TdLdsQLiaDrSQUpd";
@@ -189,42 +192,43 @@
 		// ++ATTENTION++
 		// PHPMailer WILL NOT WORK IN XAMMP, BUT YOU HAVE TO USE IT TO SEND EMAILS TO ANY ADDRESS
 		 
-		 /*
-		$mail = new PHPMailer();
-		//Enable SMTP debugging
-		// 0 = off (for production use)
-		// 1 = client messages
-		// 2 = client and server messages
-		// $mail->SMTPDebug = 2;
-		//Ask for HTML-friendly debug output
-		// $mail->Debugoutput = 'html';
-		
-		$mail->isSMTP();
-		$mail->CharSet = "UTF-8";
-		$mail->SMTPSecure = 'tls';
-		$mail->Host = 'smtp.YOUR_OWN_DOMAIN.com';
-		$mail->Port = 587;
-		$mail->Username = 'YOUR_OWN_EMAIL@YOUR_OWN_DOMAIN.com';
-		$mail->Password = 'YOUR_OWN_PASSWORD';
-		$mail->SMTPAuth = true;
-
-		$mail->setFrom($email_from_par, 'Your DressMakers');
-		$mail->addAddress($email_to_par);
-
-		$mail->isHTML(true);
-		$mail->Subject = $content_subject_par;
-		$mail->Body = $content_body_par;
-
-		if (!$mail->send())
+		if ($GLOBALS['ENABLE_EMAIL_SERVER'] == 1)
 		{
-		  echo "Mailer Error: " . $mail->ErrorInfo;
-		  return false;
+			$mail = new PHPMailer();
+			//Enable SMTP debugging
+			// 0 = off (for production use)
+			// 1 = client messages
+			// 2 = client and server messages
+			// $mail->SMTPDebug = 2;
+			//Ask for HTML-friendly debug output
+			// $mail->Debugoutput = 'html';
+			
+			$mail->isSMTP();
+			$mail->CharSet = "UTF-8";
+			$mail->SMTPSecure = 'tls';
+			$mail->Host = 'smtp.YOUR_OWN_DOMAIN.com';
+			$mail->Port = 587;
+			$mail->Username = 'YOUR_OWN_EMAIL@YOUR_OWN_DOMAIN.com';
+			$mail->Password = 'YOUR_OWN_PASSWORD';
+			$mail->SMTPAuth = true;
+
+			$mail->setFrom($email_from_par, $GLOBALS['OFFICIAL_NAME_APPLICATION_GLOBAL']);
+			$mail->addAddress($email_to_par);
+
+			$mail->isHTML(true);
+			$mail->Subject = $content_subject_par;
+			$mail->Body = $content_body_par;
+
+			if (!$mail->send())
+			{
+			  echo "Mailer Error: " . $mail->ErrorInfo;
+			  return false;
+			}
+			else
+			{
+			   return true;
+			}
 		}
-		else
-		{
-		   return true;
-		}
-		*/
 		
 		return true;
 	 }
