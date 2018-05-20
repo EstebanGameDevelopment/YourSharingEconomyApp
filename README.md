@@ -7,6 +7,12 @@ With YourSharingEconomyApp you can create you own app easily in an extremely sho
 
 ---------
 
+Here is the installation and basic customization tutorial:
+
+https://youtu.be/xRwAmkJTWVo
+
+---------
+
 You will find all the tutorials you need to implent your solution using this template:
 
 https://www.youtube.com/playlist?list=PLviCMQdRMJhMJjEyUu3PoumsSTCAG2S4M
@@ -29,23 +35,15 @@ https://www.apachefriends.org/download.html
 
 ---------
 
-By default the mail verification code is disable so it's easy for any programmer to run the project without the need of the configuration of the email. When you are ready to enable the email, make the next changes:
+By default the mail verification code is disable so it's easy for any programmer to run the project without the need of the configuration of the email. When you are ready to enable the email, make the next change:
 
 ---------
 
 FILE: ConfigurationYourSharingEconomyApp.php
 
-FUNCTION: SendGlobalEmail
+CONSTANT: $ENABLE_EMAIL_SERVER = 0;
 
-TO DO: Uncomment the commeted code for the email to work
-
----------
-
-FILE: UserRegisterByEmail.php
-
-LINE: 102
-
-TODO: Uncomment the commented line so it's necessary for the register user the email verification process to access the system
+TO DO: Set to 1 to enable the email if you have set up an email server
 
 ---------
 
