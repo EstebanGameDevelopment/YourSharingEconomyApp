@@ -7,6 +7,12 @@ With YourSharingEconomyApp you can create you own app easily in an extremely sho
 
 ---------
 
+Here is the installation and basic customization tutorial:
+
+https://youtu.be/xRwAmkJTWVo
+
+---------
+
 You will find all the tutorials you need to implent your solution using this template:
 
 https://www.youtube.com/playlist?list=PLviCMQdRMJhMJjEyUu3PoumsSTCAG2S4M
