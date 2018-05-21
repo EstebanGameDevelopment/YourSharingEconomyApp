@@ -78,7 +78,11 @@ namespace YourSharingEconomyApp
 				DirectoryInfo directoryInfo = _directoryInfo;
 				if (directoryInfo == null)
 				{
+#if UNITY_EDITOR
 					directoryInfo = new DirectoryInfo(Directory.GetCurrentDirectory());
+#else
+					directoryInfo = new DirectoryInfo(Application.persistentDataPath);					
+#endif
 				}
 
 				// IF SHOW DRIVES
