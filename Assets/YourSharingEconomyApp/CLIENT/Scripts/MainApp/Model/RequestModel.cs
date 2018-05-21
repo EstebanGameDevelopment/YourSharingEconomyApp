@@ -222,7 +222,9 @@ namespace YourSharingEconomyApp
 		public string FeedbackCustomerGivesToTheProvider
 		{
 			get { return m_feedbackcustomer; }
-			set { m_feedbackcustomer = value; }
+			set { m_feedbackcustomer = value;
+				m_feedbackcustomer = m_feedbackcustomer.Replace('\'', '`');
+			}
 		}
 		public int ScoreCustomerGivesToTheProvider
 		{
@@ -233,7 +235,9 @@ namespace YourSharingEconomyApp
 		public string FeedbackProviderGivesToTheCustomer
 		{
 			get { return m_feedbackprovider; }
-			set { m_feedbackprovider = value; }
+			set { m_feedbackprovider = value;
+				m_feedbackprovider = m_feedbackprovider.Replace('\'', '`');
+			}
 		}
 		public int ScoreProviderGivesToTheCustomer
 		{
