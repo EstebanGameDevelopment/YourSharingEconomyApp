@@ -1,0 +1,61 @@
+
+REQUIREMENTS:
+
+Unity SDK
+XAMPP
+
+PROJECT INSTALLATION:
+
+1. Create a new project and import "YourSharingEconomyApp" package
+2. Switch Scripting Runtime Version: .NET 4.x Equivalent
+3. Import Facebook Unity SDK
+4. Import Flat Calendar from Unity Asset Store
+5. Activate IAP services and import the Unity IAP packages
+6. Load the scene "Main" and run it to test everything is compiling
+7. Download and install XAMPP Apache webserver
+8. Run XAMPP control panel. Customize the port and start the service
+9. Open the web browser and access to localhost and phpMyAdmin
+10. Create database "yoursharingeconomyapp"
+11. Import the database structure you will find in the package
+12. Check all the tables have been created and they are empty
+13. Copy the PHP files to the folder C:/xampp/htdocs/yoursharingeconomyapp
+14. Open the file "ConfigurationYourSharingEconomyApp"
+15. Check the main configuration variables with the database
+	LOCAL SERVER CONNECTION
+	DATABASE CONNECTION
+	URL SERVICES
+16. Open "ScreenController.cs" to check basic client configuration
+17. Run the Unity client and create a new user
+18. Check the user has been created in the table "Users"
+19. Clear PlayersPrefs and create another user
+20. Check that the new user has been created in the database
+21. Create two more users that will help you during development
+22. Open the file "YourSharingEconomyTools.cs"
+23. Replace the accounts with the ones you have just previously created
+24. Use the Tools Menu to switch fast between the multiple accounts
+25. Do some tests and switch between the accounts using the tools menu
+
+APPLICATION FLOW: From the creation of a job request to the scoring of a job completed
+
+26. Switch to client 1 and let's create a new job request
+27. Check in the database the table "requests" to see the new entry
+28. Switch to the account of provider
+29. Become a provider and fill your profile as a provider of services
+30. Fill the data of your profile to tell the world about your skills
+31. Set an approximate location where you plan to offer your services
+32. Look for job in an area
+33. Make a proposal to an offer you are interested into.
+34. Switch back to the client and we will accept the offer
+35. Provider provide proof that the job has been completed
+36. Evaluate proof of work finished
+37. Pay with Bitcoin
+38. Customer scores the service quality of the provider
+39. Provider scores customer behaviour
+40. Check the scores applied to customer and provider
+
+APPLICATION CUSTOMIZATION: Make your own MVP custom Sharing Economy App
+
+41. Change the title of the application and the provider name by your own
+42. Replace the key images with your own images
+43. Run the application and you will have customized your own app
+
