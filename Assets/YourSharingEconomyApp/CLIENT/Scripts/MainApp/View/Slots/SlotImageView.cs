@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -122,6 +123,7 @@ namespace YourSharingEconomyApp
 			m_loadingText.GetComponent<Text>().text = LanguageController.Instance.GetText("message.loading");
 
 			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
 		// -------------------------------------------
@@ -132,6 +134,7 @@ namespace YourSharingEconomyApp
 		{
 			m_urlImage = null;
 			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
 			GameObject.Destroy(this.gameObject);
 		}
 
@@ -318,6 +321,42 @@ namespace YourSharingEconomyApp
 		/* 
 		 * OnBasicEvent
 		 */
+		private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
+		{
+			if (_nameEvent == ImageUtils.EVENT_IMAGES_LOAD_CONFIRMATION_FROM_SYSTEM)
+			{
+				string pathFile = (string)_list[0];
+				if (m_pathFile == pathFile)
+				{
+					m_imageLoaded = true;
+					if (_list.Length == 3)
+					{
+						int widthTexture = (int)_list[1];
+						int heightTexture = (int)_list[2];
+						if (m_isPossibleImageURL)
+						{
+							m_isPossibleImageURL = false;
+							if ((widthTexture < 100) || (heightTexture < 100))
+							{
+								m_url = m_pathFile;
+								BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_URL, m_pathFile, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, ImageUtils.GetBytesJPG(m_urlImage), m_url);
+							}
+						}
+					}
+					if (m_type == RequestModel.IMAGE_TYPE_FINISHED)
+					{
+						m_isUploadingFinalImage = true;
+						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_NEW_IMAGE, m_id, ScreenController.TABLE_REQUESTS, m_originId, m_type, GetByteImageJPG(), m_url);
+					}
+				}
+			}
+		}
+
+		// -------------------------------------------
+		/* 
+		 * OnBasicEvent
+		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
 			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
@@ -358,34 +397,6 @@ namespace YourSharingEconomyApp
 					if ((bool)_list[0])
 					{
 						m_isUploadingFinalImage = false;
-					}
-				}
-			}
-			if (_nameEvent == ImagesController.EVENT_IMAGES_LOAD_CONFIRMATION_FROM_SYSTEM)
-			{
-				string pathFile = (string)_list[0];
-				if (m_pathFile == pathFile)
-				{
-					m_imageLoaded = true;
-					if (_list.Length == 3)
-					{
-						int widthTexture = (int)_list[1];
-						int heightTexture = (int)_list[2];
-						if (m_isPossibleImageURL)
-						{
-							m_isPossibleImageURL = false;
-							if ((widthTexture < 100) || (heightTexture < 100))
-							{
-								m_url = m_pathFile;
-								BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_URL, m_pathFile, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, ImageUtils.GetBytesJPG(m_urlImage), m_url);
-							}
-						}
-					}
-					if (m_type == RequestModel.IMAGE_TYPE_FINISHED)
-					{
-						m_isUploadingFinalImage = true;
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_NEW_IMAGE, m_id, ScreenController.TABLE_REQUESTS, m_originId, m_type, GetByteImageJPG(), m_url);
 					}
 				}
 			}

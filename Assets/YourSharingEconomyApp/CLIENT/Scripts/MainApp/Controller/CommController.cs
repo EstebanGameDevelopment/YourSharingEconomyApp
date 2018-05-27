@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 using System.Text;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {

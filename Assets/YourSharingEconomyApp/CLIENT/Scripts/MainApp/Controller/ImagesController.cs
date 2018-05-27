@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 using UnityEngine.UI;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -28,7 +29,6 @@ namespace YourSharingEconomyApp
 		// EVENTS
 		// ----------------------------------------------
 		public const string EVENT_IMAGES_LOAD_FROM_SYSTEM_IMAGE = "EVENT_IMAGES_LOAD_FROM_SYSTEM_IMAGE";
-		public const string EVENT_IMAGES_LOAD_CONFIRMATION_FROM_SYSTEM = "EVENT_IMAGES_LOAD_CONFIRMATION_FROM_SYSTEM";
 		public const string EVENT_IMAGES_LOAD_FROM_BYTE_ARRAY = "EVENT_IMAGES_LOAD_FROM_BYTE_ARRAY";
 
 		public const string EVENT_IMAGES_LOAD_FROM_ID = "EVENT_IMAGES_LOAD_FROM_ID";
@@ -284,7 +284,7 @@ namespace YourSharingEconomyApp
 				int heightImage = (int)_list[2];
 				byte[] dataImage = (byte[])_list[3];
 				ImageUtils.LoadBytesImage(imgContainer, dataImage, heightImage, ScreenController.Instance.SizeHeightAllowedImages);
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_CONFIRMATION_FROM_SYSTEM, pathFileURL);
+				BasicSystemEventController.Instance.DispatchBasicSystemEvent(ImageUtils.EVENT_IMAGES_LOAD_CONFIRMATION_FROM_SYSTEM, pathFileURL);
 			}
 			if (_nameEvent == EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_IMAGE_URL)
 			{

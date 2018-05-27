@@ -1,3 +1,9 @@
 [submodule "Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules"]
 	path = Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules
 	url = https://github.com/EstebanGameDevelopment/YourBitcoinController.git
+[submodule "Assets/YourSharingEconomyApp/YourBitcoinManager/Screens"]
+	path = Assets/YourSharingEconomyApp/YourBitcoinManager/Screens
+	url = https://github.com/EstebanGameDevelopment/YourBitcoinScreens.git
+[submodule "Assets/YourSharingEconomyApp/YourBitcoinManager/Common"]
+	path = Assets/YourSharingEconomyApp/YourBitcoinManager/Common
+	url = https://github.com/EstebanGameDevelopment/YourCommonTools.git

@@ -4,7 +4,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using YourBitcoinController;
 using YourBitcoinManager;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -131,6 +133,7 @@ namespace YourSharingEconomyApp
 			m_newMapData = UsersController.Instance.CurrentUser.Mapdata;
 
 			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
 		// -------------------------------------------
@@ -140,6 +143,8 @@ namespace YourSharingEconomyApp
 		public void Destroy()
 		{
 			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
+
 			GameObject.Destroy(this.gameObject);
 		}
 
@@ -286,7 +291,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBitcoinManager()
 		{
-			ScreenBitcoinController.Instance.InitializeBitcoin(ScreenBitcoinPrivateKeyView.SCREEN_NAME);
+			ScreenBitcoinController.Instance.InitializeBitcoin(ScreenBitcoinPrivateKeyView.SCREEN_NAME, UsersController.Instance.CurrentUser.PublicKey);
 		}
 
 		// -------------------------------------------
@@ -310,6 +315,38 @@ namespace YourSharingEconomyApp
 				}				
 			}
 		}
+
+		// -------------------------------------------
+		/* 
+		 * OnBasicSystemEvent
+		 */
+		private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
+		{
+			if (_nameEvent == GoogleMap.EVENT_GOOGLEMAP_USER_UPDATE_VILLAGE)
+			{
+				HasChanged = true;
+				m_newVillage = (string)_list[0];
+				m_newMapData = (string)_list[1];
+				m_container.Find("Button_Maps/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.profile.area.maps") + '\n' + m_newVillage;
+			}
+			if (_nameEvent == BitCoinController.EVENT_BITCOINCONTROLLER_PUBLIC_KEY_SELECTED)
+			{
+				// UPDATE DATABASE
+				UsersController.Instance.CurrentUser.PublicKey = (string)_list[0];
+				BasicEventController.Instance.DispatchBasicEvent(
+											UsersController.EVENT_USER_UPDATE_PROFILE_REQUEST,
+											UsersController.Instance.CurrentUser.Id.ToString(),
+											UsersController.Instance.CurrentUser.PasswordPlain,
+											UsersController.Instance.CurrentUser.Email,
+											UsersController.Instance.CurrentUser.Nickname,
+											UsersController.Instance.CurrentUser.Village,
+											UsersController.Instance.CurrentUser.Mapdata,
+											UsersController.Instance.CurrentUser.Skills,
+											UsersController.Instance.CurrentUser.Description,
+											UsersController.Instance.CurrentUser.PublicKey);
+			}
+		}
+
 		// -------------------------------------------
 		/* 
 		 * OnBasicEvent
@@ -406,13 +443,7 @@ namespace YourSharingEconomyApp
 				{
 					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.profile.update.failed"), null, "");
 				}
-			}
-			if (_nameEvent == UsersController.EVENT_USER_UPDATE_VILLAGE)
-			{
-				HasChanged = true;
-				m_newVillage = (string)_list[0];
-				m_newMapData = (string)_list[1];
-				m_container.Find("Button_Maps/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.profile.area.maps") + '\n' + m_newVillage;
+				BitcoinManagerEventController.Instance.DispatchBasicEvent(BitcoinManagerEventController.EVENT_BASICEVENT_USER_DATA_UPDATED, (bool)_list[0]);
 			}
 			if (_nameEvent == FacebookController.EVENT_FACEBOOK_COMPLETE_INITIALITZATION)
 			{

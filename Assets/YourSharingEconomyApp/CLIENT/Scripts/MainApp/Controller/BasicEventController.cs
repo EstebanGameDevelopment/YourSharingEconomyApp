@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -69,7 +70,7 @@ namespace YourSharingEconomyApp
 		 */
 		public void Destroy()
 		{
-			DestroyObject(_instance.gameObject);
+			Destroy(_instance.gameObject);
 			_instance = null;
 		}
 

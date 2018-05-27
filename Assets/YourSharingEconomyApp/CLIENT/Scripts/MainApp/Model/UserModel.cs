@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -240,8 +241,8 @@ namespace YourSharingEconomyApp
 		public void SetPassword(string _password)
 		{
 			m_password = _password;
-			m_passwordEncrypted = RJEncryptor.Encrypt(_password, false);
-			PlayerPrefs.SetString(ScreenController.USER_PASSWORD_COOCKIE, RJEncryptor.Encrypt(_password, false));
+			m_passwordEncrypted = RJEncryptor.EncryptStringWithKey(_password, ScreenController.KYRJEncryption);
+			PlayerPrefs.SetString(ScreenController.USER_PASSWORD_COOCKIE, RJEncryptor.EncryptStringWithKey(_password, ScreenController.KYRJEncryption));
 		}
 
 		// -------------------------------------------
@@ -252,10 +253,10 @@ namespace YourSharingEconomyApp
 		{
 			Email = _email;
 			m_password = _password;
-			m_passwordEncrypted = RJEncryptor.Encrypt(_password, false);
+			m_passwordEncrypted = RJEncryptor.EncryptStringWithKey(_password, ScreenController.KYRJEncryption);
 
 			PlayerPrefs.SetString(ScreenController.USER_EMAIL_COOCKIE, Email.ToLower());
-			PlayerPrefs.SetString(ScreenController.USER_PASSWORD_COOCKIE, RJEncryptor.Encrypt(_password, false));
+			PlayerPrefs.SetString(ScreenController.USER_PASSWORD_COOCKIE, RJEncryptor.EncryptStringWithKey(_password, ScreenController.KYRJEncryption));
 		}
 
 		// -------------------------------------------
@@ -349,7 +350,7 @@ namespace YourSharingEconomyApp
 								string _description)
 		{
 			m_password = _password;
-			m_passwordEncrypted = RJEncryptor.Encrypt(_password, false);
+			m_passwordEncrypted = RJEncryptor.EncryptStringWithKey(_password, ScreenController.KYRJEncryption);
 			Email = _email;
 			m_nickname = _name;
 			m_village = _village;
@@ -369,8 +370,8 @@ namespace YourSharingEconomyApp
 		 */
 		private void SaveLocalEmailLogin(string _email, string _password)
 		{
-			PlayerPrefs.SetString(ScreenController.USER_EMAIL_COOCKIE, RJEncryptor.Encrypt(_email.ToLower(), false));
-			PlayerPrefs.SetString(ScreenController.USER_PASSWORD_COOCKIE, RJEncryptor.Encrypt(_password, false));
+			PlayerPrefs.SetString(ScreenController.USER_EMAIL_COOCKIE, RJEncryptor.EncryptStringWithKey(_email.ToLower(), ScreenController.KYRJEncryption));
+			PlayerPrefs.SetString(ScreenController.USER_PASSWORD_COOCKIE, RJEncryptor.EncryptStringWithKey(_password, ScreenController.KYRJEncryption));
 			PlayerPrefs.SetInt(ScreenController.USER_FACEBOOK_CONNECTED_COOCKIE, 0);
 		}
 
@@ -380,7 +381,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void SaveLocalFacebookLogin(string _facebookId, string _name, string _email)
 		{
-			PlayerPrefs.SetString(ScreenController.USER_EMAIL_COOCKIE, RJEncryptor.Encrypt(_email.ToLower(), false));
+			PlayerPrefs.SetString(ScreenController.USER_EMAIL_COOCKIE, RJEncryptor.EncryptStringWithKey(_email.ToLower(), ScreenController.KYRJEncryption));
 			PlayerPrefs.SetString(ScreenController.USER_NAME_COOCKIE, _name);
 			PlayerPrefs.SetInt(ScreenController.USER_FACEBOOK_CONNECTED_COOCKIE, 1);
 		}
@@ -391,8 +392,8 @@ namespace YourSharingEconomyApp
 		 */
 		private void UpdateLocalProfile(string _password, string _email, string _name)
 		{
-			PlayerPrefs.SetString(ScreenController.USER_PASSWORD_COOCKIE, RJEncryptor.Encrypt(_password, false));
-			PlayerPrefs.SetString(ScreenController.USER_EMAIL_COOCKIE, RJEncryptor.Encrypt(_email.ToLower(), false));
+			PlayerPrefs.SetString(ScreenController.USER_PASSWORD_COOCKIE, RJEncryptor.EncryptStringWithKey(_password, ScreenController.KYRJEncryption));
+			PlayerPrefs.SetString(ScreenController.USER_EMAIL_COOCKIE, RJEncryptor.EncryptStringWithKey(_email.ToLower(), ScreenController.KYRJEncryption));
 			PlayerPrefs.SetString(ScreenController.USER_NAME_COOCKIE, _name);
 		}
 

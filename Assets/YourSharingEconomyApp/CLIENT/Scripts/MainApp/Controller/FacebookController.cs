@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 using Facebook.Unity;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
