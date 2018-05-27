@@ -6,6 +6,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using YourBitcoinController;
 using YourBitcoinManager;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -372,6 +373,7 @@ namespace YourSharingEconomyApp
 			LoadRequestData();
 
 			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
 		// -------------------------------------------
@@ -385,6 +387,7 @@ namespace YourSharingEconomyApp
 			ClearAllProposals();
 			m_requestData = null;
 			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
 			if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
 			{
 				YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent -= new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
@@ -1828,14 +1831,9 @@ namespace YourSharingEconomyApp
 		/* 
 		 * OnBasicEvent
 		 */
-		private void OnBasicEvent(string _nameEvent, params object[] _list)
+		private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
 		{
-			if (!this.gameObject.activeSelf)
-			{
-				return;
-			}
-
-			if (_nameEvent == UsersController.EVENT_USER_UPDATE_VILLAGE)
+			if (_nameEvent == GoogleMap.EVENT_GOOGLEMAP_USER_UPDATE_VILLAGE)
 			{
 				m_requestData.Village = (string)_list[0];
 				m_requestData.Mapdata = (string)_list[1];
@@ -1843,6 +1841,19 @@ namespace YourSharingEconomyApp
 
 				m_container.Find("Button_Maps/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.create.request.area.search") + '\n' + m_requestData.Village;
 			}
+		}
+
+		// -------------------------------------------
+		/* 
+		 * OnBasicEvent
+		 */
+		private void OnBasicEvent(string _nameEvent, params object[] _list)
+		{
+			if (!this.gameObject.activeSelf)
+			{
+				return;
+			}
+
 			if (_nameEvent == ScreenCalendarView.EVENT_SCREENCALENDAR_SELECT_DAY)
 			{
 				m_requestData.Deadline = (long)_list[0];
@@ -2613,7 +2624,7 @@ namespace YourSharingEconomyApp
 					}
 					else
 					{
-						YourBitcoinManager.ScreenBitcoinController.Instance.CreateNewScreen(ScreenBitcoinSendView.SCREEN_NAME, YourBitcoinManager.TypePreviousActionEnum.DESTROY_ALL_SCREENS, true, UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, m_publicKeyProvider, m_requestData.Price.ToString(), m_requestData.Currency, m_requestData.Title);
+						YourBitcoinManager.ScreenBitcoinController.Instance.CreateNewScreen(ScreenBitcoinSendView.SCREEN_NAME, YourBitcoinManager.TypePreviousActionEnum.DESTROY_ALL_SCREENS, true, m_publicKeyProvider, m_requestData.Price.ToString(), m_requestData.Currency, m_requestData.Title);
 					}
 				}
 				else
@@ -2622,6 +2633,25 @@ namespace YourSharingEconomyApp
 					{
 						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
 					}
+				}
+			}
+			if (_nameEvent == BitCoinController.EVENT_BITCOINCONTROLLER_TRANSACTION_DONE)
+			{
+				if ((bool)_list[0])
+				{
+					BitCoinController.Instance.RefreshBalancePrivateKeys();
+					string transactionID = (string)_list[1];
+					CommController.Instance.RequestUpdateTransactionBitcoin(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, transactionID);
+				}
+				else
+				{
+					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					string messageError = LanguageController.Instance.GetText("screen.bitcoin.send.transaction.error");
+					if (_list.Length >= 2)
+					{
+						messageError = (string)_list[1];
+					}
+					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), messageError, null, "");
 				}
 			}
 		}
