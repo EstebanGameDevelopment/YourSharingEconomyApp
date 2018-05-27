@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 18, 2018 at 07:08 PM
+-- Generation Time: May 27, 2018 at 10:49 AM
 -- Server version: 10.1.25-MariaDB
 -- PHP Version: 7.1.7
 
@@ -97,9 +97,9 @@ CREATE TABLE `requests` (
   `reported` varchar(200) NOT NULL,
   `flaged` int(11) NOT NULL,
   `confirmflag` int(11) NOT NULL,
-  `signaturecustomer` varchar(500) NOT NULL,
-  `signatureprovider` varchar(500) NOT NULL,
-  `transactionid` varchar(500) NOT NULL
+  `signaturecustomer` varchar(1000) NOT NULL,
+  `signatureprovider` varchar(1000) NOT NULL,
+  `transactionid` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -134,7 +134,7 @@ CREATE TABLE `users` (
   `description` varchar(2000) CHARACTER SET utf8 COLLATE utf8_unicode_ci NOT NULL,
   `additionalrequest` int(11) NOT NULL,
   `additionaloffer` int(11) NOT NULL,
-  `purchasecode` varchar(64) NOT NULL,
+  `purchasecode` varchar(256) NOT NULL,
   `ipaddress` varchar(200) NOT NULL,
   `banned` int(11) NOT NULL,
   `publickey` varchar(200) NOT NULL

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -30,9 +31,7 @@ namespace YourSharingEconomyApp
 		// ----------------------------------------------	
 		public const string URL_BASE_PHP = "http://localhost:8080/yoursharingeconomyapp/";
 
-		// ENCRYPTION KEYS: CHANGE IT TO MATCH IN THE SERVER SIDE
 		public const string KYRJEncryption = "sK1rwpD1p+5e#bvt31CK13z77n=ES8jR"; //32 chr shared ascii string (32 * 8 = 256 bit)
-		public const string SIVJEncryption = "A9q2N2haeQybv8#Aq!N9ybc1Cnrx12@y"; //32 chr shared ascii string (32 * 8 = 256 bit)
 
 		// COOKIES
 		public const string USER_EMAIL_COOCKIE = "USER_EMAIL_COOCKIE";
@@ -205,13 +204,13 @@ namespace YourSharingEconomyApp
 
 			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
 
-			LanguageController.Instance.LoadTextsXML();
+			LanguageController.Instance.Initialize();
 			UsersController.Instance.Init();
 			CommController.Instance.Init();
 			RequestsController.Instance.Init();
 			ProposalsController.Instance.Init();
 			ImagesController.Instance.Init();
-			SoundsController.Instance.Init();
+			SoundsController.Instance.Initialize();
 			IAPController.Instance.Init();
 			CreateNewScreenNoParameters(ScreenInitialView.SCREEN_INITIAL, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
 
@@ -332,12 +331,12 @@ namespace YourSharingEconomyApp
 
 			if (_hidePreviousScreens)
 			{
-				SoundsController.Instance.PlayFxSelection();
+				SoundsConstants.PlayFxSelection();
 				m_screensPool.Add(currentScreen);
 			}
 			else
 			{
-				if (_nameScreen != ScreenInformationView.SCREEN_WAIT) SoundsController.Instance.PlayFxSubSelection();
+				if (_nameScreen != ScreenInformationView.SCREEN_WAIT) SoundsConstants.PlayFxSubSelection();
 				m_screensOverlay.Add(currentScreen);
 			}
 		}
@@ -351,8 +350,8 @@ namespace YourSharingEconomyApp
 		{
 			try
 			{
-				string email = RJEncryptor.DecryptString(PlayerPrefs.GetString(USER_EMAIL_COOCKIE, ""), false);
-				string password = RJEncryptor.DecryptString(PlayerPrefs.GetString(USER_PASSWORD_COOCKIE, ""), false);
+				string email = RJEncryptor.DecryptStringWithKey(PlayerPrefs.GetString(USER_EMAIL_COOCKIE, ""), KYRJEncryption);
+				string password = RJEncryptor.DecryptStringWithKey(PlayerPrefs.GetString(USER_PASSWORD_COOCKIE, ""), KYRJEncryption);
 				string nameUser = PlayerPrefs.GetString(USER_NAME_COOCKIE, "");
 
 				if (email.Length > 0)
@@ -488,7 +487,7 @@ namespace YourSharingEconomyApp
 				GameObject screen = (GameObject)_list[0];
 				DestroyGameObjectSingleScreen(screen, true);
 				EnableScreens(true);
-				SoundsController.Instance.PlayFxSelection();
+				SoundsConstants.PlayFxSelection();
 			}
 			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP)
 			{

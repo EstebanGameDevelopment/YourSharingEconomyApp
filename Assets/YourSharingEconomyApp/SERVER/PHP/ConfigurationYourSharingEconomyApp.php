@@ -78,7 +78,6 @@
 	
 	// PASSWORD ENCRYPTION COMMS
 	$kyRJEncryption = 'sK1rwpD1p+5e#bvt31CK13z77n=ES8jR'; // 32 * 8 = 256 bit key
-	$ivRJEncryption = 'A9q2N2haeQybv8#Aq!N9ybc1Cnrx12@y'; // 32 * 8 = 256 bit iv		
 	
 	 //-------------------------------------------------------------
      //  SpecialCharacters
@@ -152,22 +151,34 @@
 	 //-------------------------------------------------------------
      //  decryptRJ256
      //-------------------------------------------------------------
-	function decryptRJ256($key,$iv,$string_to_decrypt)
+	function decryptRJ256($key,$string_to_decrypt)
 	{
-		$string_to_decrypt = base64_decode($string_to_decrypt);
-		$rtn = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $string_to_decrypt, MCRYPT_MODE_CBC, $iv);
+		$array_encrypted = explode('|', $string_to_decrypt);		
+		$decoded_data = base64_decode($array_encrypted[0]);
+		$iv = base64_decode($array_encrypted[1]);
+		$rtn = mcrypt_decrypt(MCRYPT_RIJNDAEL_256, $key, $decoded_data, MCRYPT_MODE_CBC, $iv);
 		$rtn = rtrim($rtn, "\0\4");
 		return($rtn);
 	}
 
 	 //-------------------------------------------------------------
+     //  encryptRJ256	 
+     //-------------------------------------------------------------
+	function encryptRJ256($key,$string_to_encrypt)
+	{
+		$iv = mcrypt_create_iv(mcrypt_get_iv_size(MCRYPT_RIJNDAEL_256, MCRYPT_MODE_CBC), MCRYPT_DEV_URANDOM);
+		$rtn = mcrypt_encrypt(MCRYPT_RIJNDAEL_256, $key, $string_to_encrypt, MCRYPT_MODE_CBC, $iv);
+		$rtn_base64 = base64_encode($rtn) . '|' . base64_encode($iv);
+		return($rtn_base64);
+	}
+	
+	 //-------------------------------------------------------------
  	 //  ExistsUser
      //-------------------------------------------------------------
 	 function ExistsUser($iduser_par, $currpassword_encrypted_par)
      {
-		// DECRIPT THE PASSWORD WITH THE KEY
-		$currpassword_encrypted_corrected = str_replace(" ","+",$currpassword_encrypted_par);
-		$currpassword_decrypted = decryptRJ256($GLOBALS['kyRJEncryption'],$GLOBALS['ivRJEncryption'],$currpassword_encrypted_corrected);
+		$currpassword_encrypted_corrected = str_replace(" ","+",$currpassword_encrypted_par);		
+		$currpassword_decrypted = decryptRJ256($GLOBALS['kyRJEncryption'],$currpassword_encrypted_corrected);
 		$currpassword_encrypted_final = EncryptText($currpassword_decrypted);
 	 
 		// Performing SQL Consult

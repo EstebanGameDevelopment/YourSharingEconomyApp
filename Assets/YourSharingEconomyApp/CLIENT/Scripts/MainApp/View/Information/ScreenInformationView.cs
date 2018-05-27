@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -130,7 +131,7 @@ namespace YourSharingEconomyApp
 		public void Destroy()
 		{
 			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			GameObject.Destroy(this.gameObject);
 		}
 
 		// -------------------------------------------

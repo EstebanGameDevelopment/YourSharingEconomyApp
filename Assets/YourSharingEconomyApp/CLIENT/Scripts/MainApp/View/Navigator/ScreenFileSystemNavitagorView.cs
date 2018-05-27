@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -63,6 +64,7 @@ namespace YourSharingEconomyApp
 			UpdateListItems(FileSystemController.Instance.PathLastSearch);
 
 			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
 		// -------------------------------------------
@@ -74,6 +76,7 @@ namespace YourSharingEconomyApp
 			if (m_listItems!=null) m_listItems.GetComponent<FileManagerView>().Destroy();
 			m_listItems = null;
 
+			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
 			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
 			GameObject.Destroy(this.gameObject);
 		}
@@ -110,10 +113,14 @@ namespace YourSharingEconomyApp
 
 		// -------------------------------------------
 		/* 
-		 * OnBasicEvent
+		 * OnBasicSystemEvent
 		 */
-		private void OnBasicEvent(string _nameEvent, params object[] _list)
+		private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
 		{
+			if (_nameEvent == BasicSystemEventController.EVENT_BASICSYSTEMEVENT_OPEN_INFO_IMAGE_SCREEN)
+			{
+				ScreenController.Instance.CreateNewScreen(ScreenImageView.SCREEN_IMAGE, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, _list);
+			}
 			if (_nameEvent == FileItemView.EVENT_FILE_ITEM_SELECTED)
 			{
 				ItemMultiObjectEntry item = (ItemMultiObjectEntry)_list[0];
@@ -124,6 +131,14 @@ namespace YourSharingEconomyApp
 				ItemMultiObjectEntry item = (ItemMultiObjectEntry)_list[0];
 				UpdateListItems((DirectoryInfo)item.Objects[1]);
 			}
+		}
+
+		// -------------------------------------------
+		/* 
+		 * OnBasicEvent
+		 */
+		private void OnBasicEvent(string _nameEvent, params object[] _list)
+		{
 			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				Destroy();

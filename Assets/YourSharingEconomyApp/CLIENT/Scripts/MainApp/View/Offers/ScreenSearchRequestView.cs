@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using UnityEngine.UI;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -74,6 +75,7 @@ namespace YourSharingEconomyApp
 			m_container.Find("Button_Back").GetComponent<Button>().onClick.AddListener(BackPressed);
 
 			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
 		// -------------------------------------------
@@ -83,7 +85,8 @@ namespace YourSharingEconomyApp
 		public void Destroy()
 		{
 			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
+			GameObject.Destroy(this.gameObject);
 		}
 
 		// -------------------------------------------
@@ -148,18 +151,26 @@ namespace YourSharingEconomyApp
 
 		// -------------------------------------------
 		/* 
+		 * OnBasicSystemEvent
+		 */
+		private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
+		{
+			if (_nameEvent == GoogleMap.EVENT_GOOGLEMAP_USER_UPDATE_VILLAGE)
+			{
+				m_villageSearch = (string)_list[0];
+				m_mapDataSearch = (string)_list[1];
+				m_container.Find("Button_Maps/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.create.request.area.search") + '\n' + m_villageSearch;
+			}
+		}
+
+		// -------------------------------------------
+		/* 
 		 * OnBasicEvent
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
 			if (!this.gameObject.activeSelf) return;
 
-			if (_nameEvent == UsersController.EVENT_USER_UPDATE_VILLAGE)
-			{
-				m_villageSearch = (string)_list[0];
-				m_mapDataSearch = (string)_list[1];
-				m_container.Find("Button_Maps/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.create.request.area.search") + '\n' + m_villageSearch;
-			}
 			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				BackPressed();

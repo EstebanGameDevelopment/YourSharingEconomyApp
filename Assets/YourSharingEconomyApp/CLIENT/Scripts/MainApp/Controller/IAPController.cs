@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Xml;
 using System.IO;
 using UnityEngine.Purchasing;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -248,7 +249,7 @@ namespace YourSharingEconomyApp
 					if (success)
 					{
 						int rentValue = int.Parse(iapID.Substring(iapID.Length - 1, 1));
-						BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_RENT_PROVIDER, success, rentValue, RJEncryptor.Encrypt(m_currentCodeTransaction, false));
+						BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_RENT_PROVIDER, success, rentValue, m_currentCodeTransaction);
 					}
 					else
 					{
@@ -259,13 +260,13 @@ namespace YourSharingEconomyApp
 				{
 					if (iapID.IndexOf(IAP_POST_OFFER_NO_WAIT) != -1)
 					{
-						BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_POST_OFFER, success, RJEncryptor.Encrypt(m_currentCodeTransaction, false));
+						BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_POST_OFFER, success, m_currentCodeTransaction);
 					}
 					else
 					{
 						if (iapID.IndexOf(IAP_CREATE_NEW_REQUEST) != -1)
 						{
-							BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_NEW_REQUEST, success, RJEncryptor.Encrypt(m_currentCodeTransaction, false));
+							BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_NEW_REQUEST, success, m_currentCodeTransaction);
 						}
 						else
 						{
@@ -285,26 +286,29 @@ namespace YourSharingEconomyApp
 				m_currentEventIAP = EVENT_IAP_CALL_PURCHASE_RENT_PROVIDER;
 				m_currentIdProduct = (string)_list[0];
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
-				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.Encrypt(m_currentCodeTransaction, false));
+				string codeGeneratedInitial = RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, ScreenController.KYRJEncryption);
+				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, codeGeneratedInitial);
 			}
 			if (_nameEvent == EVENT_IAP_CALL_PURCHASE_POST_OFFER_NO_WAIT)
 			{
 				m_currentEventIAP = EVENT_IAP_CALL_PURCHASE_POST_OFFER_NO_WAIT;
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
-				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.Encrypt(m_currentCodeTransaction, false));
+				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, ScreenController.KYRJEncryption));
 			}
 			if (_nameEvent == EVENT_IAP_CALL_PURCHASE_CREATE_NEW_REQUEST)
 			{
 				m_currentEventIAP = EVENT_IAP_CALL_PURCHASE_CREATE_NEW_REQUEST;
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
-				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.Encrypt(m_currentCodeTransaction, false));
+				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, ScreenController.KYRJEncryption));
 			}
 			if (_nameEvent == EVENT_IAP_CODE_CONFIRMATION)
 			{
 				if ((bool)_list[0])
 				{
-					if (RJEncryptor.Encrypt(m_currentCodeTransaction, false) == (string)_list[1])
+					string codeDecrypted = RJEncryptor.DecryptStringWithKey((string)_list[1], ScreenController.KYRJEncryption);
+					if (codeDecrypted == m_currentCodeTransaction)
 					{
+						m_currentCodeTransaction = (string)_list[1];
 						if (m_currentEventIAP == EVENT_IAP_CALL_PURCHASE_RENT_PROVIDER)
 						{
 							if (m_currentIdProduct.Length > 0)
