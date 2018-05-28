@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class RequestUpdateImageRefHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "RequestUpdateImageReference.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "RequestUpdateImageReference.php";
 
 		public string UrlRequest
 		{
@@ -27,18 +28,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_UPDATE_IMG_REF, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_UPDATE_IMG_REF, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_UPDATE_IMG_REF, true);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_UPDATE_IMG_REF, true);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_UPDATE_IMG_REF, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_UPDATE_IMG_REF, false);
 			}
 		}
 	}

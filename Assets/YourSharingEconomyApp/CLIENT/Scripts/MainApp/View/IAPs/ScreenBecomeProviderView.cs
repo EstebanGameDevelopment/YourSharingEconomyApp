@@ -18,7 +18,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenBecomeProviderView : ScreenBaseView, IBasicScreenView
+	public class ScreenBecomeProviderView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_BECOME_PROVIDER = "SCREEN_BECOME_PROVIDER";
 
@@ -38,7 +38,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -60,17 +60,21 @@ namespace YourSharingEconomyApp
 			m_container.Find("Button_Cancel").GetComponent<Button>().onClick.AddListener(OnClickCancel);
 			m_container.Find("Button_Cancel/Text").GetComponent<Text>().text = LanguageController.Instance.GetText("message.cancel");
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -79,8 +83,8 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnRentPurchase(string _rentIAP)
 		{
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-			BasicEventController.Instance.DispatchBasicEvent(IAPController.EVENT_IAP_CALL_PURCHASE_RENT_PROVIDER, _rentIAP);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+			UIEventController.Instance.DispatchUIEvent(IAPController.EVENT_IAP_CALL_PURCHASE_RENT_PROVIDER, _rentIAP);
 		}
 
 		// -------------------------------------------
@@ -140,10 +144,10 @@ namespace YourSharingEconomyApp
 			{
 				if (!(bool)_list[0])
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					string title = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.iap.failure.become.proovider");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_SCREENBECOMEPROVIDER_DESTROY);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_SCREENBECOMEPROVIDER_DESTROY);
 				}
 			}
 			if (_nameEvent == UsersController.EVENT_USER_IAP_RESULT_PURCHASE_RENT_PROVIDER)
@@ -152,32 +156,32 @@ namespace YourSharingEconomyApp
 				{
 					string title = LanguageController.Instance.GetText("message.info");
 					string description = LanguageController.Instance.GetText("message.iap.congratulations.proovider");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_SCREENBECOMEPROVIDER_CONFIRMATION);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_SCREENBECOMEPROVIDER_CONFIRMATION);
 				}
 				else
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					string title = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.iap.failure.become.proovider");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_SCREENBECOMEPROVIDER_DESTROY);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_SCREENBECOMEPROVIDER_DESTROY);
 				}
-			}
-			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			}			
+			if (_nameEvent == ScreenController.EVENT_CONFIRMATION_POPUP)
 			{
 				string subEvent = (string)_list[2];
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if (subEvent == SUB_EVENT_SCREENBECOMEPROVIDER_CONFIRMATION)
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-					BasicEventController.Instance.DelayBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, 0.01f, (long)UsersController.Instance.CurrentUser.Id);
-					Destroy();
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+					UIEventController.Instance.DelayUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, 0.01f, (long)UsersController.Instance.CurrentUser.Id);
+					Destroy();					
 				}
 				if (subEvent == SUB_EVENT_SCREENBECOMEPROVIDER_DESTROY)
 				{
 					Destroy();
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				OnClickCancel();
 			}

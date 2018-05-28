@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class RequestUpdateScoreAndFeedbackHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "RequestUpdateScore.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "RequestUpdateScore.php";
 
 		public string UrlRequest
 		{
@@ -41,18 +42,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_SCORE_AND_FEEDBACK_UPDATE, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_SCORE_AND_FEEDBACK_UPDATE, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_SCORE_AND_FEEDBACK_UPDATE, true, long.Parse(data[1]));
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_SCORE_AND_FEEDBACK_UPDATE, true, long.Parse(data[1]));
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_SCORE_AND_FEEDBACK_UPDATE, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_SCORE_AND_FEEDBACK_UPDATE, false);
 			}
 		}
 	}

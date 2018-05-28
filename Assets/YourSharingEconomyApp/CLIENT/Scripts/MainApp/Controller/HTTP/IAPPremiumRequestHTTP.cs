@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class IAPPremiumRequestHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "IAPPremiumRequest.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "IAPPremiumRequest.php";
 
 		public string UrlRequest
 		{
@@ -27,18 +28,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_RESULT_PURCHASE_NEW_REQUEST, false);
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_IAP_RESULT_PURCHASE_NEW_REQUEST, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_RESULT_PURCHASE_NEW_REQUEST, true);
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_IAP_RESULT_PURCHASE_NEW_REQUEST, true);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_RESULT_PURCHASE_NEW_REQUEST, false);
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_IAP_RESULT_PURCHASE_NEW_REQUEST, false);
 			}
 		}
 	}

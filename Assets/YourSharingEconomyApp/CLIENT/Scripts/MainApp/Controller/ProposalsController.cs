@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -97,7 +98,7 @@ namespace YourSharingEconomyApp
 		 */
 		public void Init()
 		{
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
@@ -106,8 +107,8 @@ namespace YourSharingEconomyApp
 		 */
 		public void Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			DestroyObject(_instance.gameObject);
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			Destroy(_instance.gameObject);
 			_instance = null;
 		}
 
@@ -197,7 +198,7 @@ namespace YourSharingEconomyApp
 					}
 				}
 			}
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_PROPOSAL_RESULT_FORMATTED_PROPOSALS, m_proposals);
+			UIEventController.Instance.DispatchUIEvent(EVENT_PROPOSAL_RESULT_FORMATTED_PROPOSALS, m_proposals);
 		}
 
 		// -------------------------------------------

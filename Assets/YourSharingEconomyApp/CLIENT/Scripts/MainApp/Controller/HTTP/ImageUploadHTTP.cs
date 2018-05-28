@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class ImageUploadHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "ImageUpload.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "ImageUpload.php";
 
 		public string UrlRequest
 		{
@@ -42,18 +43,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION, false);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION, true, long.Parse(data[1]), data[2], long.Parse(data[3]));
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION, true, long.Parse(data[1]), data[2], long.Parse(data[3]));
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION, false);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION, false);
 			}
 		}
 	}

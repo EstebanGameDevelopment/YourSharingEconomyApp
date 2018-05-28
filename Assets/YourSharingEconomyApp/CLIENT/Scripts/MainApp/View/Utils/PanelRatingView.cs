@@ -153,7 +153,7 @@ namespace YourSharingEconomyApp
 			{
 				if (m_eventData.Length > 0)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(m_eventData, this.gameObject, _index, m_property);
+					UIEventController.Instance.DispatchUIEvent(m_eventData, this.gameObject, _index, m_property);
 				}
 			}
 		}

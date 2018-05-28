@@ -122,7 +122,7 @@ namespace YourSharingEconomyApp
 			m_loadingText = this.gameObject.transform.Find("Loading").gameObject;
 			m_loadingText.GetComponent<Text>().text = LanguageController.Instance.GetText("message.loading");
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
@@ -133,7 +133,7 @@ namespace YourSharingEconomyApp
 		public void Destroy()
 		{
 			m_urlImage = null;
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
 			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
 			GameObject.Destroy(this.gameObject);
 		}
@@ -148,7 +148,7 @@ namespace YourSharingEconomyApp
 			m_pathFile = _pathFile;
 			m_url = "";
 
-			BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_FROM_SYSTEM_IMAGE, _pathFile, _scrollPosition, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, m_type);
+			UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_FROM_SYSTEM_IMAGE, _pathFile, _scrollPosition, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, m_type);
 		}
 
 		// -------------------------------------------
@@ -167,11 +167,11 @@ namespace YourSharingEconomyApp
 			{
 				m_url = "";
 				m_isPossibleImageURL = true;
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_IMAGE_URL, m_pathFile, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, ImageUtils.GetBytesJPG(_urlImage));
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_IMAGE_URL, m_pathFile, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, ImageUtils.GetBytesJPG(_urlImage));
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_URL, m_pathFile, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, ImageUtils.GetBytesJPG(_urlImage), m_url);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_URL, m_pathFile, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, ImageUtils.GetBytesJPG(_urlImage), m_url);
 			}
 		}
 
@@ -196,16 +196,16 @@ namespace YourSharingEconomyApp
 			{
 				if (m_isBanned)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_TOXIC_IMAGE, m_image, (int)(m_background.GetComponent<RectTransform>().sizeDelta.y), ImageUtils.GetBytesJPG(ScreenController.Instance.ImageToxicConfirmed));
+					UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_TOXIC_IMAGE, m_image, (int)(m_background.GetComponent<RectTransform>().sizeDelta.y), ImageUtils.GetBytesJPG(MenusScreenController.Instance.ImageToxicConfirmed));
 				}
 				else
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_TOXIC_IMAGE, m_image, (int)(m_background.GetComponent<RectTransform>().sizeDelta.y), ImageUtils.GetBytesJPG(ScreenController.Instance.ImageToxicPossible));
+					UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_TOXIC_IMAGE, m_image, (int)(m_background.GetComponent<RectTransform>().sizeDelta.y), ImageUtils.GetBytesJPG(MenusScreenController.Instance.ImageToxicPossible));
 				}
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_FROM_ID, this.gameObject, _idImage, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, false);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_FROM_ID, this.gameObject, _idImage, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, false);
 			}
 		}
 
@@ -218,7 +218,7 @@ namespace YourSharingEconomyApp
 			m_requestedToDelete = true;
 			string warning = LanguageController.Instance.GetText("message.warning");
 			string description = LanguageController.Instance.GetText("message.slot.image.delete.confirmation");
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_IMAGESLOT_CONFIRMATION_DELETE);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_IMAGESLOT_CONFIRMATION_DELETE);
 		}
 
 		// -------------------------------------------
@@ -230,7 +230,7 @@ namespace YourSharingEconomyApp
 			if (m_isCurrentUser)
 			{
 				Selected = true;
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_SELECTED_THUMBNAIL_REFERENCE, this.gameObject, m_id, m_isDisplayOnly);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_SELECTED_THUMBNAIL_REFERENCE, this.gameObject, m_id, m_isDisplayOnly);
 			}
 		}
 
@@ -246,13 +246,13 @@ namespace YourSharingEconomyApp
 				{
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("message.show.nothing.of.user.banned");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 				}
 				else
 				{
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("message.request.declared.toxic");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_IMAGESLOT_CONFIRMATION_SEE_TOXIC_CONTENT);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_IMAGESLOT_CONFIRMATION_SEE_TOXIC_CONTENT);
 					m_requestedToSeeFlagged = true;
 				}
 			}
@@ -264,7 +264,7 @@ namespace YourSharingEconomyApp
 				}
 				else
 				{
-					ScreenController.Instance.CreateNewScreen(ScreenImageView.SCREEN_IMAGE, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, m_id, GetByteImageJPG());
+					MenusScreenController.Instance.CreateNewScreen(ScreenImageView.SCREEN_IMAGE, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, false, m_id, GetByteImageJPG());
 				}
 			}
 		}
@@ -309,11 +309,11 @@ namespace YourSharingEconomyApp
 		{
 			if (m_id == -1)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_NEW_IMAGE, m_id, _table, _originId, m_type, GetByteImageJPG(), m_url);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_NEW_IMAGE, m_id, _table, _originId, m_type, GetByteImageJPG(), m_url);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION);
 			}
 		}
 
@@ -339,15 +339,15 @@ namespace YourSharingEconomyApp
 							if ((widthTexture < 100) || (heightTexture < 100))
 							{
 								m_url = m_pathFile;
-								BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_URL, m_pathFile, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, ImageUtils.GetBytesJPG(m_urlImage), m_url);
+								UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_URL, m_pathFile, m_image, (int)m_background.GetComponent<RectTransform>().sizeDelta.y, ImageUtils.GetBytesJPG(m_urlImage), m_url);
 							}
 						}
 					}
 					if (m_type == RequestModel.IMAGE_TYPE_FINISHED)
 					{
 						m_isUploadingFinalImage = true;
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_NEW_IMAGE, m_id, ScreenController.TABLE_REQUESTS, m_originId, m_type, GetByteImageJPG(), m_url);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_NEW_IMAGE, m_id, MenusScreenController.TABLE_REQUESTS, m_originId, m_type, GetByteImageJPG(), m_url);
 					}
 				}
 			}
@@ -359,7 +359,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			if (_nameEvent == ScreenController.EVENT_CONFIRMATION_POPUP)
 			{
 				string subEvent = (string)_list[2];
 				if (subEvent == SUB_EVENT_IMAGESLOT_CONFIRMATION_DELETE)
@@ -367,10 +367,10 @@ namespace YourSharingEconomyApp
 					if (m_requestedToDelete)
 					{
 						m_requestedToDelete = false;
-						BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+						UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 						if ((bool)_list[1])
 						{
-							BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_CALL_DELETE_IMAGE, this.gameObject, m_id);
+							UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_CALL_DELETE_IMAGE, this.gameObject, m_id);
 						}
 					}
 				}
@@ -381,7 +381,7 @@ namespace YourSharingEconomyApp
 						m_requestedToSeeFlagged = false;
 						if ((bool)_list[1])
 						{
-							ScreenController.Instance.CreateNewScreen(ScreenImageView.SCREEN_IMAGE, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, m_id, null);
+							MenusScreenController.Instance.CreateNewScreen(ScreenImageView.SCREEN_IMAGE, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, false, m_id, null);
 						}
 					}
 				}
@@ -392,7 +392,7 @@ namespace YourSharingEconomyApp
 				{
 					if (m_type != RequestModel.IMAGE_TYPE_FINISHED)
 					{
-						BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+						UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					}
 					if ((bool)_list[0])
 					{

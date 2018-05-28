@@ -22,7 +22,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenCustomerProfileView : ScreenBaseView, IBasicScreenView
+	public class ScreenCustomerProfileView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_CUSTOMER_PROFILE = "SCREEN_CUSTOMER_PROFILE";
 
@@ -44,7 +44,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_userData = (UserModel)_list[0];
 
@@ -79,21 +79,25 @@ namespace YourSharingEconomyApp
 				}
 			}
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
-			BasicEventController.Instance.DelayBasicEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_RECORDS_BY_USER, 0.1f, m_userData.Id);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
+			UIEventController.Instance.DelayUIEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_RECORDS_BY_USER, 0.1f, m_userData.Id);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
+			if (base.Destroy()) return true;
+
 			m_requestsContainer.GetComponent<SlotManagerView>().Destroy();
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -109,7 +113,7 @@ namespace YourSharingEconomyApp
 				m_requestsContainer.GetComponent<SlotManagerView>().ClearCurrentGameObject();
 				m_requestsContainer.GetComponent<SlotManagerView>().ClearCurrentRequests();
 
-				BasicEventController.Instance.DelayBasicEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_RECORDS_BY_USER, 0.1f, m_userData.Id);
+				UIEventController.Instance.DelayUIEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_RECORDS_BY_USER, 0.1f, m_userData.Id);
 			}
 			else
 			{
@@ -123,7 +127,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void ExitPressed()
 		{
-			BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+			UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
 		}
 
 		// -------------------------------------------
@@ -136,7 +140,7 @@ namespace YourSharingEconomyApp
 
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_FORMATTED_RECORDS)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				List<RequestModel> data = (List<RequestModel>)_list[0];
 				if ((int)_list[1] == RequestsController.TYPE_CONSULT_BY_USER)
 				{
@@ -174,33 +178,33 @@ namespace YourSharingEconomyApp
 				{
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("message.show.nothing.of.user.banned");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 				}
 				else
 				{
 					if (m_requestsContainer.GetComponent<SlotManagerView>().CheckSlotExisting(slotClicked))
 					{
 						SlotRequestView slotSelected = slotClicked.GetComponent<SlotRequestView>();
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_SINGLE_RECORD, slotSelected.Request.Id);
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_SINGLE_RECORD, slotSelected.Request.Id);
 					}
 				}
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_FORMATTED_SINGLE_RECORD)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				RequestModel request = (RequestModel)_list[0];
 				if (request != null)
 				{
-					ScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, request);
+					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, request);
 				}
 				else
 				{
 					string warning = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.request.not.found");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				ExitPressed();
 			}

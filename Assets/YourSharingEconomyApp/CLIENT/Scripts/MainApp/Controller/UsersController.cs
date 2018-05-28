@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Xml;
 using System.IO;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
@@ -115,7 +116,7 @@ namespace YourSharingEconomyApp
 		{
 			m_currentUser = new UserModel("");
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnUIEvent);
 		}
 
 		// -------------------------------------------
@@ -124,7 +125,7 @@ namespace YourSharingEconomyApp
 		 */
 		public void Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnUIEvent;
 			DestroyObject(_instance.gameObject);
 			_instance = null;
 		}
@@ -159,7 +160,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * OnBasicEvent
 		 */
-		private void OnBasicEvent(string _nameEvent, params object[] _list)
+		private void OnUIEvent(string _nameEvent, params object[] _list)
 		{
 			if (_nameEvent == UsersController.EVENT_USER_LOGIN_REQUEST)
 			{
@@ -194,19 +195,19 @@ namespace YourSharingEconomyApp
 											  (string)_list[18], //string _banned
 											  (string)_list[19] //string _publickey
 											  );
-					if (ScreenController.Instance.DebugMode)
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("UsersController::LOGIN SUCCESS");
 					}
 				}
 				else
 				{
-					if (ScreenController.Instance.DebugMode)
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("UsersController::LOGIN ERROR");
 					}
 				}
-				BasicEventController.Instance.DispatchBasicEvent(EVENT_USER_LOGIN_FORMATTED, (bool)_list[0], m_currentUser);
+				UIEventController.Instance.DispatchUIEvent(EVENT_USER_LOGIN_FORMATTED, (bool)_list[0], m_currentUser);
 			}
 			if (_nameEvent == UsersController.EVENT_USER_REGISTER_REQUEST)
 			{
@@ -241,14 +242,14 @@ namespace YourSharingEconomyApp
 											  (string)_list[18], //string _banned
 											  (string)_list[19] //string _publickey
 											  );
-					if (ScreenController.Instance.DebugMode)
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("UsersController::LOGIN EMAIL SUCCESS");
 					}
 				}
 				else
 				{
-					if (ScreenController.Instance.DebugMode)
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("UsersController::LOGIN EMAIL ERROR");
 					}
@@ -281,19 +282,19 @@ namespace YourSharingEconomyApp
 											  (string)_list[21] //string _publicKey
 											  );
 					m_currentUser.SetPassword((string)_list[2]);
-					if (ScreenController.Instance.DebugMode)
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("UsersController::LOGIN FACEBOOK SUCCESS");
 					}
 				}
 				else
 				{
-					if (ScreenController.Instance.DebugMode)
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("UsersController::LOGIN FACEBOOK ERROR");
 					}
 				}
-				BasicEventController.Instance.DispatchBasicEvent(EVENT_USER_FACEBOOK_LOGIN_FORMATTED, (bool)_list[0], m_currentUser);
+				UIEventController.Instance.DispatchUIEvent(EVENT_USER_FACEBOOK_LOGIN_FORMATTED, (bool)_list[0], m_currentUser);
 			}
 			if (_nameEvent == UsersController.EVENT_USER_UPDATE_PROFILE_REQUEST)
 			{
@@ -320,14 +321,14 @@ namespace YourSharingEconomyApp
 											  (string)_list[6], //string _skills
 											  (string)_list[7] //string _description
 											  );
-					if (ScreenController.Instance.DebugMode)
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("UsersController::UPDATE PROFILE SUCCESS");
 					}
 				}
 				else
 				{
-					if (ScreenController.Instance.DebugMode)
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("UsersController::UPDATE PROFILE ERROR");
 					}
@@ -346,7 +347,7 @@ namespace YourSharingEconomyApp
 				UserModel sUser = GetLocalUser(idUserSearch);
 				if (sUser != null)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD, sUser);
+					UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD, sUser);
 				}
 				else
 				{
@@ -374,7 +375,7 @@ namespace YourSharingEconomyApp
 					string[] tokens = lines[k].Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 					if (k == 0)
 					{
-						if (ScreenController.Instance.DebugMode)
+						if (MenusScreenController.Instance.DebugMode)
 						{
 							Debug.Log("EVENT_USER_RESULT_CONSULT_SINGLE_RECORD::tokens[" + tokens.Length + "]=" + lines[k]);
 						}
@@ -404,7 +405,7 @@ namespace YourSharingEconomyApp
 					}
 					else
 					{
-						if (ScreenController.Instance.DebugMode)
+						if (MenusScreenController.Instance.DebugMode)
 						{
 							Debug.Log("EVENT_USER_RESULT_CONSULT_SINGLE_RECORD::((IMAGE)) tokens[" + tokens.Length + "]=" + lines[k]);
 						}
@@ -432,7 +433,7 @@ namespace YourSharingEconomyApp
 						m_users.Add(requestedUser);
 					}
 				}
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD, requestedUser);
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD, requestedUser);
 			}
 			if (_nameEvent == EVENT_USER_IAP_CALL_PURCHASE_RENT_PROVIDER)
 			{

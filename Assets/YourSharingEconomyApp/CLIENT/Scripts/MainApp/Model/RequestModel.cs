@@ -675,7 +675,7 @@ namespace YourSharingEconomyApp
 			if (m_reported.Length == 0) return false;
 
 			string[] reports = m_reported.Split(',');
-			return (reports.Length >= ScreenController.Instance.TotalReportsToWarnRequest);
+			return (reports.Length >= MenusScreenController.Instance.TotalReportsToWarnRequest);
 		}
 
 		// -------------------------------------------
@@ -708,14 +708,14 @@ namespace YourSharingEconomyApp
 				binaryData.Add(BitConverter.GetBytes(m_scoreprovider));
 			}
 
-			List<ImageModel> imagesRequest = ImagesController.Instance.GetImageByOrigin(m_id, ScreenController.TABLE_REQUESTS);
+			List<ImageModel> imagesRequest = ImagesController.Instance.GetImageByOrigin(m_id, MenusScreenController.TABLE_REQUESTS);
 			for (int i = 0; i < imagesRequest.Count; i++)
 			{
 				ImageModel imageRequest = imagesRequest[i];
 				byte[] bytesImage = new byte[imageRequest.Data.Length];
 				Array.Copy(imageRequest.Data, 0, bytesImage, 0, imageRequest.Data.Length);
 				binaryData.Add(bytesImage);
-				if (ScreenController.Instance.DebugMode) Debug.Log("RequestModel::GetBinaryData::IMAGE[" + i + "] BINARY DATA=" + bytesImage.Length);
+				if (MenusScreenController.Instance.DebugMode) Debug.Log("RequestModel::GetBinaryData::IMAGE[" + i + "] BINARY DATA=" + bytesImage.Length);
 			}
 
 			int counter = 0;
@@ -747,7 +747,7 @@ namespace YourSharingEconomyApp
 			if (_privateKey.Length > 0)
 			{
 				m_signatureCustomer = YourBitcoinController.BitCoinController.Instance.SignTextData(dataRequest, _privateKey);
-				if (ScreenController.Instance.DebugMode) Debug.Log("RequestModel::SignDataCustomer::SUCCESSFULL SIGNATURE ++CUSTOMER++ OF DATA[" + dataRequest.Length + "]::signature[" + m_signatureCustomer.Length + "]=" + m_signatureCustomer);
+				if (MenusScreenController.Instance.DebugMode) Debug.Log("RequestModel::SignDataCustomer::SUCCESSFULL SIGNATURE ++CUSTOMER++ OF DATA[" + dataRequest.Length + "]::signature[" + m_signatureCustomer.Length + "]=" + m_signatureCustomer);
 				return true;
 			}
 			else
@@ -768,7 +768,7 @@ namespace YourSharingEconomyApp
 			if (_privateKey.Length > 0)
 			{
 				m_signatureProvider = YourBitcoinController.BitCoinController.Instance.SignTextData(dataRequest, _privateKey);
-				if (ScreenController.Instance.DebugMode) Debug.Log("RequestModel::SignDataProvider::SUCCESSFULL SIGNATURE ++PROVIDER++ OF DATA[" + dataRequest.Length + "]::signature[" + m_signatureProvider.Length + "]=" + m_signatureProvider);
+				if (MenusScreenController.Instance.DebugMode) Debug.Log("RequestModel::SignDataProvider::SUCCESSFULL SIGNATURE ++PROVIDER++ OF DATA[" + dataRequest.Length + "]::signature[" + m_signatureProvider.Length + "]=" + m_signatureProvider);
 				return true;
 			}
 			else
@@ -786,7 +786,7 @@ namespace YourSharingEconomyApp
 			byte[] binaryRequest = GetBinaryData(true);
 			string dataRequest = Encoding.UTF8.GetString(binaryRequest);
 
-			if (ScreenController.Instance.DebugMode)
+			if (MenusScreenController.Instance.DebugMode)
 			{
 				Debug.Log("RequestModel::VerifySignedDataCustomer::DATA[" + dataRequest.Length + "]");
 				Debug.Log("	signature[" + m_signatureCustomer.Length + "]=" + m_signatureCustomer);
@@ -805,7 +805,7 @@ namespace YourSharingEconomyApp
 			byte[] binaryRequest = GetBinaryData(false);
 			string dataRequest = Encoding.UTF8.GetString(binaryRequest);
 
-			if (ScreenController.Instance.DebugMode)
+			if (MenusScreenController.Instance.DebugMode)
 			{
 				Debug.Log("RequestModel::VerifySignedDataProvider::DATA[" + dataRequest.Length + "]");
 				Debug.Log("	signature[" + m_signatureCustomer.Length + "]=" + m_signatureCustomer);

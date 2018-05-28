@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class ImageRemoveHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "ImageRemove.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "ImageRemove.php";
 
 		public string UrlRequest
 		{
@@ -27,18 +28,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGE_REMOVED_SERVER_CONFIRMATION, false);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGE_REMOVED_SERVER_CONFIRMATION, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGE_REMOVED_SERVER_CONFIRMATION, true, long.Parse(data[1]));
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGE_REMOVED_SERVER_CONFIRMATION, true, long.Parse(data[1]));
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGE_REMOVED_SERVER_CONFIRMATION, false);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGE_REMOVED_SERVER_CONFIRMATION, false);
 			}
 		}
 	}

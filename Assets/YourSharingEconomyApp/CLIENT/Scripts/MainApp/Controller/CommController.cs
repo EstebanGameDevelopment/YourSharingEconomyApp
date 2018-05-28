@@ -731,7 +731,7 @@ namespace YourSharingEconomyApp
 
 			ChangeState(STATE_COMMUNICATION);
 			string data = m_commRequest.Build(_list);
-			if (ScreenController.Instance.DebugComms)
+			if (MenusScreenController.Instance.DebugComms)
 			{
 				Debug.Log("CommController::RequestReal:URL=" + m_commRequest.UrlRequest);
 				Debug.Log("CommController::RequestReal:data=" + data);
@@ -800,12 +800,12 @@ namespace YourSharingEconomyApp
 			// check for errors
 			if (www.error == null)
 			{
-				if (ScreenController.Instance.DebugComms) Debug.Log("WWW Ok!: " + www.text);
+				if (MenusScreenController.Instance.DebugComms) Debug.Log("WWW Ok!: " + www.text);
 				m_commRequest.Response(www.bytes);
 			}
 			else
 			{
-				if (ScreenController.Instance.DebugComms) Debug.LogError("WWW Error: " + www.error);
+				if (MenusScreenController.Instance.DebugComms) Debug.LogError("WWW Error: " + www.error);
 				m_commRequest.Response(Encoding.ASCII.GetBytes(www.error));
 
 			}
@@ -825,12 +825,12 @@ namespace YourSharingEconomyApp
 			// check for errors
 			if (www.error == null)
 			{
-				if (ScreenController.Instance.DebugComms) Debug.Log("WWW Ok!: " + www.text);
+				if (MenusScreenController.Instance.DebugComms) Debug.Log("WWW Ok!: " + www.text);
 				m_commRequest.Response(www.text);
 			}
 			else
 			{
-				if (ScreenController.Instance.DebugComms) Debug.LogError("WWW Error: " + www.error);
+				if (MenusScreenController.Instance.DebugComms) Debug.LogError("WWW Error: " + www.error);
 				m_commRequest.Response(Encoding.ASCII.GetBytes(www.error));
 
 			}
@@ -846,7 +846,7 @@ namespace YourSharingEconomyApp
 		public void DisplayLog(string _data)
 		{
 			m_inGameLog = _data + "\n";
-			if (ScreenController.Instance.DebugComms)
+			if (MenusScreenController.Instance.DebugComms)
 			{
 				Debug.Log("CommController::DisplayLog::DATA=" + _data);
 			}
@@ -869,7 +869,7 @@ namespace YourSharingEconomyApp
 		 */
 		void OnGUI()
 		{
-			if (ScreenController.Instance.DebugComms)
+			if (MenusScreenController.Instance.DebugComms)
 			{
 				if (!m_enableLog)
 				{

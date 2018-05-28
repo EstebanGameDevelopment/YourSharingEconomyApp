@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class UserUpdateProfileHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "UserUpdateProfile.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "UserUpdateProfile.php";
 
 		private string m_newPassword;
 		private string m_newEmail;
@@ -57,18 +58,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_UPDATE_PROFILE_RESULT, false);
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_UPDATE_PROFILE_RESULT, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_UPDATE_PROFILE_RESULT, true, m_newPassword, m_newEmail, m_newName, m_newVillage, m_newMapData, m_newSkills, m_newDescription);
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_UPDATE_PROFILE_RESULT, true, m_newPassword, m_newEmail, m_newName, m_newVillage, m_newMapData, m_newSkills, m_newDescription);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_UPDATE_PROFILE_RESULT, false);
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_UPDATE_PROFILE_RESULT, false);
 			}
 		}
 	}

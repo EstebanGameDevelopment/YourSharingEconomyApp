@@ -15,7 +15,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenRegisterView : ScreenBaseView, IBasicScreenView
+	public class ScreenRegisterView : ScreenBaseView, IBasicView
 	{
 		// ----------------------------------------------
 		// SCREEN ID
@@ -32,7 +32,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -46,24 +46,28 @@ namespace YourSharingEconomyApp
 			m_container.Find("PasswordConfirmationTitle").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.register.confirm");
 			m_container.Find("Button_Apply/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.register.word");
 
-			if (ScreenController.Instance.DebugMode)
+			if (MenusScreenController.Instance.DebugMode)
 			{
 				m_container.Find("EmailValue").GetComponent<InputField>().text = "YOUR_EMAIL_ADDRESS@YOUR_OWN_DOMAIN.COM";
 				m_container.Find("PasswordValue").GetComponent<InputField>().text = "YOUR_PASSWORD";
 				m_container.Find("PasswordConfirmationValue").GetComponent<InputField>().text = "YOUR_PASSWORD";
 			}
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -80,7 +84,7 @@ namespace YourSharingEconomyApp
 			{
 				string titleInfoError = LanguageController.Instance.GetText("message.error");
 				string descriptionInfoError = LanguageController.Instance.GetText("screen.message.logging.error");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 			}
 			else
 			{
@@ -88,14 +92,14 @@ namespace YourSharingEconomyApp
 				{
 					string titleInfoError = LanguageController.Instance.GetText("message.error");
 					string descriptionInfoError = LanguageController.Instance.GetText("screen.register.mistmatch.password");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 				}
 				else
 				{
 					string titleWait = LanguageController.Instance.GetText("screen.wait.register.title");
 					string descriptionWait = LanguageController.Instance.GetText("screen.wait.register.description");
-					BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_REGISTER_REQUEST, emailToCheck, passwordToCheck);
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleWait, descriptionWait, null, "");
+					UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_REGISTER_REQUEST, emailToCheck, passwordToCheck);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleWait, descriptionWait, null, "");
 				}
 			}
 		}
@@ -106,7 +110,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void BackPressed()
 		{
-			ScreenController.Instance.CreateNewScreenNoParameters(ScreenLoginView.SCREEN_LOGIN, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+			MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenLoginView.SCREEN_LOGIN, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 		}
 
 		// -------------------------------------------
@@ -126,19 +130,19 @@ namespace YourSharingEconomyApp
 		{
 			if (_nameEvent == UsersController.EVENT_USER_REGISTER_RESULT)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if ((bool)_list[0])
 				{
-					ScreenController.Instance.CreateNewScreenNoParameters(ScreenValidationConfirmationView.SCREEN_VALIDATION_CONFIRMATION, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+					MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenValidationConfirmationView.SCREEN_VALIDATION_CONFIRMATION, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 				}
 				else
 				{
 					string titleInfoError = LanguageController.Instance.GetText("message.error");
 					string descriptionInfoError = LanguageController.Instance.GetText("screen.register.wrong.register");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				BackPressed();
 			}

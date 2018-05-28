@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class IAPCreateValidationCodeHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "IAPCreateValidationCode.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "IAPCreateValidationCode.php";
 
 		public string UrlRequest
 		{
@@ -27,18 +28,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(IAPController.EVENT_IAP_CODE_CONFIRMATION, false);
+				UIEventController.Instance.DispatchUIEvent(IAPController.EVENT_IAP_CODE_CONFIRMATION, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(IAPController.EVENT_IAP_CODE_CONFIRMATION, true, data[1]);
+				UIEventController.Instance.DispatchUIEvent(IAPController.EVENT_IAP_CODE_CONFIRMATION, true, data[1]);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(IAPController.EVENT_IAP_CODE_CONFIRMATION, false);
+				UIEventController.Instance.DispatchUIEvent(IAPController.EVENT_IAP_CODE_CONFIRMATION, false);
 			}
 		}
 	}

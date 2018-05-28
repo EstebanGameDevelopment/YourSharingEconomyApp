@@ -11,7 +11,7 @@ namespace YourSharingEconomyApp
 
 	public class RequestSetAsFinishedHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "RequestUpdateAsFinished.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "RequestUpdateAsFinished.php";
 
 		public string UrlRequest
 		{
@@ -29,18 +29,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_SET_JOB_AS_FINISHED, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_SET_JOB_AS_FINISHED, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_SET_JOB_AS_FINISHED, true, long.Parse(data[1]));
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_SET_JOB_AS_FINISHED, true, long.Parse(data[1]));
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_SET_JOB_AS_FINISHED, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_SET_JOB_AS_FINISHED, false);
 			}
 		}
 	}

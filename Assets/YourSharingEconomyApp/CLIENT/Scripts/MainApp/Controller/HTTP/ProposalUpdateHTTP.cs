@@ -11,7 +11,7 @@ namespace YourSharingEconomyApp
 
 	public class ProposalUpdateHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "ProposalUpdate.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "ProposalUpdate.php";
 
 		public string UrlRequest
 		{
@@ -42,18 +42,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_UPDATE_PROPOSAL, false);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_UPDATE_PROPOSAL, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_UPDATE_PROPOSAL, true);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_UPDATE_PROPOSAL, true);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_UPDATE_PROPOSAL, false);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_UPDATE_PROPOSAL, false);
 			}
 		}
 	}

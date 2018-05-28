@@ -90,7 +90,7 @@ namespace YourSharingEconomyApp
 					return;
 				}
 
-				BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+				UIEventController.Instance.UIEvent += new UIEventHandler(OnUIEvent);
 
 #if ENABLED_FACEBOOK
             Debug.Log("Nothing to configure");
@@ -118,7 +118,7 @@ namespace YourSharingEconomyApp
 		 */
 		public void Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnUIEvent;
 			DestroyObject(_instance.gameObject);
 			_instance = null;
 		}
@@ -142,7 +142,7 @@ namespace YourSharingEconomyApp
 			m_StoreExtensionProvider = extensions;
 
 			// Purchasing has succeeded initializing. Collect our Purchasing references.
-			if (ScreenController.Instance.DebugIAPs)
+			if (MenusScreenController.Instance.DebugIAPs)
 			{
 				Debug.Log("OnInitialized: PASS+++++++++++++++++");
 				Debug.Log("(m_StoreController!=null)[" + (m_StoreController != null) + "]");
@@ -156,7 +156,7 @@ namespace YourSharingEconomyApp
 		 */
 		public void OnInitializeFailed(InitializationFailureReason error)
 		{
-			if (ScreenController.Instance.DebugIAPs) Debug.Log("OnInitializeFailed InitializationFailureReason:" + error);
+			if (MenusScreenController.Instance.DebugIAPs) Debug.Log("OnInitializeFailed InitializationFailureReason:" + error);
 		}
 
 		// -------------------------------------------
@@ -174,7 +174,7 @@ namespace YourSharingEconomyApp
 
 				if (product != null && product.availableToPurchase)
 				{
-					if (ScreenController.Instance.DebugIAPs)
+					if (MenusScreenController.Instance.DebugIAPs)
 					{
 						Debug.Log(string.Format("Purchasing product asychronously: '{0}'", product.definition.id));
 					}
@@ -182,12 +182,12 @@ namespace YourSharingEconomyApp
 				}
 				else
 				{
-					if (ScreenController.Instance.DebugIAPs) Debug.Log("BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase");
+					if (MenusScreenController.Instance.DebugIAPs) Debug.Log("BuyProductID: FAIL. Not purchasing product, either is not found or is not available for purchase");
 				}
 			}
 			else
 			{
-				if (ScreenController.Instance.DebugIAPs) Debug.Log("BuyProductID FAIL. Not initialized.");
+				if (MenusScreenController.Instance.DebugIAPs) Debug.Log("BuyProductID FAIL. Not initialized.");
 			}
 #endif
 		}
@@ -200,12 +200,12 @@ namespace YourSharingEconomyApp
 		{
 			if (!IsInitialized())
 			{
-				if (ScreenController.Instance.DebugIAPs) Debug.Log("RestorePurchases FAIL. Not initialized.");
+				if (MenusScreenController.Instance.DebugIAPs) Debug.Log("RestorePurchases FAIL. Not initialized.");
 				return;
 			}
 
 			// We are not running on an Apple device. No work is necessary to restore purchases.
-			if (ScreenController.Instance.DebugIAPs) Debug.Log("RestorePurchases FAIL. Not supported on this platform. Current = " + Application.platform);
+			if (MenusScreenController.Instance.DebugIAPs) Debug.Log("RestorePurchases FAIL. Not supported on this platform. Current = " + Application.platform);
 		}
 
 		// -------------------------------------------
@@ -214,8 +214,8 @@ namespace YourSharingEconomyApp
 		 */
 		public PurchaseProcessingResult ProcessPurchase(PurchaseEventArgs args)
 		{
-			if (ScreenController.Instance.DebugIAPs) Debug.Log(string.Format("ProcessPurchase: SUCCESS. Product: '{0}'", args.purchasedProduct.definition.id));
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_IAP_CONFIRMATION, true, args.purchasedProduct.definition.id);
+			if (MenusScreenController.Instance.DebugIAPs) Debug.Log(string.Format("ProcessPurchase: SUCCESS. Product: '{0}'", args.purchasedProduct.definition.id));
+			UIEventController.Instance.DispatchUIEvent(EVENT_IAP_CONFIRMATION, true, args.purchasedProduct.definition.id);
 			return PurchaseProcessingResult.Complete;
 		}
 
@@ -226,21 +226,21 @@ namespace YourSharingEconomyApp
 		 */
 		public void OnPurchaseFailed(Product product, PurchaseFailureReason failureReason)
 		{
-			if (ScreenController.Instance.DebugIAPs) Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_IAP_CONFIRMATION, false, product.definition.id);
+			if (MenusScreenController.Instance.DebugIAPs) Debug.Log(string.Format("OnPurchaseFailed: FAIL. Product: '{0}', PurchaseFailureReason: {1}", product.definition.storeSpecificId, failureReason));
+			UIEventController.Instance.DispatchUIEvent(EVENT_IAP_CONFIRMATION, false, product.definition.id);
 		}
 
 		// -------------------------------------------
 		/* 
-		 * OnBasicEvent
+		 * OnUIEvent
 		 */
-		private void OnBasicEvent(string _nameEvent, params object[] _list)
+		private void OnUIEvent(string _nameEvent, params object[] _list)
 		{
 			if (_nameEvent == EVENT_IAP_CONFIRMATION)
 			{
 				bool success = (bool)_list[0];
 				string iapID = (string)_list[1];
-				if (ScreenController.Instance.DebugIAPs) Debug.Log("EVENT_IAP_CONFIRMATION::success[" + success + "]::iapID[" + iapID + "]");
+				if (MenusScreenController.Instance.DebugIAPs) Debug.Log("EVENT_IAP_CONFIRMATION::success[" + success + "]::iapID[" + iapID + "]");
 				if ((iapID.IndexOf(IAP_ENERGY_PACK_1) != -1) ||
 					(iapID.IndexOf(IAP_ENERGY_PACK_2) != -1) ||
 					(iapID.IndexOf(IAP_ENERGY_PACK_3) != -1) ||
@@ -249,33 +249,33 @@ namespace YourSharingEconomyApp
 					if (success)
 					{
 						int rentValue = int.Parse(iapID.Substring(iapID.Length - 1, 1));
-						BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_RENT_PROVIDER, success, rentValue, m_currentCodeTransaction);
+						UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_RENT_PROVIDER, success, rentValue, m_currentCodeTransaction);
 					}
 					else
 					{
-						BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_RENT_PROVIDER, success);
+						UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_RENT_PROVIDER, success);
 					}
 				}
 				else
 				{
 					if (iapID.IndexOf(IAP_POST_OFFER_NO_WAIT) != -1)
 					{
-						BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_POST_OFFER, success, m_currentCodeTransaction);
+						UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_POST_OFFER, success, m_currentCodeTransaction);
 					}
 					else
 					{
 						if (iapID.IndexOf(IAP_CREATE_NEW_REQUEST) != -1)
 						{
-							BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_NEW_REQUEST, success, m_currentCodeTransaction);
+							UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_IAP_CALL_PURCHASE_NEW_REQUEST, success, m_currentCodeTransaction);
 						}
 						else
 						{
 							if (!success)
-							{
-								BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+							{								
+								UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 								string title = LanguageController.Instance.GetText("message.error");
 								string description = LanguageController.Instance.GetText("message.iap.failure.any.operation");
-								ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, title, description, null, "");
+								MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, title, description, null, "");
 							}
 						}
 					}
@@ -286,26 +286,26 @@ namespace YourSharingEconomyApp
 				m_currentEventIAP = EVENT_IAP_CALL_PURCHASE_RENT_PROVIDER;
 				m_currentIdProduct = (string)_list[0];
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
-				string codeGeneratedInitial = RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, ScreenController.KYRJEncryption);
+				string codeGeneratedInitial = RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, MenusScreenController.KYRJEncryption);
 				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, codeGeneratedInitial);
 			}
 			if (_nameEvent == EVENT_IAP_CALL_PURCHASE_POST_OFFER_NO_WAIT)
 			{
 				m_currentEventIAP = EVENT_IAP_CALL_PURCHASE_POST_OFFER_NO_WAIT;
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
-				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, ScreenController.KYRJEncryption));
+				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, MenusScreenController.KYRJEncryption));
 			}
 			if (_nameEvent == EVENT_IAP_CALL_PURCHASE_CREATE_NEW_REQUEST)
 			{
 				m_currentEventIAP = EVENT_IAP_CALL_PURCHASE_CREATE_NEW_REQUEST;
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
-				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, ScreenController.KYRJEncryption));
+				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, MenusScreenController.KYRJEncryption));
 			}
 			if (_nameEvent == EVENT_IAP_CODE_CONFIRMATION)
 			{
 				if ((bool)_list[0])
 				{
-					string codeDecrypted = RJEncryptor.DecryptStringWithKey((string)_list[1], ScreenController.KYRJEncryption);
+					string codeDecrypted = RJEncryptor.DecryptStringWithKey((string)_list[1], MenusScreenController.KYRJEncryption);
 					if (codeDecrypted == m_currentCodeTransaction)
 					{
 						m_currentCodeTransaction = (string)_list[1];

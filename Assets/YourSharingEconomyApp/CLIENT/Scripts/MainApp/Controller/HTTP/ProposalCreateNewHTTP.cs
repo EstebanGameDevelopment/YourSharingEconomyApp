@@ -11,7 +11,7 @@ namespace YourSharingEconomyApp
 
 	public class ProposalCreateNewHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "ProposalCreate.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "ProposalCreate.php";
 
 		public string UrlRequest
 		{
@@ -45,18 +45,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL, false);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL, true, long.Parse(data[1]), int.Parse(data[2]), long.Parse(data[3]), data[4]);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL, true, long.Parse(data[1]), int.Parse(data[2]), long.Parse(data[3]), data[4]);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL, false);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL, false);
 			}
 		}
 	}

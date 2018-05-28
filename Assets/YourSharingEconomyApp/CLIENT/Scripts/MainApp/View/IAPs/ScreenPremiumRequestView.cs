@@ -18,7 +18,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenPremiumRequestView : ScreenBaseView, IBasicScreenView
+	public class ScreenPremiumRequestView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_PREMIUM_REQUEST = "SCREEN_PREMIUM_REQUEST";
 
@@ -38,22 +38,22 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
 
-			if (ScreenController.Instance.TotalNumberOfFreeRequests == 0)
+			if (MenusScreenController.Instance.TotalNumberOfFreeRequests == 0)
 			{
 				m_container.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.iap.premium.no.free.request");
 			}
 			else
 			{
-				m_container.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.iap.premium.request", ScreenController.Instance.TotalNumberOfFreeRequests);
+				m_container.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.iap.premium.request", MenusScreenController.Instance.TotalNumberOfFreeRequests);
 			}
 
 			m_container.Find("Button_PurchaseRequest").GetComponent<Button>().onClick.AddListener(OnPremiumRequestPressed);
-			if (ScreenController.Instance.TotalNumberOfFreeRequests == 0)
+			if (MenusScreenController.Instance.TotalNumberOfFreeRequests == 0)
 			{
 				m_container.Find("Button_PurchaseRequest/Text").GetComponent<Text>().text = LanguageController.Instance.GetText("message.iap.premium.button.add.no.free.request");
 			}
@@ -65,17 +65,21 @@ namespace YourSharingEconomyApp
 			m_container.Find("Button_Cancel").GetComponent<Button>().onClick.AddListener(OnClickCancel);
 			m_container.Find("Button_Cancel/Text").GetComponent<Text>().text = LanguageController.Instance.GetText("message.cancel");
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -84,8 +88,8 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnPremiumRequestPressed()
 		{
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-			BasicEventController.Instance.DispatchBasicEvent(IAPController.EVENT_IAP_CALL_PURCHASE_CREATE_NEW_REQUEST);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+			UIEventController.Instance.DispatchUIEvent(IAPController.EVENT_IAP_CALL_PURCHASE_CREATE_NEW_REQUEST);
 		}
 
 		// -------------------------------------------
@@ -107,20 +111,20 @@ namespace YourSharingEconomyApp
 			{
 				if (!(bool)_list[0])
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					string title = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.iap.failure.premium.request");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_PREMIUM_REQUEST_DESTROY);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_PREMIUM_REQUEST_DESTROY);
 				}
 			}
 			if (_nameEvent == UsersController.EVENT_USER_IAP_CALL_PURCHASE_NEW_REQUEST)
 			{
 				if (!(bool)_list[0])
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					string title = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.iap.failure.premium.request");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_PREMIUM_REQUEST_DESTROY);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_PREMIUM_REQUEST_DESTROY);
 				}
 			}
 			if (_nameEvent == UsersController.EVENT_USER_IAP_RESULT_PURCHASE_NEW_REQUEST)
@@ -129,24 +133,24 @@ namespace YourSharingEconomyApp
 				{
 					string title = LanguageController.Instance.GetText("message.info");
 					string description = LanguageController.Instance.GetText("message.iap.congratulations.premium.request");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_PREMIUM_REQUEST_CONFIRMATION);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_PREMIUM_REQUEST_CONFIRMATION);
 				}
 				else
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					string title = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.iap.failure.premium.request");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_PREMIUM_REQUEST_DESTROY);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, title, description, null, SUB_EVENT_PREMIUM_REQUEST_DESTROY);
 				}
 			}
-			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			if (_nameEvent == ScreenController.EVENT_CONFIRMATION_POPUP)
 			{
 				string subEvent = (string)_list[2];
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if (subEvent == SUB_EVENT_PREMIUM_REQUEST_CONFIRMATION)
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-					BasicEventController.Instance.DelayBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, 0.01f, (long)UsersController.Instance.CurrentUser.Id);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+					UIEventController.Instance.DelayUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, 0.01f, (long)UsersController.Instance.CurrentUser.Id);
 					Destroy();
 				}
 				if (subEvent == SUB_EVENT_PREMIUM_REQUEST_DESTROY)
@@ -154,7 +158,7 @@ namespace YourSharingEconomyApp
 					Destroy();
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				OnClickCancel();
 			}

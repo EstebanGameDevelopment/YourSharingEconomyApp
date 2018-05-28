@@ -19,7 +19,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenPasswordValidationView : ScreenBaseView, IBasicScreenView
+	public class ScreenPasswordValidationView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_PASSWORD_VALIDATION = "SCREEN_PASSWORD_VALIDATION";
 
@@ -50,17 +50,21 @@ namespace YourSharingEconomyApp
 			m_container.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.validation.title");
 			m_container.Find("PasswordTitle").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.validation.enter.password");
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -73,11 +77,11 @@ namespace YourSharingEconomyApp
 
 			if (passwordToCheck == UsersController.Instance.CurrentUser.PasswordPlain)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(EVENT_VALIDATION_PASSWORD_RESULT, true);
+				UIEventController.Instance.DispatchUIEvent(EVENT_VALIDATION_PASSWORD_RESULT, true);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(EVENT_VALIDATION_PASSWORD_RESULT, false);
+				UIEventController.Instance.DispatchUIEvent(EVENT_VALIDATION_PASSWORD_RESULT, false);
 			}
 			Destroy();
 		}
@@ -88,7 +92,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void CancelPressed()
 		{
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_VALIDATION_CANCELATION);
+			UIEventController.Instance.DispatchUIEvent(EVENT_VALIDATION_CANCELATION);
 			Destroy();
 		}
 
@@ -98,7 +102,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				CancelPressed();
 			}

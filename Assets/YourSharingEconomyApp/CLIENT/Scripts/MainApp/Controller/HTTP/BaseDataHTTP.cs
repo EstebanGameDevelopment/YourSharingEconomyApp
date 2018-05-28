@@ -44,7 +44,7 @@ namespace YourSharingEconomyApp
 		{
 			m_jsonResponse = Encoding.ASCII.GetString(_response);
 			m_jsonResponse = CleanUndesiredTags(m_jsonResponse);
-			if (ScreenController.Instance.DebugComms)
+			if (MenusScreenController.Instance.DebugComms)
 			{
 				Debug.Log("BaseDataJSON::ResponseCode(BYTE)=" + m_jsonResponse);
 			}
@@ -55,7 +55,7 @@ namespace YourSharingEconomyApp
 		{
 			m_jsonResponse = _response;
 			m_jsonResponse = CleanUndesiredTags(m_jsonResponse);
-			if (ScreenController.Instance.DebugComms)
+			if (MenusScreenController.Instance.DebugComms)
 			{
 				Debug.Log("BaseDataJSON::ResponseCode(STRING)=" + m_jsonResponse);
 			}

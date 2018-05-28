@@ -11,7 +11,7 @@ namespace YourSharingEconomyApp
 
 	public class RequestCreateNewJobHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "RequestCreate.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "RequestCreate.php";
 
 		public string UrlRequest
 		{
@@ -58,18 +58,18 @@ namespace YourSharingEconomyApp
 			if (!ResponseCode(_response))
 			{
 				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_CREATED_RECORD_CONFIRMATION, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_CREATED_RECORD_CONFIRMATION, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_CREATED_RECORD_CONFIRMATION, true, long.Parse(data[1]));
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_CREATED_RECORD_CONFIRMATION, true, long.Parse(data[1]));
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_CREATED_RECORD_CONFIRMATION, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_CREATED_RECORD_CONFIRMATION, false);
 			}
 		}
 	}

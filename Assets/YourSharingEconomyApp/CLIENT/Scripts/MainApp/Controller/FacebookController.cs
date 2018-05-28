@@ -113,7 +113,7 @@ namespace YourSharingEconomyApp
 		 */
 		public void InitListener()
 		{
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
@@ -122,8 +122,8 @@ namespace YourSharingEconomyApp
 		 */
 		public void Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			DestroyObject(_instance.gameObject);
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			Destroy(_instance.gameObject);
 			_instance = null;
 		}
 
@@ -137,7 +137,7 @@ namespace YourSharingEconomyApp
 			{
 				if (!m_isInited)
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 					InitListener();
 					FB.Init(this.OnInitComplete, this.OnHideUnity);
 				}
@@ -162,8 +162,8 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnInitComplete()
 		{
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_FACEBOOK_REQUEST_INITIALITZATION);
-			if (ScreenController.Instance.DebugMode)
+			UIEventController.Instance.DispatchUIEvent(EVENT_FACEBOOK_REQUEST_INITIALITZATION);
+			if (MenusScreenController.Instance.DebugMode)
 			{
 				Debug.Log("Success - Check log for details");
 				Debug.Log("Success Response: OnInitComplete Called");
@@ -182,7 +182,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnHideUnity(bool _isGameShown)
 		{
-			if (ScreenController.Instance.DebugMode)
+			if (MenusScreenController.Instance.DebugMode)
 			{
 				Debug.Log("Success - Check log for details");
 				Debug.Log("Success Response: OnHideUnity Called {" + _isGameShown + "}");
@@ -207,11 +207,11 @@ namespace YourSharingEconomyApp
 		{
 			if (_result == null)
 			{
-				if (ScreenController.Instance.DebugMode) Debug.Log("Null Response");
+				if (MenusScreenController.Instance.DebugMode) Debug.Log("Null Response");
 				return;
 			}
 
-			if (ScreenController.Instance.DebugMode) Debug.Log("FacebookController::LoggedWithPermissions::result.RawResult=" + _result.RawResult);
+			if (MenusScreenController.Instance.DebugMode) Debug.Log("FacebookController::LoggedWithPermissions::result.RawResult=" + _result.RawResult);
 			FB.API("/me?fields=id,name,email", HttpMethod.GET, HandleMyInformation);
 		}
 
@@ -223,7 +223,7 @@ namespace YourSharingEconomyApp
 		{
 			if (_result == null)
 			{
-				if (ScreenController.Instance.DebugMode) Debug.Log("Null Response");
+				if (MenusScreenController.Instance.DebugMode) Debug.Log("Null Response");
 				return;
 			}
 
@@ -233,11 +233,11 @@ namespace YourSharingEconomyApp
 			m_nameHuman = jsonResponse["name"];
 			m_email = jsonResponse["email"];
 
-			if (ScreenController.Instance.DebugMode) Debug.Log("CURRENT PLAYER NAME=" + m_nameHuman + ";ID=" + m_id);
+			if (MenusScreenController.Instance.DebugMode) Debug.Log("CURRENT PLAYER NAME=" + m_nameHuman + ";ID=" + m_id);
 
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_FACEBOOK_MY_INFO_LOADED);
+			UIEventController.Instance.DispatchUIEvent(EVENT_FACEBOOK_MY_INFO_LOADED);
 
-			if (ScreenController.Instance.DebugMode) Debug.Log("FacebookController::HandleMyInformation::result.RawResult=" + _result.RawResult);
+			if (MenusScreenController.Instance.DebugMode) Debug.Log("FacebookController::HandleMyInformation::result.RawResult=" + _result.RawResult);
 			FB.API("/me/friends", HttpMethod.GET, HandleListOfFriends);
 		}
 
@@ -249,24 +249,24 @@ namespace YourSharingEconomyApp
 		{
 			if (_result == null)
 			{
-				if (ScreenController.Instance.DebugMode) Debug.Log("Null Response");
+				if (MenusScreenController.Instance.DebugMode) Debug.Log("Null Response");
 				return;
 			}
 
-			if (ScreenController.Instance.DebugMode) Debug.Log("FacebookController::HandleListOfFriends::result.RawResult=" + _result.RawResult);
+			if (MenusScreenController.Instance.DebugMode) Debug.Log("FacebookController::HandleListOfFriends::result.RawResult=" + _result.RawResult);
 			JSONNode jsonResponse = JSONNode.Parse(_result.RawResult);
 
 			JSONNode friends = jsonResponse["data"];
-			if (ScreenController.Instance.DebugMode) Debug.Log("FacebookController::HandleListOfFriends::friends.Count=" + friends.Count);
+			if (MenusScreenController.Instance.DebugMode) Debug.Log("FacebookController::HandleListOfFriends::friends.Count=" + friends.Count);
 			for (int i = 0; i < friends.Count; i++)
 			{
 				string nameFriend = friends[i]["name"];
 				string idFriend = friends[i]["id"];
 				m_friends.Add(new ItemMultiTextEntry(idFriend, nameFriend));
-				if (ScreenController.Instance.DebugMode) Debug.Log("   NAME=" + nameFriend + ";ID=" + idFriend);
+				if (MenusScreenController.Instance.DebugMode) Debug.Log("   NAME=" + nameFriend + ";ID=" + idFriend);
 			}
 
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_FACEBOOK_FRIENDS_LOADED);
+			UIEventController.Instance.DispatchUIEvent(EVENT_FACEBOOK_FRIENDS_LOADED);
 
 			// INIT PAYMENT METHOD
 			RegisterConnectionFacebookID(true);
@@ -289,7 +289,7 @@ namespace YourSharingEconomyApp
 			}
 			if (_dispatchCompletedFacebookInit)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(EVENT_FACEBOOK_COMPLETE_INITIALITZATION, m_id, m_nameHuman, m_email);
+				UIEventController.Instance.DispatchUIEvent(EVENT_FACEBOOK_COMPLETE_INITIALITZATION, m_id, m_nameHuman, m_email);
 			}
 		}
 
@@ -336,7 +336,7 @@ namespace YourSharingEconomyApp
 				if (sFriendEntry.Length == 2)
 				{
 					m_friends.Add(new ItemMultiTextEntry(sFriendEntry[0], sFriendEntry[1]));
-					if (ScreenController.Instance.DebugMode) Debug.Log("FacebookController::SetFriends::FRIEND[" + sFriendEntry[0] + "][" + sFriendEntry[1] + "]");
+					if (MenusScreenController.Instance.DebugMode) Debug.Log("FacebookController::SetFriends::FRIEND[" + sFriendEntry[0] + "][" + sFriendEntry[1] + "]");
 				}
 			}
 		}
@@ -357,7 +357,7 @@ namespace YourSharingEconomyApp
 			  null, null, null, null, null,
 			  callback: delegate (IPayResult response)
 			  {
-				  if (ScreenController.Instance.DebugMode) Debug.Log("PurchaseIAP::CALLBACK RESPONSE=" + response.RawResult);
+				  if (MenusScreenController.Instance.DebugMode) Debug.Log("PurchaseIAP::CALLBACK RESPONSE=" + response.RawResult);
 				  PurchaseIAPResponse(response.RawResult);
 			  }
 			);
@@ -405,11 +405,11 @@ namespace YourSharingEconomyApp
 				// string productId = jsonResponse["product_id"]; // string id
 				// int quantity = int.Parse(jsonResponse["quantity"]);  // int
 				// string signedRequest = jsonResponse["signed_request"];  // signed_request string
-				BasicEventController.Instance.DispatchBasicEvent(IAPController.EVENT_IAP_CONFIRMATION, true, m_urlProduct);
+				UIEventController.Instance.DispatchUIEvent(IAPController.EVENT_IAP_CONFIRMATION, true, m_urlProduct);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(IAPController.EVENT_IAP_CONFIRMATION, false, m_urlProduct);
+				UIEventController.Instance.DispatchUIEvent(IAPController.EVENT_IAP_CONFIRMATION, false, m_urlProduct);
 			}
 		}
 

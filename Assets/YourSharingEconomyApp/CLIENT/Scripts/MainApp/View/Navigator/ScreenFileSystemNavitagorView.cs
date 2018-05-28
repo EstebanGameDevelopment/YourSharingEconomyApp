@@ -17,7 +17,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenFileSystemNavitagorView : ScreenBaseView, IBasicScreenView
+	public class ScreenFileSystemNavitagorView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_NAME = "SCREEN_FILESYSTEM_NAVIGATOR";
 
@@ -49,7 +49,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -63,7 +63,7 @@ namespace YourSharingEconomyApp
 			m_listItems = m_container.Find("ListItems");
 			UpdateListItems(FileSystemController.Instance.PathLastSearch);
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
@@ -71,14 +71,18 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
+			if (base.Destroy()) return true;
+
 			if (m_listItems!=null) m_listItems.GetComponent<FileManagerView>().Destroy();
 			m_listItems = null;
 
 			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
 			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -107,7 +111,7 @@ namespace YourSharingEconomyApp
 		*/
 		private void AcceptPressed()
 		{
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_SCREENSYSTEMNAVIGATOR_FINAL_SELECTION, true, m_currentFileSelection);
+			UIEventController.Instance.DispatchUIEvent(EVENT_SCREENSYSTEMNAVIGATOR_FINAL_SELECTION, true, m_currentFileSelection);
 			Destroy();
 		}
 
@@ -119,7 +123,7 @@ namespace YourSharingEconomyApp
 		{
 			if (_nameEvent == BasicSystemEventController.EVENT_BASICSYSTEMEVENT_OPEN_INFO_IMAGE_SCREEN)
 			{
-				ScreenController.Instance.CreateNewScreen(ScreenImageView.SCREEN_IMAGE, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, _list);
+				MenusScreenController.Instance.CreateNewScreen(ScreenImageView.SCREEN_IMAGE, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, false, _list);
 			}
 			if (_nameEvent == FileItemView.EVENT_FILE_ITEM_SELECTED)
 			{
@@ -139,7 +143,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				Destroy();
 			}

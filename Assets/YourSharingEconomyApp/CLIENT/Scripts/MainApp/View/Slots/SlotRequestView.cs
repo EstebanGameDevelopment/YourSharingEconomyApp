@@ -98,7 +98,7 @@ namespace YourSharingEconomyApp
 
 
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 
 			LoadData(false);
 		}
@@ -132,18 +132,18 @@ namespace YourSharingEconomyApp
 				m_thumbnail = m_container.Find("Thumbnail/Image").GetComponent<Image>();
 				if ((!m_request.CheckEnoughReportsToWarningForToxic()) && (m_request.Flaged != 1))
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_FROM_ID, this.gameObject, m_request.Referenceimg, m_thumbnail, (int)(m_thumbnail.gameObject.GetComponent<RectTransform>().sizeDelta.y), false);
+					UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_FROM_ID, this.gameObject, m_request.Referenceimg, m_thumbnail, (int)(m_thumbnail.gameObject.GetComponent<RectTransform>().sizeDelta.y), false);
 				}
 				else
 				{
 					HideLoading();
 					if (m_request.IsFlagged())
 					{
-						BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_TOXIC_IMAGE, m_thumbnail, (int)(m_thumbnail.gameObject.GetComponent<RectTransform>().sizeDelta.y), ImageUtils.GetBytesJPG(ScreenController.Instance.ImageToxicConfirmed));
+						UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_TOXIC_IMAGE, m_thumbnail, (int)(m_thumbnail.gameObject.GetComponent<RectTransform>().sizeDelta.y), ImageUtils.GetBytesJPG(MenusScreenController.Instance.ImageToxicConfirmed));
 					}
 					else
 					{
-						BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_TOXIC_IMAGE, m_thumbnail, (int)(m_thumbnail.gameObject.GetComponent<RectTransform>().sizeDelta.y), ImageUtils.GetBytesJPG(ScreenController.Instance.ImageToxicPossible));
+						UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_TOXIC_IMAGE, m_thumbnail, (int)(m_thumbnail.gameObject.GetComponent<RectTransform>().sizeDelta.y), ImageUtils.GetBytesJPG(MenusScreenController.Instance.ImageToxicPossible));
 					}
 				}
 			}
@@ -194,7 +194,7 @@ namespace YourSharingEconomyApp
 		public void Destroy()
 		{
 			m_request = null;
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
 			GameObject.DestroyObject(this.gameObject);
 		}
 
@@ -210,25 +210,25 @@ namespace YourSharingEconomyApp
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("message.user.banned");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
 				if (m_request.IsFlagged())
 				{
 					m_flagToxicConfirmation = true;
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("message.request.declared.toxic"), null, SUB_EVENT_SLOTREQUEST_SEE_TOXIC);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("message.request.declared.toxic"), null, SUB_EVENT_SLOTREQUEST_SEE_TOXIC);
 				}
 				else
 				{
 					if (m_request.CheckEnoughReportsToWarningForToxic())
 					{
 						m_flagToxicConfirmation = true;
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("message.request.possible.toxic"), null, SUB_EVENT_SLOTREQUEST_SEE_TOXIC);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("message.request.possible.toxic"), null, SUB_EVENT_SLOTREQUEST_SEE_TOXIC);
 					}
 					else
 					{
-						BasicEventController.Instance.DispatchBasicEvent(EVENT_SLOTREQUEST_SELECTED_REQUEST, this.gameObject);
+						UIEventController.Instance.DispatchUIEvent(EVENT_SLOTREQUEST_SELECTED_REQUEST, this.gameObject);
 					}
 				}
 			}
@@ -286,18 +286,18 @@ namespace YourSharingEconomyApp
 					HideLoading();
 				}
 			}
-			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			if (_nameEvent == ScreenController.EVENT_CONFIRMATION_POPUP)
 			{
 				string subEvent = (string)_list[2];
 				if (subEvent == SUB_EVENT_SLOTREQUEST_SEE_TOXIC)
 				{
 					if (m_flagToxicConfirmation)
 					{
-						BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+						UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 						m_flagToxicConfirmation = false;
 						if ((bool)_list[1])
 						{
-							BasicEventController.Instance.DispatchBasicEvent(EVENT_SLOTREQUEST_SELECTED_REQUEST, this.gameObject);
+							UIEventController.Instance.DispatchUIEvent(EVENT_SLOTREQUEST_SELECTED_REQUEST, this.gameObject);
 						}
 					}
 				}

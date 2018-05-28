@@ -17,7 +17,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenTypeMediaView : ScreenBaseView, IBasicScreenView
+	public class ScreenTypeMediaView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_TYPE_MEDIA = "SCREEN_TYPE_MEDIA";
 
@@ -31,7 +31,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -43,17 +43,21 @@ namespace YourSharingEconomyApp
 			m_container.Find("Button_AddLink").GetComponent<Button>().onClick.AddListener(OnAddTypeLink);
 			m_container.Find("Button_AddLink/Text").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.type.media.add.url");
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -69,14 +73,14 @@ namespace YourSharingEconomyApp
 
 			if (displayFilebrowser)
 			{
-				ScreenController.Instance.CreateNewScreenNoParameters(ScreenFileSystemNavitagorView.SCREEN_NAME, false, TypePreviousActionEnum.KEEP_CURRENT_SCREEN);
+				MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenFileSystemNavitagorView.SCREEN_NAME, false, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN);
 				Destroy();
 			}
 			else
 			{
 				string titleInfoError = LanguageController.Instance.GetText("message.error");
 				string descriptionInfoError = LanguageController.Instance.GetText("screen.media.type.no.filesystem.available");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 			}
 		}
 
@@ -86,7 +90,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnAddTypeLink()
 		{
-			ScreenController.Instance.CreateNewScreenNoParameters(ScreenEnterURLView.SCREEN_ENTER_URL, false, TypePreviousActionEnum.KEEP_CURRENT_SCREEN);
+			MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenEnterURLView.SCREEN_ENTER_URL, false, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN);
 			Destroy();
 		}
 
@@ -96,7 +100,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				Destroy();
 			}
