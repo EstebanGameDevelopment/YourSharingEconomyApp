@@ -33,7 +33,7 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
 				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_RESULT_CONSULT_SINGLE_RECORD);
 				return;
 			}

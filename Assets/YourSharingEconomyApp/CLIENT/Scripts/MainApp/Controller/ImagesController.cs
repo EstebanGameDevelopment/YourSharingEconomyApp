@@ -238,7 +238,7 @@ namespace YourSharingEconomyApp
 				{
 					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 				}
-				CommController.Instance.LoadImage(m_imageReferenceTmp.Id);
+				CommsHTTPConstants.LoadImage(m_imageReferenceTmp.Id);
 			}
 
 			if (m_images.Count > LIMIT_IMAGES_IN_MEMORY_TO_CLEAR)
@@ -326,7 +326,7 @@ namespace YourSharingEconomyApp
 				m_imageTemp.CopyData(dataImg);
 				m_imageTemp.Url = (string)_list[5];
 
-				CommController.Instance.UploadImage((long)_list[0], m_imageTemp.Table, m_imageTemp.IdOrigin, m_imageTemp.Type, dataImg, m_imageTemp.Url);
+				CommsHTTPConstants.UploadImage((long)_list[0], m_imageTemp.Table, m_imageTemp.IdOrigin, m_imageTemp.Type, dataImg, m_imageTemp.Url);
 			}
 			if (_nameEvent == EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION)
 			{
@@ -387,7 +387,7 @@ namespace YourSharingEconomyApp
 				if (idImage != -1)
 				{
 					RemoveImageByID(idImage);
-					CommController.Instance.RemoveImage(idImage);
+					CommsHTTPConstants.RemoveImage(idImage);
 				}
 			}
 			if (_nameEvent == EVENT_IMAGES_CANCEL_LOADING_IMAGES)

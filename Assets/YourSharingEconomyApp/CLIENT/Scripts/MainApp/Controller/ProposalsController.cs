@@ -211,11 +211,11 @@ namespace YourSharingEconomyApp
 			{
 				ProposalModel proposal = (ProposalModel)_list[0];
 				RequestsController.Instance.MustReloadRequests = true;
-				CommController.Instance.CreateNewProposal(UsersController.Instance.CurrentUser.Id.ToString(), UsersController.Instance.CurrentUser.Password, proposal);
+				CommsHTTPConstants.CreateNewProposal(UsersController.Instance.CurrentUser.Id.ToString(), UsersController.Instance.CurrentUser.Password, proposal);
 			}
 			if (_nameEvent == EVENT_PROPOSAL_CALL_CONSULT_PROPOSALS)
 			{
-				CommController.Instance.ConsultAllProposalsByRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, (long)_list[0]);
+				CommsHTTPConstants.ConsultAllProposalsByRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, (long)_list[0]);
 			}
 			if (_nameEvent == EVENT_PROPOSAL_RESULT_CONSULTED_PROPOSALS)
 			{
@@ -234,22 +234,22 @@ namespace YourSharingEconomyApp
 			{
 				long idProposal = (long)_list[0];
 				RequestsController.Instance.MustReloadRequests = true;
-				CommController.Instance.RemoveProposal(UsersController.Instance.CurrentUser.Id.ToString(), UsersController.Instance.CurrentUser.Password, idProposal);
+				CommsHTTPConstants.RemoveProposal(UsersController.Instance.CurrentUser.Id.ToString(), UsersController.Instance.CurrentUser.Password, idProposal);
 			}
 			if (_nameEvent == EVENT_PROPOSAL_CALL_UPDATE_PROPOSAL)
 			{
 				ProposalModel proposal = (ProposalModel)_list[0];
-				CommController.Instance.UpdateProposal(UsersController.Instance.CurrentUser.Id.ToString(), UsersController.Instance.CurrentUser.Password, proposal);
+				CommsHTTPConstants.UpdateProposal(UsersController.Instance.CurrentUser.Id.ToString(), UsersController.Instance.CurrentUser.Password, proposal);
 			}
 			if (_nameEvent == EVENT_PROPOSAL_CALL_RESET_ALL_PROPOSALS)
 			{
 				long requestID = (long)_list[0];
-				CommController.Instance.ResetProposalsForRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, requestID);
+				CommsHTTPConstants.ResetProposalsForRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, requestID);
 			}
 			if (_nameEvent == EVENT_PROPOSAL_CALL_REACTIVATE_PROPOSAL)
 			{
 				long proposalID = (long)_list[0];
-				CommController.Instance.ReactivateProposal(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, proposalID);
+				CommsHTTPConstants.ReactivateProposal(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, proposalID);
 			}
 			if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_REACTIVATE_PROPOSAL)
 			{
@@ -269,7 +269,7 @@ namespace YourSharingEconomyApp
 				long proposalID = (long)_list[0];
 				int reporterID = (int)_list[1];
 				long requestID = (long)_list[2];
-				CommController.Instance.ReportProposal(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, proposalID, reporterID, requestID);
+				CommsHTTPConstants.ReportProposal(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, proposalID, reporterID, requestID);
 			}
 			if (_nameEvent == EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL)
 			{

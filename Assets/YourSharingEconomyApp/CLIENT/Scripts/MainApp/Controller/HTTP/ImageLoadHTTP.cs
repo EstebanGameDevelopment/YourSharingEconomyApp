@@ -27,7 +27,7 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
 				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_SERVER_DATA_RECEIVED, false);
 				return;
 			}

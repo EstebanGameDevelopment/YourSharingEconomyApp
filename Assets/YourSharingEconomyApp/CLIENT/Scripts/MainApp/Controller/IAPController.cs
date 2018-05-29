@@ -287,19 +287,19 @@ namespace YourSharingEconomyApp
 				m_currentIdProduct = (string)_list[0];
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
 				string codeGeneratedInitial = RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, MenusScreenController.KYRJEncryption);
-				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, codeGeneratedInitial);
+				CommsHTTPConstants.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, codeGeneratedInitial);
 			}
 			if (_nameEvent == EVENT_IAP_CALL_PURCHASE_POST_OFFER_NO_WAIT)
 			{
 				m_currentEventIAP = EVENT_IAP_CALL_PURCHASE_POST_OFFER_NO_WAIT;
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
-				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, MenusScreenController.KYRJEncryption));
+				CommsHTTPConstants.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, MenusScreenController.KYRJEncryption));
 			}
 			if (_nameEvent == EVENT_IAP_CALL_PURCHASE_CREATE_NEW_REQUEST)
 			{
 				m_currentEventIAP = EVENT_IAP_CALL_PURCHASE_CREATE_NEW_REQUEST;
 				m_currentCodeTransaction = Utilities.RandomCodeGeneration(UsersController.Instance.CurrentUser.Id.ToString());
-				CommController.Instance.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, MenusScreenController.KYRJEncryption));
+				CommsHTTPConstants.IAPRegisterCode(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, RJEncryptor.EncryptStringWithKey(m_currentCodeTransaction, MenusScreenController.KYRJEncryption));
 			}
 			if (_nameEvent == EVENT_IAP_CODE_CONFIRMATION)
 			{

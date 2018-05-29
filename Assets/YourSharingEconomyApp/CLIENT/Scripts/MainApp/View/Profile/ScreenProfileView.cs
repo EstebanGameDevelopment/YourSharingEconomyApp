@@ -221,7 +221,7 @@ namespace YourSharingEconomyApp
 			if (!UsersController.Instance.CurrentUser.Validated)
 			{
 				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, SUB_EVENT_SCREENPROFILE_CONFIRMATION_EXIT_WITHOUT_SAVE);
-				CommController.Instance.CheckValidationUser(UsersController.Instance.CurrentUser.Id.ToString());
+				CommsHTTPConstants.CheckValidationUser(UsersController.Instance.CurrentUser.Id.ToString());
 			}
 			else
 			{
@@ -412,7 +412,7 @@ namespace YourSharingEconomyApp
 					if ((bool)_list[1])
 					{
 						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						CommController.Instance.RequestResetPassword(UsersController.Instance.CurrentUser.Id.ToString());
+						CommsHTTPConstants.RequestResetPassword(UsersController.Instance.CurrentUser.Id.ToString());
 					}
 				}
 				if (subEvent == SUB_EVENT_SCREENPROFILE_CONFIRMATION_EXIT_WITHOUT_SAVE)
@@ -454,7 +454,7 @@ namespace YourSharingEconomyApp
 				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if (((string)_list[0]) != null)
 				{
-					CommController.Instance.RequestUserByFacebook(FacebookController.Instance.Id, FacebookController.Instance.NameHuman, UsersController.Instance.CurrentUser.Email, FacebookController.Instance.GetPackageFriends());
+					CommsHTTPConstants.RequestUserByFacebook(FacebookController.Instance.Id, FacebookController.Instance.NameHuman, UsersController.Instance.CurrentUser.Email, FacebookController.Instance.GetPackageFriends());
 				}
 				else
 				{

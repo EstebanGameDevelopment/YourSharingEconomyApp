@@ -136,7 +136,7 @@ namespace YourSharingEconomyApp
 			else
 			{
 				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-				CommController.Instance.RequestResetPasswordByEmail(emailToCheck);
+				CommsHTTPConstants.RequestResetPasswordByEmail(emailToCheck);
 			}
 		}
 

@@ -81,7 +81,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void GetConfigurationServerData()
 		{
-			CommController.Instance.GetServerConfigurationParameters();
+			CommsHTTPConstants.GetServerConfigurationParameters();
 		}
 
 		// -------------------------------------------
@@ -198,7 +198,7 @@ namespace YourSharingEconomyApp
 				if ((string)_list[0] != null)
 				{
 					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-					CommController.Instance.RequestUserByFacebook(FacebookController.Instance.Id, FacebookController.Instance.NameHuman, FacebookController.Instance.Email, FacebookController.Instance.GetPackageFriends());
+					CommsHTTPConstants.RequestUserByFacebook(FacebookController.Instance.Id, FacebookController.Instance.NameHuman, FacebookController.Instance.Email, FacebookController.Instance.GetPackageFriends());
 				}
 				else
 				{

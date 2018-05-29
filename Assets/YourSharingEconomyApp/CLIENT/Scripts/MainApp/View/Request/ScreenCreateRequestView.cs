@@ -2646,7 +2646,7 @@ namespace YourSharingEconomyApp
 					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 					BitCoinController.Instance.RefreshBalancePrivateKeys();
 					string transactionID = (string)_list[1];
-					CommController.Instance.RequestUpdateTransactionBitcoin(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, transactionID);
+					CommsHTTPConstants.RequestUpdateTransactionBitcoin(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, transactionID);
 				}
 			}
 		}

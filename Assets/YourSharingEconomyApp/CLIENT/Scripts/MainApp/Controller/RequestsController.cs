@@ -647,7 +647,7 @@ namespace YourSharingEconomyApp
 					localRequest.Copy(request, true);
 					localRequest.IsDataFull = false;
 				}
-				CommController.Instance.CreateNewRequestDress(UsersController.Instance.CurrentUser.Id.ToString(), UsersController.Instance.CurrentUser.Password, request);
+				CommsHTTPConstants.CreateNewRequestDress(UsersController.Instance.CurrentUser.Id.ToString(), UsersController.Instance.CurrentUser.Password, request);
 			}
 			if (_nameEvent == EVENT_REQUEST_RESULT_CREATED_RECORD_CONFIRMATION)
 			{
@@ -669,7 +669,7 @@ namespace YourSharingEconomyApp
 					{
 						if (m_otherUserRequests.Count == 0)
 						{
-							CommController.Instance.RequestConsultRecordsByUser(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idUser);
+							CommsHTTPConstants.RequestConsultRecordsByUser(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idUser);
 						}
 						else
 						{
@@ -678,14 +678,14 @@ namespace YourSharingEconomyApp
 					}
 					else
 					{
-						CommController.Instance.RequestConsultRecordsByUser(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idUser);
+						CommsHTTPConstants.RequestConsultRecordsByUser(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idUser);
 					}
 				}
 				else
 				{
 					if (m_userRequests.Count == 0)
 					{
-						CommController.Instance.RequestConsultRecordsByUser(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idUser);
+						CommsHTTPConstants.RequestConsultRecordsByUser(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idUser);
 					}
 					else
 					{
@@ -703,7 +703,7 @@ namespace YourSharingEconomyApp
 					{
 						if (m_otherProviderRequests.Count == 0)
 						{
-							CommController.Instance.RequestConsultRecordsByProvider(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idProvider, requestAll);
+							CommsHTTPConstants.RequestConsultRecordsByProvider(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idProvider, requestAll);
 						}
 						else
 						{
@@ -712,14 +712,14 @@ namespace YourSharingEconomyApp
 					}
 					else
 					{
-						CommController.Instance.RequestConsultRecordsByProvider(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idProvider, requestAll);
+						CommsHTTPConstants.RequestConsultRecordsByProvider(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idProvider, requestAll);
 					}
 				}
 				else
 				{
 					if (m_providerRequests.Count == 0)
 					{
-						CommController.Instance.RequestConsultRecordsByProvider(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idProvider, requestAll);
+						CommsHTTPConstants.RequestConsultRecordsByProvider(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idProvider, requestAll);
 					}
 					else
 					{
@@ -730,7 +730,7 @@ namespace YourSharingEconomyApp
 			if (_nameEvent == EVENT_REQUEST_CALL_CONSULT_BY_DISTANCE_RECORDS)
 			{
 				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
-				CommController.Instance.RequestConsultRecordsByDistance(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, (SearchModel)_list[0], RequestModel.STATE_REQUEST_OPEN);
+				CommsHTTPConstants.RequestConsultRecordsByDistance(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, (SearchModel)_list[0], RequestModel.STATE_REQUEST_OPEN);
 			}
 			if (_nameEvent == EVENT_REQUEST_CALL_CONSULT_SINGLE_RECORD)
 			{
@@ -747,7 +747,7 @@ namespace YourSharingEconomyApp
 				if (makeServerCall)
 				{
 					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
-					CommController.Instance.RequestConsultSingleRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest);
+					CommsHTTPConstants.RequestConsultSingleRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest);
 				}
 				else
 				{
@@ -864,7 +864,7 @@ namespace YourSharingEconomyApp
 			{
 				long idRequest = (long)_list[0];
 				RemoveLocalRequests(idRequest);
-				CommController.Instance.DeleteRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest);
+				CommsHTTPConstants.DeleteRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest);
 			}
 			if (_nameEvent == EVENT_REQUEST_CALL_UPDATE_IMG_REF)
 			{
@@ -875,11 +875,11 @@ namespace YourSharingEconomyApp
 				{
 					request.Referenceimg = idImageReference;
 				}
-				CommController.Instance.UpdateImageReferenceRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest, idImageReference);
+				CommsHTTPConstants.UpdateImageReferenceRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest, idImageReference);
 			}
 			if (_nameEvent == EVENT_REQUEST_CALL_CONSULT_IMAGES_REQUEST)
 			{
-				CommController.Instance.ConsultImagesRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, (long)_list[0], MenusScreenController.TABLE_REQUESTS);
+				CommsHTTPConstants.ConsultImagesRequest(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, (long)_list[0], MenusScreenController.TABLE_REQUESTS);
 			}
 			if (_nameEvent == EVENT_REQUEST_RESULT_CONSULT_IMAGES_REQUEST)
 			{
@@ -940,7 +940,7 @@ namespace YourSharingEconomyApp
 					localRequest.IsDataFull = false;
 					localRequest.Deliverydate = 0;
 				}
-				CommController.Instance.SetRequestAsFinished(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest, broken);
+				CommsHTTPConstants.SetRequestAsFinished(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest, broken);
 			}
 			if (_nameEvent == EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE)
 			{
@@ -960,7 +960,7 @@ namespace YourSharingEconomyApp
 					localRequest.FeedbackCustomerGivesToTheProvider = feedbackConsumer;
 					localRequest.FeedbackProviderGivesToTheCustomer = feedbackProvider;
 				}
-				CommController.Instance.UpdateRequestScoreAndFeedback(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest, scoreConsumer, feedbackConsumer, scoreProvider, feedbackProvider, signatureCustomer, signatureProvider);
+				CommsHTTPConstants.UpdateRequestScoreAndFeedback(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, idRequest, scoreConsumer, feedbackConsumer, scoreProvider, feedbackProvider, signatureCustomer, signatureProvider);
 			}
 			if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_INSERTED_PROPOSAL)
 			{

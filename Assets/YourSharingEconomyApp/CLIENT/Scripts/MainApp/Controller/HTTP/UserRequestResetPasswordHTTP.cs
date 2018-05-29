@@ -27,7 +27,7 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
 				UIEventController.Instance.DispatchUIEvent(ScreenProfileView.EVENT_SCREENPROFILE_SERVER_REQUEST_RESET_PASSWORD_CONFIRMATION, false);
 				return;
 			}

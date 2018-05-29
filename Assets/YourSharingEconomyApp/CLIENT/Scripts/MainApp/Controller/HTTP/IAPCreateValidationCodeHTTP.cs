@@ -27,7 +27,7 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
 				UIEventController.Instance.DispatchUIEvent(IAPController.EVENT_IAP_CODE_CONFIRMATION, false);
 				return;
 			}
