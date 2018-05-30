@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class ImageConsultAllHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "ImagesConsultAll.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "ImagesConsultAll.php";
 
 		public string UrlRequest
 		{
@@ -26,12 +27,12 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_CONSULT_IMAGES_REQUEST);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_CONSULT_IMAGES_REQUEST);
 				return;
 			}
 
-			BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_CONSULT_IMAGES_REQUEST, m_jsonResponse);
+			UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_CONSULT_IMAGES_REQUEST, m_jsonResponse);
 		}
 	}
 

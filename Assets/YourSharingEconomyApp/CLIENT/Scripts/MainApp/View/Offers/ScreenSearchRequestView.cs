@@ -21,7 +21,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenSearchRequestView : ScreenBaseView, IBasicScreenView
+	public class ScreenSearchRequestView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_SEARCH_REQUEST = "SCREEN_SEARCH_REQUEST";
 
@@ -40,7 +40,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -74,7 +74,7 @@ namespace YourSharingEconomyApp
 
 			m_container.Find("Button_Back").GetComponent<Button>().onClick.AddListener(BackPressed);
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
@@ -82,11 +82,15 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
 			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
 			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -98,9 +102,9 @@ namespace YourSharingEconomyApp
 #if ENABLED_FACEBOOK
         string warning = LanguageController.Instance.GetText("message.warning");
         string description = LanguageController.Instance.GetText("message.map.not.available.in.facebook");
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 #else
-			ScreenController.Instance.CreateNewScreen(ScreenGoogleMapView.SCREEN_GOOGLEMAP, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, m_mapDataSearch, m_villageSearch);
+			MenusScreenController.Instance.CreateNewScreen(ScreenGoogleMapView.SCREEN_GOOGLEMAP, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, false, m_mapDataSearch, m_villageSearch);
 #endif
 		}
 
@@ -132,11 +136,11 @@ namespace YourSharingEconomyApp
 			{
 				string warning = LanguageController.Instance.GetText("message.error");
 				string description = LanguageController.Instance.GetText("message.search.requests.specify.location");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
-				ScreenController.Instance.CreateNewScreen(ScreenSearchResultView.SCREEN_SEARCH_RESULT, TypePreviousActionEnum.DESTROY_ALL_SCREENS, true, new SearchModel(m_villageSearch, m_mapDataSearch, m_indexDistance));
+				MenusScreenController.Instance.CreateNewScreen(ScreenSearchResultView.SCREEN_SEARCH_RESULT, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS, true, new SearchModel(m_villageSearch, m_mapDataSearch, m_indexDistance));
 			}
 		}
 
@@ -146,7 +150,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void BackPressed()
 		{
-			ScreenController.Instance.CreateNewScreenNoParameters(ScreenOffersSummaryView.SCREEN_OFFERS, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+			MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenOffersSummaryView.SCREEN_OFFERS, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 		}
 
 		// -------------------------------------------
@@ -171,7 +175,7 @@ namespace YourSharingEconomyApp
 		{
 			if (!this.gameObject.activeSelf) return;
 
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				BackPressed();
 			}

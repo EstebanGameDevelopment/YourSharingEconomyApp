@@ -128,7 +128,7 @@ namespace YourSharingEconomyApp
 		public void Init()
 		{
 			m_heightThumbnail = (int)((ThumbnailRequestedInfo.DEFAULT_ICON_HEIGHT / ThumbnailRequestedInfo.DEFAULT_SCREEN_HEIGHT) * Screen.height);
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
@@ -137,7 +137,7 @@ namespace YourSharingEconomyApp
 		 */
 		public void Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
 			Destroy(_instance.gameObject);
 			_instance = null;
 		}
@@ -220,25 +220,25 @@ namespace YourSharingEconomyApp
 			ImageModel imageModel = GetImageByID(m_imageReferenceTmp.Id);
 			if (imageModel != null)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(EVENT_IMAGE_LOADED_REPORT_SYSTEM, _image);
+				UIEventController.Instance.DispatchUIEvent(EVENT_IMAGE_LOADED_REPORT_SYSTEM, _image);
 				try
 				{
-					ImageUtils.LoadBytesImage(m_imageReferenceTmp.Image, imageModel.Data, m_imageReferenceTmp.Height, ScreenController.Instance.SizeHeightAllowedImages);
+					ImageUtils.LoadBytesImage(m_imageReferenceTmp.Image, imageModel.Data, m_imageReferenceTmp.Height, MenusScreenController.Instance.SizeHeightAllowedImages);
 				}
 				catch (Exception err)
 				{
-					if (ScreenController.Instance.DebugMode) Debug.Log(err.StackTrace);
+					if (MenusScreenController.Instance.DebugMode) Debug.Log(err.StackTrace);
 				};
-				BasicEventController.Instance.DispatchBasicEvent(EVENT_IMAGES_LOAD_SERVER_LOCAL_DATA_LOADED);
+				UIEventController.Instance.DispatchUIEvent(EVENT_IMAGES_LOAD_SERVER_LOCAL_DATA_LOADED);
 				return true;
 			}
 			else
 			{
 				if (_showLoadingMessage)
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 				}
-				CommController.Instance.LoadImage(m_imageReferenceTmp.Id);
+				CommsHTTPConstants.LoadImage(m_imageReferenceTmp.Id);
 			}
 
 			if (m_images.Count > LIMIT_IMAGES_IN_MEMORY_TO_CLEAR)
@@ -257,7 +257,7 @@ namespace YourSharingEconomyApp
 		{
 			if (_nameEvent == EVENT_IMAGES_LOAD_FROM_SYSTEM_IMAGE)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(EVENT_IMAGES_CLEAR_THUMBNAIL_CACHE);
+				UIEventController.Instance.DispatchUIEvent(EVENT_IMAGES_CLEAR_THUMBNAIL_CACHE);
 				string fullPath = (string)_list[0];
 				m_lastScrollPosition = (float)_list[1];
 				if (fullPath.LastIndexOf('/') != -1)
@@ -271,10 +271,10 @@ namespace YourSharingEconomyApp
 				Image imageContainer = (Image)_list[2];
 				int heightTarget = (int)_list[3];
 				int typeTarget = (int)_list[4];
-				ImageUtils.LoadImage(fullPath, imageContainer, heightTarget, ScreenController.Instance.SizeHeightAllowedImages);
+				ImageUtils.LoadImage(fullPath, imageContainer, heightTarget, MenusScreenController.Instance.SizeHeightAllowedImages);
 				if (typeTarget != RequestModel.IMAGE_TYPE_FINISHED)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				}
 			}
 			if (_nameEvent == EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_URL)
@@ -283,7 +283,7 @@ namespace YourSharingEconomyApp
 				Image imgContainer = (Image)_list[1];
 				int heightImage = (int)_list[2];
 				byte[] dataImage = (byte[])_list[3];
-				ImageUtils.LoadBytesImage(imgContainer, dataImage, heightImage, ScreenController.Instance.SizeHeightAllowedImages);
+				ImageUtils.LoadBytesImage(imgContainer, dataImage, heightImage, MenusScreenController.Instance.SizeHeightAllowedImages);
 				BasicSystemEventController.Instance.DispatchBasicSystemEvent(ImageUtils.EVENT_IMAGES_LOAD_CONFIRMATION_FROM_SYSTEM, pathFileURL);
 			}
 			if (_nameEvent == EVENT_IMAGES_LOAD_REFERENCE_IMG_WITH_IMAGE_URL)
@@ -291,7 +291,7 @@ namespace YourSharingEconomyApp
 				string pathFileURL = (string)_list[0];
 				Image imgContainer = (Image)_list[1];
 				int heightImage = (int)_list[2];
-				ImageURLLoader.Instance.LoadURLImage(pathFileURL, imgContainer, heightImage, ScreenController.Instance.SizeHeightAllowedImages);
+				ImageURLLoader.Instance.LoadURLImage(pathFileURL, imgContainer, heightImage, MenusScreenController.Instance.SizeHeightAllowedImages);
 			}
 			if (_nameEvent == EVENT_IMAGES_LOAD_FROM_ID)
 			{
@@ -303,7 +303,7 @@ namespace YourSharingEconomyApp
 				Image imgContainer = (Image)_list[0];
 				int heightImage = (int)_list[1];
 				byte[] dataImage = (byte[])_list[2];
-				ImageUtils.LoadBytesImage(imgContainer, dataImage, heightImage, ScreenController.Instance.SizeHeightAllowedImages);
+				ImageUtils.LoadBytesImage(imgContainer, dataImage, heightImage, MenusScreenController.Instance.SizeHeightAllowedImages);
 			}
 			if (_nameEvent == EVENT_IMAGES_LOAD_PRIORITY_FROM_ID)
 			{
@@ -312,7 +312,7 @@ namespace YourSharingEconomyApp
 			}
 			if (_nameEvent == EVENT_IMAGES_LOAD_FROM_BYTE_ARRAY)
 			{
-				ImageUtils.LoadBytesImage((Image)_list[1], (byte[])_list[0], (int)_list[2], ScreenController.Instance.SizeHeightAllowedImages);
+				ImageUtils.LoadBytesImage((Image)_list[1], (byte[])_list[0], (int)_list[2], MenusScreenController.Instance.SizeHeightAllowedImages);
 			}
 			if (_nameEvent == EVENT_IMAGES_UPLOAD_TO_SERVER_NEW_IMAGE)
 			{
@@ -326,7 +326,7 @@ namespace YourSharingEconomyApp
 				m_imageTemp.CopyData(dataImg);
 				m_imageTemp.Url = (string)_list[5];
 
-				CommController.Instance.UploadImage((long)_list[0], m_imageTemp.Table, m_imageTemp.IdOrigin, m_imageTemp.Type, dataImg, m_imageTemp.Url);
+				CommsHTTPConstants.UploadImage((long)_list[0], m_imageTemp.Table, m_imageTemp.IdOrigin, m_imageTemp.Type, dataImg, m_imageTemp.Url);
 			}
 			if (_nameEvent == EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION)
 			{
@@ -368,8 +368,8 @@ namespace YourSharingEconomyApp
 							{
 								if (m_imageReferenceTmp.Image != null)
 								{
-									ImageUtils.LoadBytesImage(m_imageReferenceTmp.Image, imageModel.Data, m_imageReferenceTmp.Height, ScreenController.Instance.SizeHeightAllowedImages);
-									BasicEventController.Instance.DispatchBasicEvent(EVENT_IMAGE_LOADED_REPORT_SYSTEM, m_imageReferenceTmp.Image, imageNew.Url);
+									ImageUtils.LoadBytesImage(m_imageReferenceTmp.Image, imageModel.Data, m_imageReferenceTmp.Height, MenusScreenController.Instance.SizeHeightAllowedImages);
+									UIEventController.Instance.DispatchUIEvent(EVENT_IMAGE_LOADED_REPORT_SYSTEM, m_imageReferenceTmp.Image, imageNew.Url);
 								}
 							}
 						}
@@ -387,7 +387,7 @@ namespace YourSharingEconomyApp
 				if (idImage != -1)
 				{
 					RemoveImageByID(idImage);
-					CommController.Instance.RemoveImage(idImage);
+					CommsHTTPConstants.RemoveImage(idImage);
 				}
 			}
 			if (_nameEvent == EVENT_IMAGES_CANCEL_LOADING_IMAGES)

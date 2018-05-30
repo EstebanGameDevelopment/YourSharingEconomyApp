@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class ProposalReportToxicHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "ProposalReportToxic.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "ProposalReportToxic.php";
 
 		private string m_proposalID;
 		private string m_reporterID;
@@ -34,19 +35,19 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, false);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, true, long.Parse(m_proposalID), int.Parse(m_reporterID));
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, true, long.Parse(m_proposalID), int.Parse(m_reporterID));
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, false);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_RESULT_REPORT_PROPOSAL, false);
 			}
 		}
 	}

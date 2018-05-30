@@ -17,7 +17,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenImageView : ScreenBaseView, IBasicScreenView
+	public class ScreenImageView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_IMAGE = "SCREEN_IMAGE";
 
@@ -38,7 +38,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_idImage = (long)_list[0];
 			m_binaryDataImage = (byte[])_list[1];
@@ -61,14 +61,14 @@ namespace YourSharingEconomyApp
 
 			if (m_binaryDataImage == null)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_LOAD_PRIORITY_FROM_ID, this.gameObject, m_idImage, m_imageContent, (int)m_imageContent.GetComponent<RectTransform>().sizeDelta.y, false);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_LOAD_PRIORITY_FROM_ID, this.gameObject, m_idImage, m_imageContent, (int)m_imageContent.GetComponent<RectTransform>().sizeDelta.y, false);
 			}
 			else
 			{
-				ImageUtils.LoadBytesImage(m_imageContent, m_binaryDataImage, (int)m_imageContent.GetComponent<RectTransform>().sizeDelta.y, ScreenController.Instance.SizeHeightAllowedImages);
+				ImageUtils.LoadBytesImage(m_imageContent, m_binaryDataImage, (int)m_imageContent.GetComponent<RectTransform>().sizeDelta.y, MenusScreenController.Instance.SizeHeightAllowedImages);
 			}
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 
@@ -76,10 +76,14 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
 			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -97,7 +101,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				OkPressed();
 			}

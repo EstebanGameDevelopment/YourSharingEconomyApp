@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class RequestConsultByProviderHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "RequestConsultByProvider.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "RequestConsultByProvider.php";
 
 		public string UrlRequest
 		{
@@ -26,12 +27,12 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_CONSULT_BY_PROVIDER_RECORDS);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_CONSULT_BY_PROVIDER_RECORDS);
 				return;
 			}
 
-			BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_RESULT_CONSULT_BY_PROVIDER_RECORDS, m_jsonResponse);
+			UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_RESULT_CONSULT_BY_PROVIDER_RECORDS, m_jsonResponse);
 		}
 	}
 

@@ -21,7 +21,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenSearchResultView : ScreenBaseView, IBasicScreenView
+	public class ScreenSearchResultView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_SEARCH_RESULT = "SCREEN_SEARCH_RESULT";
 
@@ -43,10 +43,10 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_searchRequest = (SearchModel)_list[0];
-			ScreenController.Instance.LastSearchModel = m_searchRequest.Clone();
+			MenusScreenController.Instance.LastSearchModel = m_searchRequest.Clone();
 
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -60,21 +60,25 @@ namespace YourSharingEconomyApp
 			m_slotSearchResultInfoContainer = m_container.Find("YourSearchResultWorks");
 			m_slotSearchResultInfoContainer.GetComponent<SlotManagerView>().Initialize(6);
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 
-			BasicEventController.Instance.DelayBasicEvent(EVENT_SCREENSEARCHRESULTS_LOAD_DATA_SEARCHED, 0.01f);
+			UIEventController.Instance.DelayUIEvent(EVENT_SCREENSEARCHRESULTS_LOAD_DATA_SEARCHED, 0.01f);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
+			if (base.Destroy()) return true;
+
 			m_slotSearchResultInfoContainer.GetComponent<SlotManagerView>().Destroy();
 
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -83,7 +87,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void BackPressed()
 		{
-			ScreenController.Instance.CreateNewScreenNoParameters(ScreenOffersSummaryView.SCREEN_OFFERS, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+			MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenOffersSummaryView.SCREEN_OFFERS, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 		}
 
 		// -------------------------------------------
@@ -92,7 +96,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void NewSearchPressed()
 		{
-			ScreenController.Instance.CreateNewScreenNoParameters(ScreenSearchRequestView.SCREEN_SEARCH_REQUEST, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+			MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenSearchRequestView.SCREEN_SEARCH_REQUEST, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 		}
 
 		// -------------------------------------------
@@ -105,11 +109,11 @@ namespace YourSharingEconomyApp
 
 			if (_nameEvent == EVENT_SCREENSEARCHRESULTS_LOAD_DATA_SEARCHED)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_BY_DISTANCE_RECORDS, m_searchRequest);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_BY_DISTANCE_RECORDS, m_searchRequest);
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_FORMATTED_RECORDS)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				List<RequestModel> data = (List<RequestModel>)_list[0];
 				if ((int)_list[1] == RequestsController.TYPE_CONSULT_BY_DISTANCE)
 				{
@@ -136,25 +140,25 @@ namespace YourSharingEconomyApp
 				if (m_slotSearchResultInfoContainer.GetComponent<SlotManagerView>().CheckSlotExisting(slotClicked))
 				{
 					SlotRequestView slotSelected = slotClicked.GetComponent<SlotRequestView>();
-					BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_SINGLE_RECORD, slotSelected.Request.Id);
+					UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_SINGLE_RECORD, slotSelected.Request.Id);
 				}
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_FORMATTED_SINGLE_RECORD)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				RequestModel request = (RequestModel)_list[0];
 				if (request != null)
 				{
-					ScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, request);
+					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, request);
 				}
 				else
 				{
 					string warning = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.request.not.found");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				NewSearchPressed();
 			}

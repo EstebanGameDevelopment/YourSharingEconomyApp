@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 using System.Security.Cryptography;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class RequestUpdateTransactionHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "RequestUpdateTransaction.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "RequestUpdateTransaction.php";
 
 		private string m_transactionID;
 
@@ -32,19 +33,19 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_TRANSACTION_REGISTERED_RESPONSE, false);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_TRANSACTION_REGISTERED_RESPONSE, false);
 				return;
 			}
 
 			string[] data = m_jsonResponse.Split(new string[] { CommController.TOKEN_SEPARATOR_EVENTS }, StringSplitOptions.None);
 			if (bool.Parse(data[0]))
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_TRANSACTION_REGISTERED_RESPONSE, true, m_transactionID);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_TRANSACTION_REGISTERED_RESPONSE, true, m_transactionID);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_TRANSACTION_REGISTERED_RESPONSE, false);
+				UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_TRANSACTION_REGISTERED_RESPONSE, false);
 			}
 		}
 	}

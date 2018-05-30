@@ -19,7 +19,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenInitialView : ScreenBaseView, IBasicScreenView
+	public class ScreenInitialView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_INITIAL = "SCREEN_INITIAL";
 
@@ -42,7 +42,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -63,7 +63,7 @@ namespace YourSharingEconomyApp
 			m_login.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("message.your.sharingeconomyapp.title");
 			m_login.Find("Message").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.initial.login.welcome", LanguageController.Instance.GetText("message.your.sharingeconomyapp.title"));
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 
 			m_container.gameObject.SetActive(false);
 			m_login.gameObject.SetActive(true);
@@ -81,7 +81,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void GetConfigurationServerData()
 		{
-			CommController.Instance.GetServerConfigurationParameters();
+			CommsHTTPConstants.GetServerConfigurationParameters();
 		}
 
 		// -------------------------------------------
@@ -91,7 +91,7 @@ namespace YourSharingEconomyApp
 		private void AutoLogin()
 		{
 			// CHECK COOKIES CONNECTION
-			m_connectedFacebook = PlayerPrefs.GetInt(ScreenController.USER_FACEBOOK_CONNECTED_COOCKIE, -1);
+			m_connectedFacebook = PlayerPrefs.GetInt(MenusScreenController.USER_FACEBOOK_CONNECTED_COOCKIE, -1);
 			if (m_connectedFacebook == -1)
 			{
 				m_container.gameObject.SetActive(true);
@@ -104,13 +104,13 @@ namespace YourSharingEconomyApp
 			}
 
 			// AUTOCONNECT
-			ItemMultiTextEntry userData = ScreenController.Instance.LoadEmailLoginLocal();
+			ItemMultiTextEntry userData = MenusScreenController.Instance.LoadEmailLoginLocal();
 			switch (m_connectedFacebook)
 			{
 				case 0:
 					if (userData != null)
 					{
-						BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_LOGIN_REQUEST, userData.Items[0], userData.Items[1]);
+						UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_LOGIN_REQUEST, userData.Items[0], userData.Items[1]);
 					}
 					else
 					{
@@ -132,10 +132,13 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+			return false;
 		}
 
 		// -------------------------------------------
@@ -147,7 +150,7 @@ namespace YourSharingEconomyApp
 			if (!m_enableInteraction) return;
 			m_enableInteraction = false;
 
-			ScreenController.Instance.CreateNewScreenNoParameters(ScreenLoginView.SCREEN_LOGIN, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+			MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenLoginView.SCREEN_LOGIN, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 		}
 
 		// -------------------------------------------
@@ -177,7 +180,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == BasicEventController.EVENT_BASICEVENT_DELAYED_CALL)
+			if (_nameEvent == UIEventController.EVENT_BASICEVENT_DELAYED_CALL)
 			{
 				if (this.gameObject == ((GameObject)_list[0]))
 				{
@@ -187,68 +190,68 @@ namespace YourSharingEconomyApp
 			if (_nameEvent == EVENT_CONFIGURATION_DATA_RECEIVED)
 			{
 				UsersController.Instance.InitLocalUserSkills();
-				BasicEventController.Instance.DelayBasicEvent(BasicEventController.EVENT_BASICEVENT_DELAYED_CALL, 2.4f, this.gameObject, "AutoLogin");
+				UIEventController.Instance.DelayUIEvent(UIEventController.EVENT_BASICEVENT_DELAYED_CALL, 2.4f, this.gameObject, "AutoLogin");
 			}
 			if (_nameEvent == FacebookController.EVENT_FACEBOOK_COMPLETE_INITIALITZATION)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if ((string)_list[0] != null)
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-					CommController.Instance.RequestUserByFacebook(FacebookController.Instance.Id, FacebookController.Instance.NameHuman, FacebookController.Instance.Email, FacebookController.Instance.GetPackageFriends());
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+					CommsHTTPConstants.RequestUserByFacebook(FacebookController.Instance.Id, FacebookController.Instance.NameHuman, FacebookController.Instance.Email, FacebookController.Instance.GetPackageFriends());
 				}
 				else
 				{
 					string titleInfoError = LanguageController.Instance.GetText("message.warning");
 					string descriptionInfoError = LanguageController.Instance.GetText("message.operation.canceled");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 				}
 			}
 			if (_nameEvent == UsersController.EVENT_USER_FACEBOOK_LOGIN_FORMATTED)
 			{
 				m_enableInteraction = true;
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if ((bool)_list[0])
 				{
-					ScreenController.Instance.CreateNewScreenNoParameters(ScreenMainMenuView.SCREEN_MAIN_MENU, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+					MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenMainMenuView.SCREEN_MAIN_MENU, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 				}
 				else
 				{
 					string titleInfoError = LanguageController.Instance.GetText("message.error");
 					string descriptionInfoError = LanguageController.Instance.GetText("screen.message.facebook.error.register");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 				}
 			}
 			if (_nameEvent == UsersController.EVENT_USER_LOGIN_FORMATTED)
 			{
 				m_enableInteraction = true;
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if ((bool)_list[0])
 				{
 					UserModel userData = (UserModel)_list[1];
 					if (userData.Validated)
 					{
-						ScreenController.Instance.CreateNewScreenNoParameters(ScreenMainMenuView.SCREEN_MAIN_MENU, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+						MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenMainMenuView.SCREEN_MAIN_MENU, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 					}
 					else
 					{
-						ScreenController.Instance.CreateNewScreenNoParameters(ScreenValidationConfirmationView.SCREEN_VALIDATION_CONFIRMATION, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+						MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenValidationConfirmationView.SCREEN_VALIDATION_CONFIRMATION, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 					}
 				}
 				else
 				{
 					string titleInfoError = LanguageController.Instance.GetText("message.error");
 					string descriptionInfoError = LanguageController.Instance.GetText("screen.message.logging.wrong.user");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 				}
 			}
-			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			if (_nameEvent == ScreenController.EVENT_CONFIRMATION_POPUP)
 			{
 				m_enableInteraction = true;
 				m_container.gameObject.SetActive(true);
 				m_login.gameObject.SetActive(false);
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				ExitPressed();
 			}

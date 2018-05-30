@@ -153,7 +153,7 @@ namespace YourSharingEconomyApp
 		{
 			base.OnPointerClick(eventData);
 
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_SLOTOFFER_SELECTED_PROPOSAL, this.gameObject);
+			UIEventController.Instance.DispatchUIEvent(EVENT_SLOTOFFER_SELECTED_PROPOSAL, this.gameObject);
 		}
 	}
 }
