@@ -15,7 +15,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenLoginView : ScreenBaseView, IBasicScreenView
+	public class ScreenLoginView : ScreenBaseView, IBasicView
 	{
 		// ----------------------------------------------
 		// SUBS
@@ -37,7 +37,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -53,23 +53,27 @@ namespace YourSharingEconomyApp
 			m_container.Find("Button_Register/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.login.register");
 			m_container.Find("Button_Forget/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.login.forget.mail");
 
-			if (ScreenController.Instance.DebugMode)
+			if (MenusScreenController.Instance.DebugMode)
 			{
 				m_container.Find("EmailValue").GetComponent<InputField>().text = "YOUR_EMAIL_ADDRESS@YOUR_OWN_DOMAIN.COM";
 				m_container.Find("PasswordValue").GetComponent<InputField>().text = "YOUR_PASSWORD";
 			}
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -85,14 +89,14 @@ namespace YourSharingEconomyApp
 			{
 				string titleInfoError = LanguageController.Instance.GetText("message.error");
 				string descriptionInfoError = LanguageController.Instance.GetText("screen.message.logging.error");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 			}
 			else
 			{
 				string titleWait = LanguageController.Instance.GetText("screen.wait.logging.title");
 				string descriptionWait = LanguageController.Instance.GetText("screen.wait.logging.description");
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_LOGIN_REQUEST, emailToCheck, passwordToCheck);
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleWait, descriptionWait, null, "");
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_LOGIN_REQUEST, emailToCheck, passwordToCheck);
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleWait, descriptionWait, null, "");
 			}
 		}
 
@@ -104,7 +108,7 @@ namespace YourSharingEconomyApp
 		{
 			string warning = LanguageController.Instance.GetText("message.warning");
 			string description = LanguageController.Instance.GetText("message.do.you.want.exit");
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENLOGIN_CONFIRMATION_EXIT_APP);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENLOGIN_CONFIRMATION_EXIT_APP);
 		}
 
 		// -------------------------------------------
@@ -113,7 +117,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void RegisterPressed()
 		{
-			ScreenController.Instance.CreateNewScreenNoParameters(ScreenRegisterView.SCREEN_REGISTER, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+			MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenRegisterView.SCREEN_REGISTER, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 		}
 
 		// -------------------------------------------
@@ -127,12 +131,12 @@ namespace YourSharingEconomyApp
 			{
 				string titleInfoError = LanguageController.Instance.GetText("message.error");
 				string descriptionInfoError = LanguageController.Instance.GetText("screen.login.email");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 			}
 			else
 			{
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-				CommController.Instance.RequestResetPasswordByEmail(emailToCheck);
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+				CommsHTTPConstants.RequestResetPasswordByEmail(emailToCheck);
 			}
 		}
 
@@ -144,43 +148,43 @@ namespace YourSharingEconomyApp
 		{
 			if (_nameEvent == UsersController.EVENT_USER_LOGIN_FORMATTED)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if ((bool)_list[0])
 				{
 					UserModel userData = (UserModel)_list[1];
 					if (userData.Validated)
 					{
-						ScreenController.Instance.CreateNewScreenNoParameters(ScreenMainMenuView.SCREEN_MAIN_MENU, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+						MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenMainMenuView.SCREEN_MAIN_MENU, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 					}
 					else
 					{
-						ScreenController.Instance.CreateNewScreenNoParameters(ScreenValidationConfirmationView.SCREEN_VALIDATION_CONFIRMATION, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+						MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenValidationConfirmationView.SCREEN_VALIDATION_CONFIRMATION, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 					}
 				}
 				else
 				{
 					string titleInfoError = LanguageController.Instance.GetText("message.error");
 					string descriptionInfoError = LanguageController.Instance.GetText("screen.message.logging.wrong.user");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 				}
 			}
 			if (_nameEvent == UsersController.EVENT_USER_RESULT_RESETED_PASSWORD_BY_EMAIL)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if ((bool)_list[0])
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.profile.check.email.to.reset"), null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.profile.check.email.to.reset"), null, "");
 				}
 				else
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.error.server"), null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.error.server"), null, "");
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				ExitPressed();
 			}
-			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			if (_nameEvent == ScreenController.EVENT_CONFIRMATION_POPUP)
 			{
 				string subEvent = (string)_list[2];
 				if (subEvent == SUB_EVENT_SCREENLOGIN_CONFIRMATION_EXIT_APP)

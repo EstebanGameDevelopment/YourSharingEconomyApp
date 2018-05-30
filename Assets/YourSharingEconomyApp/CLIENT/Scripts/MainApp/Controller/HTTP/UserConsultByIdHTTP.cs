@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using UnityEngine;
+using YourCommonTools;
 
 namespace YourSharingEconomyApp
 {
 
 	public class UserConsultByIdHTTP : BaseDataHTTP, IHTTPComms
 	{
-		private string m_urlRequest = ScreenController.URL_BASE_PHP + "UserConsult.php";
+		private string m_urlRequest = MenusScreenController.URL_BASE_PHP + "UserConsult.php";
 
 		public string UrlRequest
 		{
@@ -32,12 +33,12 @@ namespace YourSharingEconomyApp
 		{
 			if (!ResponseCode(_response))
 			{
-				CommController.Instance.DisplayLog(m_jsonResponse);
-				BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_RESULT_CONSULT_SINGLE_RECORD);
+				CommsHTTPConstants.DisplayLog(m_jsonResponse);
+				UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_RESULT_CONSULT_SINGLE_RECORD);
 				return;
 			}
 
-			BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_RESULT_CONSULT_SINGLE_RECORD, m_jsonResponse);
+			UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_RESULT_CONSULT_SINGLE_RECORD, m_jsonResponse);
 		}
 	}
 }

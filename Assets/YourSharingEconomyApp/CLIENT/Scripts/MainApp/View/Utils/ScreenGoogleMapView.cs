@@ -17,7 +17,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenGoogleMapView : ScreenBaseView, IBasicScreenView
+	public class ScreenGoogleMapView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_GOOGLEMAP = "SCREEN_GOOGLEMAP";
 
@@ -41,7 +41,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			string coordinateData = (string)_list[0];
 
@@ -58,7 +58,7 @@ namespace YourSharingEconomyApp
 
 			m_container.transform.Find("Button_Back").GetComponent<Button>().onClick.AddListener(OnBackButton);
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
@@ -66,18 +66,22 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
+			if (base.Destroy()) return true;
+
 			if (m_map != null)
 			{
 				m_map.GetComponent<GoogleMap>().Destroy();
 				m_map = null;
 			}
 
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
 			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
 
 			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -130,7 +134,7 @@ namespace YourSharingEconomyApp
 				Vector2 distanceMoved = (new Vector2(_position.x, _position.y)) - m_anchor;
 				distanceMoved = new Vector2(distanceMoved.x / UnityEngine.Screen.width, distanceMoved.y / UnityEngine.Screen.height);
 				m_map.transform.localPosition = Vector2.zero;
-				BasicEventController.Instance.DispatchBasicEvent(GoogleMap.EVENT_GOOGLEMAP_SHIFT_POSITION, distanceMoved);
+				UIEventController.Instance.DispatchUIEvent(GoogleMap.EVENT_GOOGLEMAP_SHIFT_POSITION, distanceMoved);
 			}
 		}
 
@@ -152,7 +156,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				OnBackButton();
 			}

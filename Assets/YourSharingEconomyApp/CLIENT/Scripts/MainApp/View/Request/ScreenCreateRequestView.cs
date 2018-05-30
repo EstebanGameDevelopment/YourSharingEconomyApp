@@ -31,7 +31,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenCreateRequestView : ScreenBaseView, IBasicScreenView
+	public class ScreenCreateRequestView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_CREATE_REQUEST = "SCREEN_CREATE_REQUEST";
 		public const string SCREEN_DISPLAY_REQUEST = "SCREEN_DISPLAY_REQUEST";
@@ -151,7 +151,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content/ScrollPage/Page");
@@ -176,7 +176,7 @@ namespace YourSharingEconomyApp
 			if (m_root.transform.Find("Content/Button_Save") != null)
 			{
 				m_isDisplayInfo = false;
-				BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_CANCEL_LOADING_IMAGES);
+				UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_CANCEL_LOADING_IMAGES);
 			}
 			else
 			{
@@ -372,7 +372,7 @@ namespace YourSharingEconomyApp
 			// ++++ LOADING THE DATA ++++
 			LoadRequestData();
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
@@ -380,19 +380,23 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
+			if (base.Destroy()) return true;
+
 			ClearAllReferenceImages();
 			ClearAllFinishedImages();
 			ClearAllProposals();
 			m_requestData = null;
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
 			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
 			if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
 			{
 				YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent -= new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
 			}
 			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -554,7 +558,7 @@ namespace YourSharingEconomyApp
 				m_imageLoadingOffers.gameObject.SetActive(true);
 				m_offersTextLoading.SetActive(true);
 
-				BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_CONSULT_PROPOSALS, m_requestData.Id);
+				UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_CALL_CONSULT_PROPOSALS, m_requestData.Id);
 			}
 
 			// FINISHED LABEL
@@ -753,7 +757,7 @@ namespace YourSharingEconomyApp
 			}
 			else
 			{
-				BasicEventController.Instance.DelayBasicEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_IMAGES_REQUEST, 0.4f, m_requestData.Id);
+				UIEventController.Instance.DelayUIEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_IMAGES_REQUEST, 0.4f, m_requestData.Id);
 			}
 		}
 
@@ -769,13 +773,13 @@ namespace YourSharingEconomyApp
 				m_requestData.FeedbackCustomerGivesToTheProvider = _text;
 				if (m_requestData.SignDataCustomer(YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey))
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.feedback"), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.feedback"), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER);
 				}
 				else
 				{
 					string info = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.create.request.failure.to.sign.data");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
 				}
 			}
 			else
@@ -797,13 +801,13 @@ namespace YourSharingEconomyApp
 				m_requestData.FeedbackProviderGivesToTheCustomer = _text;
 				if (m_requestData.SignDataProvider(YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey))
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.feedback"), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.feedback"), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER);
 				}
 				else
 				{
 					string info = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.create.request.failure.to.sign.data");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
 				}
 			}
 			else
@@ -923,7 +927,7 @@ namespace YourSharingEconomyApp
 			m_counterImagesLoaded = m_requestData.Images;
 			if (m_requestData.TemporalImageReferences.Count > 0)
 			{
-				BasicEventController.Instance.DelayBasicEvent(EVENT_SCREENCREATEREQUEST_DELAY_LOAD_IMAGE, 0.4f);
+				UIEventController.Instance.DelayUIEvent(EVENT_SCREENCREATEREQUEST_DELAY_LOAD_IMAGE, 0.4f);
 			}
 		}
 
@@ -941,7 +945,7 @@ namespace YourSharingEconomyApp
 			{
 				if ((m_requestData.TemporalImageReferences[i].Id == m_requestData.Referenceimg) && (m_requestData.TemporalImageReferences[i].Type != RequestModel.IMAGE_TYPE_FINISHED))
 				{
-					GameObject newImageRequest = Utilities.AddChild(m_referenceImagesContainer, ScreenController.Instance.SlotImage);
+					GameObject newImageRequest = Utilities.AddChild(m_referenceImagesContainer, MenusScreenController.Instance.SlotImage);
 					long idImageReference = m_requestData.TemporalImageReferences[i].Id;
 					string urlReference = m_requestData.TemporalImageReferences[i].Url;
 					m_imagesReferences.Add(newImageRequest);
@@ -955,7 +959,7 @@ namespace YourSharingEconomyApp
 			{
 				if ((m_requestData.TemporalImageReferences[i].Id != m_requestData.Referenceimg) && (m_requestData.TemporalImageReferences[i].Type != RequestModel.IMAGE_TYPE_FINISHED))
 				{
-					GameObject newImageRequest = Utilities.AddChild(m_referenceImagesContainer, ScreenController.Instance.SlotImage);
+					GameObject newImageRequest = Utilities.AddChild(m_referenceImagesContainer, MenusScreenController.Instance.SlotImage);
 					long idImageReference = m_requestData.TemporalImageReferences[i].Id;
 					string urlReference = m_requestData.TemporalImageReferences[i].Url;
 					m_imagesReferences.Add(newImageRequest);
@@ -969,7 +973,7 @@ namespace YourSharingEconomyApp
 			{
 				if (m_requestData.TemporalImageReferences[i].Type == RequestModel.IMAGE_TYPE_FINISHED)
 				{
-					GameObject newFinishedImage = Utilities.AddChild(m_finishedImagesContainer, ScreenController.Instance.SlotImage);
+					GameObject newFinishedImage = Utilities.AddChild(m_finishedImagesContainer, MenusScreenController.Instance.SlotImage);
 					long idImageReference = m_requestData.TemporalImageReferences[i].Id;
 					string urlReference = m_requestData.TemporalImageReferences[i].Url;
 					m_imagesFinishedJob.Add(newFinishedImage);
@@ -1102,7 +1106,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void BackPressed()
 		{
-			BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+			UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
 		}
 
 		// -------------------------------------------
@@ -1115,12 +1119,12 @@ namespace YourSharingEconomyApp
 			if (m_requestData.Id == -1)
 			{
 				string description = LanguageController.Instance.GetText("message.create.request.confirmation");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION);
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION);
 			}
 			else
 			{
 				string description = LanguageController.Instance.GetText("message.create.request.save.confirmation");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION);
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION);
 			}
 		}
 
@@ -1134,11 +1138,11 @@ namespace YourSharingEconomyApp
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("message.create.request.exit.without.saving");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING);
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING);
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+				UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
 			}
 		}
 
@@ -1152,7 +1156,7 @@ namespace YourSharingEconomyApp
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
@@ -1161,13 +1165,13 @@ namespace YourSharingEconomyApp
 					m_flagResetAllProposal = true;
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("message.create.request.invalidate.if.edit");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT);
 				}
 				else
 				{
 					string warning = LanguageController.Instance.GetText("message.info");
 					string description = LanguageController.Instance.GetText("message.create.request.want.to.edit");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT);
 				}
 			}
 		}
@@ -1183,7 +1187,7 @@ namespace YourSharingEconomyApp
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
@@ -1191,13 +1195,13 @@ namespace YourSharingEconomyApp
 				{
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("message.create.request.remove.with.penalty");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_REMOVE_WITH_PENALTY);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_REMOVE_WITH_PENALTY);
 				}
 				else
 				{
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("message.create.request.want.to.remove");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_REMOVE);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_REMOVE);
 				}
 			}
 		}
@@ -1209,8 +1213,8 @@ namespace YourSharingEconomyApp
 		private void OnCheckCustomerProfile()
 		{
 			m_pressedCheckCustomerProfile = true;
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-			BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)m_requestData.Customer);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+			UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)m_requestData.Customer);
 		}
 
 		// -------------------------------------------
@@ -1337,7 +1341,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnCalendarClick()
 		{
-			ScreenController.Instance.CreateNewScreen(ScreenCalendarView.SCREEN_CALENDAR, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, m_requestData.Deadline.ToString());
+			MenusScreenController.Instance.CreateNewScreen(ScreenCalendarView.SCREEN_CALENDAR, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, false, m_requestData.Deadline.ToString());
 		}
 
 		// -------------------------------------------
@@ -1346,7 +1350,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnGoogleMaps()
 		{
-			ScreenController.Instance.CreateNewScreen(ScreenGoogleMapView.SCREEN_GOOGLEMAP, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, m_requestData.Mapdata, m_requestData.Village);
+			MenusScreenController.Instance.CreateNewScreen(ScreenGoogleMapView.SCREEN_GOOGLEMAP, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, false, m_requestData.Mapdata, m_requestData.Village);
 		}
 
 		// -------------------------------------------
@@ -1356,16 +1360,16 @@ namespace YourSharingEconomyApp
 		private void OnAddNewImage()
 		{
 #if ENABLED_FACEBOOK
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.no.add.media.on.web"), null, "");
+        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.no.add.media.on.web"), null, "");
 #else
 			m_typeImageToUpload = RequestModel.IMAGE_TYPE_REFERENCE;
-			if (m_imagesReferences.Count >= ScreenController.Instance.TotalNumberImagesAsReference)
+			if (m_imagesReferences.Count >= MenusScreenController.Instance.TotalNumberImagesAsReference)
 			{
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.maximum.number.images", ScreenController.Instance.TotalNumberImagesAsReference), null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.maximum.number.images", MenusScreenController.Instance.TotalNumberImagesAsReference), null, "");
 			}
 			else
 			{
-				ScreenController.Instance.CreateNewScreenNoParameters(ScreenTypeMediaView.SCREEN_TYPE_MEDIA, false, TypePreviousActionEnum.KEEP_CURRENT_SCREEN);
+				MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenTypeMediaView.SCREEN_TYPE_MEDIA, false, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN);
 			}
 #endif
 		}
@@ -1377,30 +1381,30 @@ namespace YourSharingEconomyApp
 		private void OnAddFinishedImage()
 		{
 #if ENABLED_FACEBOOK
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.no.add.media.on.web"), null, "");
+        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.no.add.media.on.web"), null, "");
 #else
 			if (!m_loadedAllOffersData)
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
 				if (m_imagesFinishedJob.Count == 0)
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.add.final.image"), null, SUB_EVENT_SCREENCREATEREQUEST_UPLOAD_FINAL_IMAGE);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.add.final.image"), null, SUB_EVENT_SCREENCREATEREQUEST_UPLOAD_FINAL_IMAGE);
 				}
 				else
 				{
 					m_typeImageToUpload = RequestModel.IMAGE_TYPE_FINISHED;
-					if (m_imagesFinishedJob.Count >= ScreenController.Instance.TotalNumberImagesAsFinished)
+					if (m_imagesFinishedJob.Count >= MenusScreenController.Instance.TotalNumberImagesAsFinished)
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.maximum.number.images", ScreenController.Instance.TotalNumberImagesAsFinished), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.maximum.number.images", MenusScreenController.Instance.TotalNumberImagesAsFinished), null, "");
 					}
 					else
 					{
-						ScreenController.Instance.CreateNewScreenNoParameters(ScreenTypeMediaView.SCREEN_TYPE_MEDIA, false, TypePreviousActionEnum.KEEP_CURRENT_SCREEN);
+						MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenTypeMediaView.SCREEN_TYPE_MEDIA, false, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN);
 					}
 				}
 			}
@@ -1414,17 +1418,17 @@ namespace YourSharingEconomyApp
 		private void OnBreakDeal()
 		{
 #if ENABLED_FACEBOOK
-        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.no.add.media.on.web"), null, "");
+        ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.no.add.media.on.web"), null, "");
 #else
 			if (!m_loadedAllOffersData)
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.confirmation.break.deal"), null, SUB_EVENT_SCREENCREATEREQUEST_DEAL_BROKEN_CONFIRMATION);
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.confirmation.break.deal"), null, SUB_EVENT_SCREENCREATEREQUEST_DEAL_BROKEN_CONFIRMATION);
 			}
 #endif
 		}
@@ -1452,7 +1456,7 @@ namespace YourSharingEconomyApp
 			if (indexProposal != -1)
 			{
 				int hoursToBeAbleToPost = DateConverter.GetTimeDifferenceInHours(maxDate);
-				if (hoursToBeAbleToPost > ScreenController.Instance.HoursToEnableANewProposal)
+				if (hoursToBeAbleToPost > MenusScreenController.Instance.HoursToEnableANewProposal)
 				{
 					return true;
 				}
@@ -1460,7 +1464,7 @@ namespace YourSharingEconomyApp
 				{
 					if (UsersController.Instance.CurrentUser.Additionaloffer <= 0)
 					{
-						ScreenController.Instance.CreateNewScreen(ScreenPremiumPostView.SCREEN_PREMIUM_POST, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false, hoursToBeAbleToPost);
+						MenusScreenController.Instance.CreateNewScreen(ScreenPremiumPostView.SCREEN_PREMIUM_POST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, false, hoursToBeAbleToPost);
 						return false;
 					}
 					else
@@ -1485,7 +1489,7 @@ namespace YourSharingEconomyApp
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
@@ -1493,7 +1497,7 @@ namespace YourSharingEconomyApp
 				{
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("screen.create.request.you.already.reported");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 				}
 				else
 				{
@@ -1501,7 +1505,7 @@ namespace YourSharingEconomyApp
 					{
 						string warning = LanguageController.Instance.GetText("message.warning");
 						string description = LanguageController.Instance.GetText("screen.create.request.has.been.flagged");
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 					}
 					else
 					{
@@ -1509,7 +1513,7 @@ namespace YourSharingEconomyApp
 						{
 							string warning = LanguageController.Instance.GetText("message.warning");
 							string description = LanguageController.Instance.GetText("message.user.not.validated");
-							ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 						}
 						else
 						{
@@ -1517,17 +1521,17 @@ namespace YourSharingEconomyApp
 							{
 								if (m_requestData.Customer == UsersController.Instance.CurrentUser.Id)
 								{
-									ScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_CREATE_PROPOSAL, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, m_requestData.Clone(), true);
+									MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_CREATE_PROPOSAL, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_requestData.Clone(), true);
 								}
 								else
 								{
 									if (!UsersController.Instance.CurrentUser.IsProvider())
 									{
-										ScreenController.Instance.CreateNewScreen(ScreenBecomeProviderView.SCREEN_BECOME_PROVIDER, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, false);
+										MenusScreenController.Instance.CreateNewScreen(ScreenBecomeProviderView.SCREEN_BECOME_PROVIDER, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, false);
 									}
 									else
 									{
-										ScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_CREATE_PROPOSAL, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, m_requestData.Clone());
+										MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_CREATE_PROPOSAL, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_requestData.Clone());
 									}
 								}
 							}
@@ -1551,7 +1555,7 @@ namespace YourSharingEconomyApp
 					finalIndexImageReference = m_imagesReferences[i].GetComponent<SlotImageView>().Id;
 				}
 			}
-			BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_UPDATE_IMG_REF, m_requestData.Id, finalIndexImageReference);
+			UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_UPDATE_IMG_REF, m_requestData.Id, finalIndexImageReference);
 		}
 
 		// -------------------------------------------
@@ -1561,7 +1565,7 @@ namespace YourSharingEconomyApp
 		private void MessageConfirmationServer()
 		{
 			RequestsController.Instance.MustReloadRequests = true;
-			BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+			UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 			string warning = LanguageController.Instance.GetText("message.info");
 			string description;
 			if (m_requestData.Id == -1)
@@ -1573,7 +1577,7 @@ namespace YourSharingEconomyApp
 				description = LanguageController.Instance.GetText("message.create.request.server.changes.confirmation");
 			}
 
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION);
 		}
 
 		// -------------------------------------------
@@ -1860,10 +1864,10 @@ namespace YourSharingEconomyApp
 				m_container.Find("Button_DeadlineCalendar/Title").GetComponent<Text>().text = DateConverter.TimeStampToDateTimeString(m_requestData.Deadline);
 				IsReadyToPublish = true;
 			}
-			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			if (_nameEvent == ScreenController.EVENT_CONFIRMATION_POPUP)
 			{
 				string subEvent = (string)_list[2];
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY)
 				{
 					if ((bool)_list[1])
@@ -1876,84 +1880,84 @@ namespace YourSharingEconomyApp
 					if ((bool)_list[1])
 					{
 						m_hasChanged = false;
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_CREATE_OR_UPDATE_REQUEST, m_requestData);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_CREATE_OR_UPDATE_REQUEST, m_requestData);
 					}
 					else
 					{
 						string warning = LanguageController.Instance.GetText("message.warning");
 						string description = LanguageController.Instance.GetText("message.operation.canceled");
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 					}
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING)
 				{
 					if ((bool)_list[1])
 					{
-						BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+						UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
 					}
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+					UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
 						if (m_flagResetAllProposal)
 						{
-							BasicEventController.Instance.DispatchBasicEvent(ProposalsController.EVENT_PROPOSAL_CALL_RESET_ALL_PROPOSALS, m_requestData.Id);
+							UIEventController.Instance.DispatchUIEvent(ProposalsController.EVENT_PROPOSAL_CALL_RESET_ALL_PROPOSALS, m_requestData.Id);
 						}
 						else
 						{
-							ScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_CREATE_REQUEST, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, m_requestData);
+							MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_CREATE_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_requestData);
 						}
 					}
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_REMOVE)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_DELETE_RECORDS, m_requestData.Id);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_DELETE_RECORDS, m_requestData.Id);
 					}
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_REMOVE_WITH_PENALTY)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_DELETE_RECORDS, m_requestData.Id);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_DELETE_RECORDS, m_requestData.Id);
 					}
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_BECOME_A_PROVIDER)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
-						ScreenController.Instance.CreateNewScreenNoParameters(ScreenProfileView.SCREEN_PROFILE, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+						MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenProfileView.SCREEN_PROFILE, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 					}
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_UPLOAD_FINAL_IMAGE)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
 						m_typeImageToUpload = RequestModel.IMAGE_TYPE_FINISHED;
-						ScreenController.Instance.CreateNewScreenNoParameters(ScreenTypeMediaView.SCREEN_TYPE_MEDIA, false, TypePreviousActionEnum.KEEP_CURRENT_SCREEN);
+						MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenTypeMediaView.SCREEN_TYPE_MEDIA, false, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN);
 					}
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
 					}
 					else
 					{
@@ -1963,11 +1967,11 @@ namespace YourSharingEconomyApp
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
 					}
 					else
 					{
@@ -1977,14 +1981,14 @@ namespace YourSharingEconomyApp
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
 						SetFeedbackConsumer(true);
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 						m_panelScoreConsumer.GetComponent<PanelRatingView>().SetScore(m_requestData.ScoreCustomerGivesToTheProvider, 1);
 						m_panelScoreConsumer.GetComponent<PanelRatingView>().IsInteractable = false;
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
 					}
 					else
 					{
@@ -1994,14 +1998,14 @@ namespace YourSharingEconomyApp
 				}
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER)
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
 						m_editFieldFeedbackProvider.gameObject.SetActive(true);
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 						m_panelScoreProvider.GetComponent<PanelRatingView>().SetScore(m_requestData.ScoreProviderGivesToTheCustomer, 1);
 						m_panelScoreProvider.GetComponent<PanelRatingView>().IsInteractable = false;
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
 					}
 					else
 					{
@@ -2015,8 +2019,8 @@ namespace YourSharingEconomyApp
 					{
 						if (m_buttonAddFinishedImages != null) m_buttonAddFinishedImages.gameObject.SetActive(false);
 						if (m_buttonBreakDeal != null) m_buttonBreakDeal.gameObject.SetActive(false);
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_SET_JOB_AS_FINISHED, m_requestData.Id, true);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SET_JOB_AS_FINISHED, m_requestData.Id, true);
 					}
 				}
 			}
@@ -2025,11 +2029,11 @@ namespace YourSharingEconomyApp
 				RequestsController.Instance.MustReloadRequests = true;
 				if ((bool)_list[0])
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.delete.success"), null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.delete.success"), null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING);
 				}
 				else
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.delete.failure"), null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.delete.failure"), null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING);
 				}
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_CREATED_RECORD_CONFIRMATION)
@@ -2039,7 +2043,7 @@ namespace YourSharingEconomyApp
 					m_requestData.Id = (long)_list[1];
 					if (m_imagesReferences.Count > 0)
 					{
-						BasicEventController.Instance.DispatchBasicEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION);
+						UIEventController.Instance.DispatchUIEvent(ImagesController.EVENT_IMAGES_UPLOAD_TO_SERVER_CONFIRMATION);
 					}
 					else
 					{
@@ -2048,20 +2052,20 @@ namespace YourSharingEconomyApp
 				}
 				else
 				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					string warning = LanguageController.Instance.GetText("message.error");
 					string description = LanguageController.Instance.GetText("message.create.request.server.error");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION);
 				}
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_UPDATE_IMG_REF)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if (m_isDisplayInfo)
 				{
 					string info = LanguageController.Instance.GetText("message.info");
 					string description = LanguageController.Instance.GetText("message.create.request.server.changes.confirmation");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
 				}
 				else
 				{
@@ -2071,10 +2075,10 @@ namespace YourSharingEconomyApp
 					}
 					else
 					{
-						BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+						UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 						string warning = LanguageController.Instance.GetText("message.error");
 						string description = LanguageController.Instance.GetText("message.create.request.server.error");
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 					}
 				}
 			}
@@ -2093,7 +2097,7 @@ namespace YourSharingEconomyApp
 					}
 					if (m_commitImageIndex < m_imagesReferences.Count)
 					{
-						m_imagesReferences[m_commitImageIndex].GetComponent<SlotImageView>().UploadImages(ScreenController.TABLE_REQUESTS, m_requestData.Id, m_commitImageIndex);
+						m_imagesReferences[m_commitImageIndex].GetComponent<SlotImageView>().UploadImages(MenusScreenController.TABLE_REQUESTS, m_requestData.Id, m_commitImageIndex);
 					}
 					else
 					{
@@ -2107,12 +2111,12 @@ namespace YourSharingEconomyApp
 						RequestsController.Instance.MustReloadRequests = true;
 						if (m_imagesFinishedJob.Count == 1)
 						{
-							ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-							BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_SET_JOB_AS_FINISHED, m_requestData.Id, false);
+							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+							UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SET_JOB_AS_FINISHED, m_requestData.Id, false);
 						}
 						else
 						{
-							BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+							UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 						}
 					}
 				}
@@ -2125,7 +2129,7 @@ namespace YourSharingEconomyApp
 					float scrollPosition = 0;
 					if (m_typeImageToUpload == RequestModel.IMAGE_TYPE_REFERENCE)
 					{
-						GameObject newImageRequest = Utilities.AddChild(m_referenceImagesContainer, ScreenController.Instance.SlotImage);
+						GameObject newImageRequest = Utilities.AddChild(m_referenceImagesContainer, MenusScreenController.Instance.SlotImage);
 						newImageRequest.GetComponent<SlotImageView>().Initialize(m_requestData.Id, -1, filePathImage, (m_requestData.Images == 0), (m_requestData.Customer == UsersController.Instance.CurrentUser.Id), RequestModel.IMAGE_TYPE_REFERENCE, scrollPosition);
 						m_imagesReferences.Add(newImageRequest);
 						m_requestData.Images++;
@@ -2135,7 +2139,7 @@ namespace YourSharingEconomyApp
 					else
 					{
 						RequestsController.Instance.MustReloadRequests = true;
-						GameObject newFinishedRequest = Utilities.AddChild(m_finishedImagesContainer, ScreenController.Instance.SlotImage);
+						GameObject newFinishedRequest = Utilities.AddChild(m_finishedImagesContainer, MenusScreenController.Instance.SlotImage);
 						newFinishedRequest.GetComponent<SlotImageView>().Initialize(m_requestData.Id, -1, filePathImage, false, false, RequestModel.IMAGE_TYPE_FINISHED, scrollPosition);
 						m_imagesFinishedJob.Add(newFinishedRequest);
 						if (m_imageLoadingFinished != null) m_imageLoadingFinished.gameObject.SetActive(false);
@@ -2149,16 +2153,16 @@ namespace YourSharingEconomyApp
 						string urlImage = (string)_list[1];
 						if (m_typeImageToUpload == RequestModel.IMAGE_TYPE_REFERENCE)
 						{
-							GameObject newImageRequest = Utilities.AddChild(m_referenceImagesContainer, ScreenController.Instance.SlotImage);
-							newImageRequest.GetComponent<SlotImageView>().InitializeWithURL(m_requestData.Id, -1, ScreenController.Instance.ImageReferenceLink, (m_requestData.Images == 0), (m_requestData.Customer == UsersController.Instance.CurrentUser.Id), RequestModel.IMAGE_TYPE_REFERENCE, urlImage);
+							GameObject newImageRequest = Utilities.AddChild(m_referenceImagesContainer, MenusScreenController.Instance.SlotImage);
+							newImageRequest.GetComponent<SlotImageView>().InitializeWithURL(m_requestData.Id, -1, MenusScreenController.Instance.ImageReferenceLink, (m_requestData.Images == 0), (m_requestData.Customer == UsersController.Instance.CurrentUser.Id), RequestModel.IMAGE_TYPE_REFERENCE, urlImage);
 							m_imagesReferences.Add(newImageRequest);
 							m_requestData.Images++;
 						}
 						else
 						{
 							RequestsController.Instance.MustReloadRequests = true;
-							GameObject newImageRequest = Utilities.AddChild(m_finishedImagesContainer, ScreenController.Instance.SlotImage);
-							newImageRequest.GetComponent<SlotImageView>().InitializeWithURL(m_requestData.Id, -1, ScreenController.Instance.ImageReferenceLink, (m_requestData.Images == 0), (m_requestData.Customer == UsersController.Instance.CurrentUser.Id), RequestModel.IMAGE_TYPE_FINISHED, urlImage);
+							GameObject newImageRequest = Utilities.AddChild(m_finishedImagesContainer, MenusScreenController.Instance.SlotImage);
+							newImageRequest.GetComponent<SlotImageView>().InitializeWithURL(m_requestData.Id, -1, MenusScreenController.Instance.ImageReferenceLink, (m_requestData.Images == 0), (m_requestData.Customer == UsersController.Instance.CurrentUser.Id), RequestModel.IMAGE_TYPE_FINISHED, urlImage);
 							m_imagesFinishedJob.Add(newImageRequest);
 							if (m_imageLoadingFinished != null) m_imageLoadingFinished.gameObject.SetActive(false);
 							if (m_buttonBreakDeal != null) m_buttonBreakDeal.gameObject.SetActive(false);
@@ -2177,7 +2181,7 @@ namespace YourSharingEconomyApp
 					m_counterImagesLoaded--;
 					if (m_counterImagesLoaded <= 0)
 					{
-						// BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+						// UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					}
 				}
 			}
@@ -2186,7 +2190,7 @@ namespace YourSharingEconomyApp
 				m_counterImagesLoaded--;
 				if (m_counterImagesLoaded <= 0)
 				{
-					// BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+					// UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				}
 			}
 			if (_nameEvent == ImagesController.EVENT_IMAGES_CALL_DELETE_IMAGE)
@@ -2222,8 +2226,8 @@ namespace YourSharingEconomyApp
 				}
 				if (isOnlyDisplay)
 				{
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-					BasicEventController.Instance.DispatchBasicEvent(RequestsController.EVENT_REQUEST_CALL_UPDATE_IMG_REF, m_requestData.Id, m_requestData.Referenceimg);
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+					UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_UPDATE_IMG_REF, m_requestData.Id, m_requestData.Referenceimg);
 				}
 				IsReadyToPublish = true;
 			}
@@ -2253,7 +2257,7 @@ namespace YourSharingEconomyApp
 							ProposalModel item = proposals[i];
 							if (item.IsSelected() && item.IsDisplayable())
 							{
-								GameObject newSlotInfoRequest = Utilities.AddChild(m_offerContainer, ScreenController.Instance.SlotOffer);
+								GameObject newSlotInfoRequest = Utilities.AddChild(m_offerContainer, MenusScreenController.Instance.SlotOffer);
 								newSlotInfoRequest.GetComponent<SlotOfferView>().Initialize(item);
 								m_slotOfferList.Add(newSlotInfoRequest);
 							}
@@ -2263,7 +2267,7 @@ namespace YourSharingEconomyApp
 							ProposalModel item = proposals[i];
 							if (!item.IsSelected() && item.IsDisplayable())
 							{
-								GameObject newSlotInfoRequest = Utilities.AddChild(m_offerContainer, ScreenController.Instance.SlotOffer);
+								GameObject newSlotInfoRequest = Utilities.AddChild(m_offerContainer, MenusScreenController.Instance.SlotOffer);
 								newSlotInfoRequest.GetComponent<SlotOfferView>().Initialize(item);
 								m_slotOfferList.Add(newSlotInfoRequest);
 							}
@@ -2287,11 +2291,11 @@ namespace YourSharingEconomyApp
 						switch (slotProposal.GetComponent<SlotOfferView>().Proposal.Type)
 						{
 							case ProposalModel.TYPE_INFO:
-								ScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_QUESTION_PROPOSAL, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, m_slotOfferList[i].GetComponent<SlotOfferView>().Proposal, m_requestData);
+								MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_QUESTION_PROPOSAL, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_slotOfferList[i].GetComponent<SlotOfferView>().Proposal, m_requestData);
 								break;
 
 							case ProposalModel.TYPE_OFFER:
-								ScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_DISPLAY_PROPOSAL, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, m_slotOfferList[i].GetComponent<SlotOfferView>().Proposal, m_requestData);
+								MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_DISPLAY_PROPOSAL, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_slotOfferList[i].GetComponent<SlotOfferView>().Proposal, m_requestData);
 								break;
 						}
 						return;
@@ -2304,13 +2308,13 @@ namespace YourSharingEconomyApp
 				{
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 				}
 				else
 				{
 					if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 						YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent += new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
 						YourBitcoinController.BitCoinController.Instance.Init();
 					}
@@ -2318,12 +2322,12 @@ namespace YourSharingEconomyApp
 					{
 						if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
 						{
-							ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
 						}
 						else
 						{
 							m_requestData.ScoreCustomerGivesToTheProvider = (int)_list[1] + 1;
-							ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.score", m_requestData.ScoreCustomerGivesToTheProvider), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER);
+							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.score", m_requestData.ScoreCustomerGivesToTheProvider), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER);
 						}
 					}
 				}
@@ -2334,13 +2338,13 @@ namespace YourSharingEconomyApp
 				{
 					string warning = LanguageController.Instance.GetText("message.warning");
 					string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 				}
 				else
 				{
 					if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 						YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent += new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
 						YourBitcoinController.BitCoinController.Instance.Init();
 					}
@@ -2348,24 +2352,24 @@ namespace YourSharingEconomyApp
 					{
 						if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
 						{
-							ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
 						}
 						else
 						{
 							m_requestData.ScoreProviderGivesToTheCustomer = (int)_list[1] + 1;
-							ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.score", m_requestData.ScoreProviderGivesToTheCustomer), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER);
+							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.score", m_requestData.ScoreProviderGivesToTheCustomer), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER);
 						}
 					}
 				}
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_SCORE_AND_FEEDBACK_UPDATE)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if ((bool)_list[0])
 				{
 					string info = LanguageController.Instance.GetText("message.info");
 					string description = LanguageController.Instance.GetText("message.create.request.updated.success.score.feedback");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
 					UpdateFeedbackElements();
 					UpdateScoreElements(true);
 				}
@@ -2373,7 +2377,7 @@ namespace YourSharingEconomyApp
 				{
 					string info = LanguageController.Instance.GetText("message.info");
 					string description = LanguageController.Instance.GetText("message.create.request.updated.failure.score.feedback");
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
 				}
 			}
 			if (_nameEvent == ProposalsController.EVENT_PROPOSAL_RESULT_RESET_ALL_PROPOSALS)
@@ -2384,29 +2388,29 @@ namespace YourSharingEconomyApp
 					if ((bool)_list[0])
 					{
 						// PROCEED TO EDIT
-						ScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_CREATE_REQUEST, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, m_requestData);
+						MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_CREATE_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_requestData);
 					}
 					else
 					{
 						string info = LanguageController.Instance.GetText("message.error");
 						string description = LanguageController.Instance.GetText("message.create.request.failure.reset.proposals");
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, info, description, null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
 					}
 				}
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_SET_JOB_AS_FINISHED)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if (m_imagesFinishedJob.Count > 0)
 				{
 					if ((bool)_list[0])
 					{
 						RequestsController.Instance.MustReloadRequests = true;
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.success.finish.job"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.success.finish.job"), null, "");
 					}
 					else
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.failure.finish.job"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.failure.finish.job"), null, "");
 					}
 				}
 				else
@@ -2425,17 +2429,17 @@ namespace YourSharingEconomyApp
 							SetPanelScoreProvider(true);
 							SetFeedbackProvider(true);
 						}
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.success.broken.job"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.success.broken.job"), null, "");
 					}
 					else
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.failure.broken.job"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.failure.broken.job"), null, "");
 					}
 				}
 			}
 			if (_nameEvent == UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if (m_requestedPublicKeyProviderToPay)
 				{
 					if (_list == null) return;
@@ -2444,7 +2448,7 @@ namespace YourSharingEconomyApp
 					m_requestedPublicKeyProviderToPay = false;
 					if (providerToPay.PublicKey.Length == 0)
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.no.public.key.to.pay.proovider"), null, "");
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.no.public.key.to.pay.proovider"), null, "");
 					}
 					else
 					{
@@ -2452,7 +2456,7 @@ namespace YourSharingEconomyApp
 						m_requestedPaymentInBitcoins = true;
 						if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
 						{
-							ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 							YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent += new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);							
 						}
 						YourBitcoinController.BitCoinController.Instance.Init();
@@ -2473,17 +2477,17 @@ namespace YourSharingEconomyApp
 								if (!m_pressedVerifySignatureProvider)
 								{
 									m_pressedVerifySignatureProvider = true;
-									if (ScreenController.Instance.DebugMode)
+									if (MenusScreenController.Instance.DebugMode)
 									{
 										Debug.Log("VERIFYING PROVIDER ID[" + (long)m_requestData.Provider + "]");
 									}
-									BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)m_requestData.Provider);
+									UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)m_requestData.Provider);
 								}
 							}
 							else
 							{
-								BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-								ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.failure.to.verify.signature.customer"), null, "");
+								UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+								MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.failure.to.verify.signature.customer"), null, "");
 							}
 						}
 						else
@@ -2491,14 +2495,14 @@ namespace YourSharingEconomyApp
 							if (m_pressedVerifySignatureProvider)
 							{
 								m_pressedVerifySignatureProvider = false;
-								BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+								UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 								if (m_requestData.VerifySignedDataProvider(userToCheckData.PublicKey))
 								{
-									ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.success.both.signatures.verified"), null, "");
+									MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.success.both.signatures.verified"), null, "");
 								}
 								else
 								{
-									ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.failure.to.verify.signature.proovider"), null, "");
+									MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.failure.to.verify.signature.proovider"), null, "");
 								}
 							}
 						}
@@ -2513,7 +2517,7 @@ namespace YourSharingEconomyApp
 							UserModel consumer = (UserModel)_list[0];
 							if (consumer != null)
 							{
-								ScreenController.Instance.CreateNewScreen(ScreenCustomerProfileView.SCREEN_CUSTOMER_PROFILE, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, true, consumer);
+								MenusScreenController.Instance.CreateNewScreen(ScreenCustomerProfileView.SCREEN_CUSTOMER_PROFILE, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, consumer);
 							}
 						}
 						else
@@ -2525,7 +2529,7 @@ namespace YourSharingEconomyApp
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_TRANSACTION_REGISTERED_RESPONSE)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if ((bool)_list[0])
 				{
 					m_requestData.TransactionIdBitcoin = (string)_list[1];
@@ -2538,7 +2542,7 @@ namespace YourSharingEconomyApp
 					SetPanelScoreConsumer(false);					
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				if (!m_isDisplayInfo)
 				{
@@ -2561,19 +2565,19 @@ namespace YourSharingEconomyApp
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
 				if (!m_pressedVerifySignatureCustomer)
 				{
 					m_pressedVerifySignatureCustomer = true;
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-					if (ScreenController.Instance.DebugMode)
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("VERIFYING CUSTOMER ID[" + (long)m_requestData.Customer + "]");
 					}
-					BasicEventController.Instance.DelayBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, 0.1f, (long)m_requestData.Customer);
+					UIEventController.Instance.DelayUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, 0.1f, (long)m_requestData.Customer);
 				}
 			}
 		}
@@ -2588,19 +2592,19 @@ namespace YourSharingEconomyApp
 			{
 				string warning = LanguageController.Instance.GetText("message.warning");
 				string description = LanguageController.Instance.GetText("screen.create.request.wait.until.loaded.information");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, "");
 			}
 			else
 			{
 				if (!m_requestedPublicKeyProviderToPay)
 				{
 					m_requestedPublicKeyProviderToPay = true;
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-					if (ScreenController.Instance.DebugMode)
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+					if (MenusScreenController.Instance.DebugMode)
 					{
 						Debug.Log("REQUESTING PROVIDER PUBLIC KEY TO PAY[" + (long)m_requestData.Provider + "]");
 					}
-					BasicEventController.Instance.DelayBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, 0.1f, (long)m_requestData.Provider);
+					UIEventController.Instance.DelayUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, 0.1f, (long)m_requestData.Provider);
 				}
 			}
 		}
@@ -2614,44 +2618,35 @@ namespace YourSharingEconomyApp
 		{
 			if (_nameEvent == YourBitcoinController.BitCoinController.EVENT_BITCOINCONTROLLER_ALL_DATA_INITIALIZED)
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
+				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 				if (m_requestedPaymentInBitcoins)
 				{
 					m_requestedPaymentInBitcoins = false;
 					if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
 					}
 					else
 					{
-						YourBitcoinManager.ScreenBitcoinController.Instance.CreateNewScreen(ScreenBitcoinSendView.SCREEN_NAME, YourBitcoinManager.TypePreviousActionEnum.DESTROY_ALL_SCREENS, true, m_publicKeyProvider, m_requestData.Price.ToString(), m_requestData.Currency, m_requestData.Title);
+						YourBitcoinManager.ScreenBitcoinController.Instance.CreateNewScreen(ScreenBitcoinSendView.SCREEN_NAME, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS, true, m_publicKeyProvider, m_requestData.Price.ToString(), m_requestData.Currency, m_requestData.Title);
 					}
 				}
 				else
 				{					
 					if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
 					{
-						ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
 					}
 				}
 			}
-			if (_nameEvent == BitCoinController.EVENT_BITCOINCONTROLLER_TRANSACTION_DONE)
-			{
+			if (_nameEvent == BitCoinController.EVENT_BITCOINCONTROLLER_TRANSACTION_USER_ACKNOWLEDGE)
+			{				
 				if ((bool)_list[0])
 				{
+					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 					BitCoinController.Instance.RefreshBalancePrivateKeys();
 					string transactionID = (string)_list[1];
-					CommController.Instance.RequestUpdateTransactionBitcoin(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, transactionID);
-				}
-				else
-				{
-					BasicEventController.Instance.DispatchBasicEvent(ScreenInformationView.EVENT_SCREENINFORMATION_FORCE_DESTRUCTION_POPUP);
-					string messageError = LanguageController.Instance.GetText("screen.bitcoin.send.transaction.error");
-					if (_list.Length >= 2)
-					{
-						messageError = (string)_list[1];
-					}
-					ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), messageError, null, "");
+					CommsHTTPConstants.RequestUpdateTransactionBitcoin(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, transactionID);
 				}
 			}
 		}

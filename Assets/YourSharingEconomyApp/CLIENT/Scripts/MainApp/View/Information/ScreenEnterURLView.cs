@@ -18,7 +18,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenEnterURLView : ScreenBaseView, IBasicScreenView
+	public class ScreenEnterURLView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_ENTER_URL = "SCREEN_ENTER_URL";
 
@@ -32,7 +32,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -47,17 +47,21 @@ namespace YourSharingEconomyApp
         m_container.Find("Button_Clipboard").gameObject.SetActive(false);
 #endif
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -72,11 +76,11 @@ namespace YourSharingEconomyApp
 			{
 				string titleInfoError = LanguageController.Instance.GetText("message.error");
 				string descriptionInfoError = LanguageController.Instance.GetText("screen.enter.url.empty.data");
-				ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
+				MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, titleInfoError, descriptionInfoError, null, "");
 			}
 			else
 			{
-				BasicEventController.Instance.DispatchBasicEvent(ScreenFileSystemNavitagorView.EVENT_SCREENSYSTEMNAVIGATOR_FINAL_SELECTION, false, urlToSave);
+				UIEventController.Instance.DispatchUIEvent(ScreenFileSystemNavitagorView.EVENT_SCREENSYSTEMNAVIGATOR_FINAL_SELECTION, false, urlToSave);
 			}
 			Destroy();
 		}
@@ -105,7 +109,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				OnCancelURL();
 			}

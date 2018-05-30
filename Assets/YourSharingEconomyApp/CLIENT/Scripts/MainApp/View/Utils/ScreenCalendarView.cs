@@ -17,7 +17,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenCalendarView : ScreenBaseView, IBasicScreenView
+	public class ScreenCalendarView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_CALENDAR = "SCREEN_CALENDAR";
 
@@ -36,7 +36,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			double timestampDate = DateConverter.GetTimestamp();
 
@@ -61,9 +61,9 @@ namespace YourSharingEconomyApp
 			m_flatCalendar.initFlatCalendar();
 			m_flatCalendar.setCallback_OnDaySelected(DayUpdated);
 			m_flatCalendar.setUIStyle(0);
-			BasicEventController.Instance.DelayBasicEvent(BasicEventController.EVENT_BASICEVENT_DELAYED_CALL, 0.01f, this.gameObject, "SetRequestDate");
+			UIEventController.Instance.DelayUIEvent(UIEventController.EVENT_BASICEVENT_DELAYED_CALL, 0.01f, this.gameObject, "SetRequestDate");
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
@@ -82,7 +82,7 @@ namespace YourSharingEconomyApp
 		public void DayUpdated(FlatCalendar.TimeObj _time)
 		{
 			DateTime newDate = new DateTime(_time.year, _time.month, _time.day, 0, 0, 0, 0, System.DateTimeKind.Utc);
-			BasicEventController.Instance.DispatchBasicEvent(EVENT_SCREENCALENDAR_SELECT_DAY, (long)DateConverter.DateTimeToTimeStamp(newDate));
+			UIEventController.Instance.DispatchUIEvent(EVENT_SCREENCALENDAR_SELECT_DAY, (long)DateConverter.DateTimeToTimeStamp(newDate));
 			Destroy();
 		}
 
@@ -90,10 +90,14 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -102,14 +106,14 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == BasicEventController.EVENT_BASICEVENT_DELAYED_CALL)
+			if (_nameEvent == UIEventController.EVENT_BASICEVENT_DELAYED_CALL)
 			{
 				if (this.gameObject == ((GameObject)_list[0]))
 				{
 					Invoke((string)_list[1], 0);
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				Destroy();
 			}

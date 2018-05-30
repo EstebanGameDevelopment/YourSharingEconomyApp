@@ -158,7 +158,7 @@ namespace YourSharingEconomyApp
 				{
 					if (i < m_requests.Count)
 					{
-						GameObject newSlotInfoRequest = Utilities.AddChild(m_content.transform, ScreenController.Instance.SlotInfoRequestImage);
+						GameObject newSlotInfoRequest = Utilities.AddChild(m_content.transform, MenusScreenController.Instance.SlotInfoRequestImage);
 						newSlotInfoRequest.GetComponent<SlotRequestView>().Initialize(m_requests[i]);
 						m_gameObjects.Add(newSlotInfoRequest);
 					}
@@ -206,7 +206,7 @@ namespace YourSharingEconomyApp
 				ClearCurrentGameObject();
 				for (int i = 0; i < m_requests.Count; i++)
 				{
-					GameObject newSlotInfoRequest = Utilities.AddChild(m_content.transform, ScreenController.Instance.SlotInfoRequestImage);
+					GameObject newSlotInfoRequest = Utilities.AddChild(m_content.transform, MenusScreenController.Instance.SlotInfoRequestImage);
 					newSlotInfoRequest.GetComponent<SlotRequestView>().Initialize(m_requests[i]);
 					m_gameObjects.Add(newSlotInfoRequest);
 				}

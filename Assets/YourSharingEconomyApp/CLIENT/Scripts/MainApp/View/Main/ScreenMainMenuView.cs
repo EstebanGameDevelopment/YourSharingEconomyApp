@@ -23,7 +23,7 @@ namespace YourSharingEconomyApp
 	 * 
 	 * @author Esteban Gallardo
 	 */
-	public class ScreenMainMenuView : ScreenBaseView, IBasicScreenView
+	public class ScreenMainMenuView : ScreenBaseView, IBasicView
 	{
 		public const string SCREEN_MAIN_MENU = "SCREEN_MAIN_MENU";
 
@@ -51,7 +51,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * Constructor
 		 */
-		public void Initialize(params object[] _list)
+		public override void Initialize(params object[] _list)
 		{
 			m_root = this.gameObject;
 			m_container = m_root.transform.Find("Content");
@@ -74,17 +74,21 @@ namespace YourSharingEconomyApp
 			m_iconOn.gameObject.SetActive(SoundsController.Instance.Enabled);
 			m_iconOff.gameObject.SetActive(!SoundsController.Instance.Enabled);
 
-			BasicEventController.Instance.BasicEvent += new BasicEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 		}
 
 		// -------------------------------------------
 		/* 
 		 * Destroy
 		 */
-		public void Destroy()
+		public override bool Destroy()
 		{
-			BasicEventController.Instance.BasicEvent -= OnBasicEvent;
-			GameObject.DestroyObject(this.gameObject);
+			if (base.Destroy()) return true;
+
+			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			GameObject.Destroy(this.gameObject);
+
+			return false;
 		}
 
 		// -------------------------------------------
@@ -95,7 +99,7 @@ namespace YourSharingEconomyApp
 		{
 			string warning = LanguageController.Instance.GetText("message.warning");
 			string description = LanguageController.Instance.GetText("message.do.you.want.exit");
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENMAIN_CONFIRMATION_EXIT_APP);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, warning, description, null, SUB_EVENT_SCREENMAIN_CONFIRMATION_EXIT_APP);
 		}
 
 		// -------------------------------------------
@@ -116,8 +120,8 @@ namespace YourSharingEconomyApp
 		private void ProviderPressed()
 		{
 			m_consultType = CONSULT_TYPE_PROVIDER;
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
-			BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)UsersController.Instance.CurrentUser.Id, true);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
+			UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)UsersController.Instance.CurrentUser.Id, true);
 		}
 
 		// -------------------------------------------
@@ -127,8 +131,8 @@ namespace YourSharingEconomyApp
 		private void CustomerPressed()
 		{
 			m_consultType = CONSULT_TYPE_CUSTOMER;
-			ScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, TypePreviousActionEnum.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
-			BasicEventController.Instance.DispatchBasicEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)UsersController.Instance.CurrentUser.Id, true);
+			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
+			UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)UsersController.Instance.CurrentUser.Id, true);
 		}
 
 		// -------------------------------------------
@@ -137,7 +141,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void ProfilePressed()
 		{
-			ScreenController.Instance.CreateNewScreenNoParameters(ScreenProfileView.SCREEN_PROFILE, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+			MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenProfileView.SCREEN_PROFILE, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 		}
 
 		// -------------------------------------------
@@ -146,7 +150,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == ScreenInformationView.EVENT_SCREENINFORMATION_CONFIRMATION_POPUP)
+			if (_nameEvent == ScreenController.EVENT_CONFIRMATION_POPUP)
 			{
 				string subEvent = (string)_list[2];
 				if (subEvent == SUB_EVENT_SCREENMAIN_CONFIRMATION_EXIT_APP)
@@ -161,14 +165,14 @@ namespace YourSharingEconomyApp
 			{
 				if (m_consultType == CONSULT_TYPE_CUSTOMER)
 				{
-					ScreenController.Instance.CreateNewScreenNoParameters(ScreenRequestsView.SCREEN_REQUESTS, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+					MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenRequestsView.SCREEN_REQUESTS, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 				}
 				else
 				{
-					ScreenController.Instance.CreateNewScreenNoParameters(ScreenOffersSummaryView.SCREEN_OFFERS, TypePreviousActionEnum.DESTROY_ALL_SCREENS);
+					MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenOffersSummaryView.SCREEN_OFFERS, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 				}
 			}
-			if (_nameEvent == ScreenController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
+			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)
 			{
 				ExitPressed();
 			}
