@@ -394,7 +394,7 @@ namespace YourSharingEconomyApp
 			{
 				YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent -= new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
 			}
-			GameObject.Destroy(this.gameObject);
+			UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
 
 			return false;
 		}

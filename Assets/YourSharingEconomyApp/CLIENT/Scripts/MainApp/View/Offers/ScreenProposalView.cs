@@ -372,7 +372,7 @@ namespace YourSharingEconomyApp
 
 			m_proposalData = null;
 			UIEventController.Instance.UIEvent -= OnBasicEvent;
-			GameObject.Destroy(this.gameObject);
+			UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
 
 			return false;
 		}
