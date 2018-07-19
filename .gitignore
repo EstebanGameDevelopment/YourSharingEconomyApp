@@ -5,3 +5,4 @@ ZIPs/
 __MARKETING/
 Temp/
 obj/Debug/
+*.meta 
