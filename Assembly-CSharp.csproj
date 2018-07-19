@@ -222,16 +222,43 @@
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Submodules\Scripts\View\CreateKeys.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Submodules\Scripts\View\SignImageData.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Submodules\Scripts\View\SignTextData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\EthereumController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\EthereumEventController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumExchangeHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumGasEstimationHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumGasPriceHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumJSONExchangeTableHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumTransactionsHistoryHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Model\PaymentContractService.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Model\SignDocumentContractService.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Utilities\CommsHTTPConstants.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\View\BasicManager.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\View\CreateKeys.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\View\SignImageData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\View\SignTextData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\Controller\ScreenEthereumController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Send\ScreenEthereumSendView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Send\ScreenTransactionSummaryView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Transactions\ScreenEthereumTransactionsView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Transactions\SlotTransactionView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Wallet\ButtonEventCustom.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Wallet\ScreenEmailPrivateKeyView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Wallet\ScreenEthereumAddFundsKeyView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Wallet\ScreenEthereumPrivateKeyView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Example\StartEthereumExample.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Information\ScreenBitcoinEnterEmailView.cs" />
+    <None Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Resources\TextsBasicEthereum.xml" />
     <None Include="Assets\YourSharingEconomyApp\GetKeyForFacebook.bat.txt" />
     <None Include="Assets\YourSharingEconomyApp\CLIENT\Resources\Languages\Texts.xml" />
     <None Include="Assets\YourSharingEconomyApp\LICENSE.txt" />
+    <None Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Resources\Languages\TextsEthereum.xml" />
     <None Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Screens\Resources\Languages\TextsBitcoin.xml" />
     <None Include="Assets\YourSharingEconomyApp\README.txt" />
-    <Reference Include="Unity.PackageManagerUI.Editor">
-      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.PackageManagerUI.Editor">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Library/ScriptAssemblies/Unity.PackageManagerUI.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>C:/Program Files/Unity/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -458,9 +485,6 @@
     <Reference Include="NBitcoin">
       <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules/Plugins/Bitcoin/NBitcoin.dll</HintPath>
     </Reference>
-    <Reference Include="Newtonsoft.Json">
-      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules/Plugins/Bitcoin/Newtonsoft.Json.dll</HintPath>
-    </Reference>
     <Reference Include="QBitNinja.Client">
       <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules/Plugins/Bitcoin/QBitNinja.Client.dll</HintPath>
     </Reference>
@@ -472,6 +496,45 @@
     </Reference>
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/esteb/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Unity">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/System.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.RLP">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.RLP.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.ABI">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.ABI.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Signer">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Signer.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Hex">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Hex.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.KeyStore">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.KeyStore.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Contracts">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Util">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Util.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.RPC">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.RPC.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.JsonRpc.Client">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.JsonRpc.Client.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
