@@ -22,7 +22,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>Temp\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_1_5;UNITY_2018_1;UNITY_2018;UNITY_ANALYTICS;UNITY_PURCHASING;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_VIDEO;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_EVENT_QUEUE;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_AR;ENABLE_SPATIALTRACKING;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLED_ANDROID;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO</DefineConstants>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_2017_1_OR_NEWER;UNITY_2017_2_OR_NEWER;UNITY_2017_3_OR_NEWER;UNITY_2018_1_OR_NEWER;UNITY_2018_1_5;UNITY_2018_1;UNITY_2018;UNITY_PURCHASING;UNITY_ANALYTICS;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_GRID;ENABLE_TILEMAP;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_DIRECTOR;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_COLLAB_SOFTLOCKS;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_USE_WEBREQUEST;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_HUB;ENABLE_EDITOR_HUB_LICENSE;ENABLE_WEBSOCKET_CLIENT;ENABLE_DIRECTOR_AUDIO;ENABLE_DIRECTOR_TEXTURE;ENABLE_TIMELINE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_MANAGED_JOBS;ENABLE_MANAGED_TRANSFORM_JOBS;INCLUDE_DYNAMIC_GI;INCLUDE_GI;ENABLE_MONO_BDWGC;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_VIDEO;ENABLE_PACKMAN;ENABLE_CUSTOM_RENDER_TEXTURE;ENABLE_LOCALIZATION;PLATFORM_ANDROID;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_EVENT_QUEUE;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_NATIVE_CRASH_REPORTING;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_VR;ENABLE_AR;ENABLE_SPATIALTRACKING;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;NET_4_6;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_UNITY_COLLECTIONS_CHECKS;UNITY_TEAM_LICENSE;ENABLE_VSTU;ENABLED_ANDROID;UNITY_HAS_GOOGLEVR;UNITY_HAS_TANGO</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <NoWarn>0169</NoWarn>
@@ -142,64 +142,6 @@
     <Compile Include="Assets\YourSharingEconomyApp\CLIENT\Scripts\MainApp\View\Utils\PanelRatingView.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\CLIENT\Scripts\MainApp\View\Utils\ScreenCalendarView.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\CLIENT\Scripts\MainApp\View\Utils\ScreenGoogleMapView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Actor\Actor.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Actor\IGameActor.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Controllers\Scripts\BasicSystemEventController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Controllers\Scripts\LanguageController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Controllers\Scripts\SoundsController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Controllers\Scripts\TextEntry.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Controllers\Scripts\TimedEventData.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Encryption\RJEncryptor.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Facebook\FacebookController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\FileBrowser\Scripts\FileItemView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\FileBrowser\Scripts\FileManagerView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\FileBrowser\Scripts\FileSystemController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\GoogleMaps\GoogleMap.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\HTTPComms\BaseDataHTTP.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\HTTPComms\CommController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\HTTPComms\CommEventData.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\HTTPComms\IHTTPComms.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\IAP\IAPController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Image\ImageRequestedInfo.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Image\ImageURLLoader.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Image\ImageUtils.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Image\ThumbnailRequestedInfo.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Inputs\KeysEventInputController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Interpolator\InterpolateData.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Interpolator\InterpolatorController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\JSON\SimpleJSON.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Pathfinding\Scripts\NodePathMatrix.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Pathfinding\Scripts\PathFindingController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\Controller\ScreenController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\Controller\UIEventController.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\Interface\IBasicItemView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\Interface\IBasicView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\Model\AppEventData.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Information\ScreenInformationView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Information\ScreenLoadingView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Information\ScreenSingleImageView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Slots\ISlotView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Slots\ItemImageView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Slots\ItemTextView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Slots\SlotManagerView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Utils\BaseItemView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Utils\ItemStringView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Utils\ScreenBaseView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Screens\View\Utils\SelectableButtonView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\CardboardLoaderVR.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\ClearLocalStore.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\CollisionTriggerEvent.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\DateConverter.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\EncodingForBase64.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\ItemMultiObjectEntry.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\ItemMultiTextEntry.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\PageInformation.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\PlaneFromPoly.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\StateManager.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\StateManagerNoMono.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\Utilities\Utilities.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\VR\ButtonVRView.cs" />
-    <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Common\VR\ScrollRectVR.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Screens\Scripts\Controller\ScreenBitcoinController.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Screens\Scripts\View\Bitcoin\Send\ScreenBitcoinSendView.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Screens\Scripts\View\Bitcoin\Send\ScreenTransactionSummaryView.cs" />
@@ -222,11 +164,96 @@
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Submodules\Scripts\View\CreateKeys.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Submodules\Scripts\View\SignImageData.cs" />
     <Compile Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Submodules\Scripts\View\SignTextData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Actor\Actor.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Actor\IGameActor.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Controllers\Scripts\BasicSystemEventController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Controllers\Scripts\LanguageController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Controllers\Scripts\SoundsController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Controllers\Scripts\TextEntry.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Controllers\Scripts\TimedEventData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Encryption\RJEncryptor.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Facebook\FacebookController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\FileBrowser\Scripts\FileItemView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\FileBrowser\Scripts\FileManagerView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\FileBrowser\Scripts\FileSystemController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\GoogleMaps\GoogleMap.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\HTTPComms\BaseDataHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\HTTPComms\CommController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\HTTPComms\CommEventData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\HTTPComms\IHTTPComms.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\IAP\IAPController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Image\ImageRequestedInfo.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Image\ImageURLLoader.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Image\ImageUtils.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Image\ThumbnailRequestedInfo.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Inputs\KeysEventInputController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Interpolator\InterpolateData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Interpolator\InterpolatorController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\JSON\SimpleJSON.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Pathfinding\Scripts\NodePathMatrix.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Pathfinding\Scripts\PathFindingController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\Controller\ScreenController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\Controller\UIEventController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\Interface\IBasicItemView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\Interface\IBasicView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\Model\AppEventData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Information\ScreenInformationView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Information\ScreenLoadingView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Information\ScreenSingleImageView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Slots\ISlotView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Slots\ItemImageView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Slots\ItemTextView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Slots\SlotManagerView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Utils\BaseItemView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Utils\ItemStringView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Utils\ScreenBaseView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Screens\View\Utils\SelectableButtonView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\CardboardLoaderVR.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\ClearLocalStore.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\CollisionTriggerEvent.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\DateConverter.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\EncodingForBase64.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\ItemMultiObjectEntry.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\ItemMultiTextEntry.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\PageInformation.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\PlaneFromPoly.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\StateManager.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\StateManagerNoMono.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\Utilities\Utilities.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\VR\ButtonVRView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourCommonTools\VR\ScrollRectVR.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\EthereumController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\EthereumEventController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumExchangeHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumGasEstimationHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumGasPriceHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumJSONExchangeTableHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Controller\HTTP\EthereumTransactionsHistoryHTTP.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Model\PaymentContractService.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Model\SignDocumentContractService.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\Utilities\CommsHTTPConstants.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\View\BasicManager.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\View\CreateKeys.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\View\SignImageData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Scripts\View\SignTextData.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\Controller\ScreenEthereumController.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Send\ScreenEthereumSendView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Send\ScreenTransactionSummaryView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Transactions\ScreenEthereumTransactionsView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Transactions\SlotTransactionView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Wallet\ButtonEventCustom.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Wallet\ScreenEmailPrivateKeyView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Wallet\ScreenEthereumAddFundsKeyView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Ethereum\Wallet\ScreenEthereumPrivateKeyView.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Example\StartEthereumExample.cs" />
+    <Compile Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Scripts\View\Information\ScreenBitcoinEnterEmailView.cs" />
+    <None Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumController\Resources\TextsBasicEthereum.xml" />
     <None Include="Assets\YourSharingEconomyApp\GetKeyForFacebook.bat.txt" />
     <None Include="Assets\YourSharingEconomyApp\CLIENT\Resources\Languages\Texts.xml" />
     <None Include="Assets\YourSharingEconomyApp\LICENSE.txt" />
     <None Include="Assets\YourSharingEconomyApp\YourBitcoinManager\Screens\Resources\Languages\TextsBitcoin.xml" />
     <None Include="Assets\YourSharingEconomyApp\README.txt" />
+    <None Include="Assets\YourSharingEconomyApp\YourEthereumManager\YourEthereumScreens\Resources\Languages\TextsEthereum.xml" />
     <Reference Include="UnityEditor.StandardEvents">
       <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Library/ScriptAssemblies/UnityEditor.StandardEvents.dll</HintPath>
     </Reference>
@@ -458,6 +485,9 @@
     <Reference Include="NBitcoin">
       <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules/Plugins/Bitcoin/NBitcoin.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules/Plugins/Bitcoin/Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="QBitNinja.Client">
       <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules/Plugins/Bitcoin/QBitNinja.Client.dll</HintPath>
     </Reference>
@@ -470,8 +500,44 @@
     <Reference Include="UnityEngine.StandardEvents">
       <HintPath>C:/Users/esteb/AppData/Local/Unity/cache/packages/packages.unity.com/com.unity.standardevents@1.0.13/UnityEngine.StandardEvents.dll</HintPath>
     </Reference>
+    <Reference Include="Nethereum.KeyStore">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.KeyStore.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.RLP">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.RLP.dll</HintPath>
+    </Reference>
+    <Reference Include="BouncyCastle.Crypto">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/BouncyCastle.Crypto.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Util">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Util.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Contracts">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Contracts.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.JsonRpc.Client">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.JsonRpc.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.ABI">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.ABI.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Hex">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Hex.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Threading">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/System.Threading.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.RPC">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.RPC.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourBitcoinManager/Submodules/Plugins/Bitcoin/Newtonsoft.Json.dll</HintPath>
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Unity">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Unity.dll</HintPath>
+    </Reference>
+    <Reference Include="Nethereum.Signer">
+      <HintPath>D:/YourVRExperience/YourSharingEconomyApp/Assets/YourSharingEconomyApp/YourEthereumManager/YourEthereumController/Plugins/Ethereum/Nethereum.Signer.dll</HintPath>
     </Reference>
     <Reference Include="mscorlib">
       <HintPath>C:/Program Files/Unity/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>
