@@ -397,7 +397,7 @@ namespace YourSharingEconomyApp
 		/* 
 		 * RequestUpdateTransactionBitcoin
 		 */
-		public static void RequestUpdateTransactionBitcoin(int _idUser, string _password, long _requestId, string _transactionID)
+		public static void RequestUpdateTransactionBlockchain(int _idUser, string _password, long _requestId, string _transactionID)
 		{
 			CommController.Instance.Request(EVENT_COMM_BITCOIN_REGISTER_TRANSACTION, true, _idUser.ToString(), _password, _requestId.ToString(), _transactionID);
 		}

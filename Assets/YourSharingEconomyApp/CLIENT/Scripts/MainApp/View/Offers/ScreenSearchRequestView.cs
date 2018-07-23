@@ -159,7 +159,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == GoogleMap.EVENT_GOOGLEMAP_USER_UPDATE_VILLAGE)
+			if (_nameEvent == GoogleMap.EVENT_GOOGLEMAP_SELECTED_LOCATION)
 			{
 				m_villageSearch = (string)_list[0];
 				m_mapDataSearch = (string)_list[1];
