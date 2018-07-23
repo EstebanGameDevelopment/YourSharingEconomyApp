@@ -27,10 +27,13 @@ namespace YourSharingEconomyApp
 		public const int IMAGE_TYPE_REFERENCE = 0;
 		public const int IMAGE_TYPE_FINISHED = 99;
 
-		// ----------------------------------------------
-		// PRIVATE MEMBERS
-		// ----------------------------------------------
-		private long m_id;
+        public const int SIGNATURE_CUSTOMER = 0;
+        public const int SIGNATURE_PROVIDER = 1;
+        
+        // ----------------------------------------------
+        // PRIVATE MEMBERS
+        // ----------------------------------------------
+        private long m_id;
 		private int m_customer;
 		private int m_provider;
 		private string m_title;
@@ -258,11 +261,19 @@ namespace YourSharingEconomyApp
 		public string SignatureProvider
 		{
 			get { return m_signatureProvider; }
-		}
+            set {
+                m_signatureProvider = value;
+                if (MenusScreenController.Instance.DebugMode) Debug.Log("RequestModel::SignDataProvider::SUCCESSFULL SIGNATURE ::signature[" + m_signatureProvider.Length + "]=" + m_signatureProvider);
+            }
+        }
 		public string SignatureCustomer
 		{
 			get { return m_signatureCustomer; }
-		}
+            set {
+                m_signatureCustomer = value;
+                if (MenusScreenController.Instance.DebugMode) Debug.Log("RequestModel::SignDataCustomer::SUCCESSFULL SIGNATURE ::signature[" + m_signatureCustomer.Length + "]=" + m_signatureCustomer);
+            }
+        }
 		public string TransactionIdBitcoin
 		{
 			get { return m_transactionIdBitcoin; }
@@ -739,49 +750,51 @@ namespace YourSharingEconomyApp
 		/* 
 		* SignDataCustomer
 		*/
-		public bool SignDataCustomer(string _privateKey)
+		public void SignDataCustomer(string _privateKey)
 		{
 			byte[] binaryRequest = GetBinaryData(true);
 			string dataRequest = Encoding.UTF8.GetString(binaryRequest);
 
 			if (_privateKey.Length > 0)
 			{
-				m_signatureCustomer = YourBitcoinController.BitCoinController.Instance.SignTextData(dataRequest, _privateKey);
-				if (MenusScreenController.Instance.DebugMode) Debug.Log("RequestModel::SignDataCustomer::SUCCESSFULL SIGNATURE ++CUSTOMER++ OF DATA[" + dataRequest.Length + "]::signature[" + m_signatureCustomer.Length + "]=" + m_signatureCustomer);
-				return true;
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                BasicSystemEventController.Instance.DispatchBasicSystemEvent(BasicSystemEventController.EVENT_BASICSYSTEMEVENT_REQUEST_SIGN_TEXT_DATA, dataRequest, _privateKey, m_id, SIGNATURE_CUSTOMER);
 			}
 			else
 			{
-				return false;
-			}
-		}
+                string info = LanguageController.Instance.GetText("message.error");
+                string description = LanguageController.Instance.GetText("message.create.request.failure.to.sign.data");
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
+            }
+        }
 
 		// -------------------------------------------
 		/* 
 		* SignDataProvider
 		*/
-		public bool SignDataProvider(string _privateKey)
+		public void SignDataProvider(string _privateKey)
 		{
 			byte[] binaryRequest = GetBinaryData(false);
 			string dataRequest = Encoding.UTF8.GetString(binaryRequest);
 
-			if (_privateKey.Length > 0)
-			{
-				m_signatureProvider = YourBitcoinController.BitCoinController.Instance.SignTextData(dataRequest, _privateKey);
-				if (MenusScreenController.Instance.DebugMode) Debug.Log("RequestModel::SignDataProvider::SUCCESSFULL SIGNATURE ++PROVIDER++ OF DATA[" + dataRequest.Length + "]::signature[" + m_signatureProvider.Length + "]=" + m_signatureProvider);
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
+            if (_privateKey.Length > 0)
+            {
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                BasicSystemEventController.Instance.DispatchBasicSystemEvent(BasicSystemEventController.EVENT_BASICSYSTEMEVENT_REQUEST_SIGN_TEXT_DATA, dataRequest, _privateKey, m_id, SIGNATURE_PROVIDER);
+            }
+            else
+            {
+                string info = LanguageController.Instance.GetText("message.error");
+                string description = LanguageController.Instance.GetText("message.create.request.failure.to.sign.data");
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
+            }
+        }
 
-		// -------------------------------------------
-		/* 
+        // -------------------------------------------
+        /* 
 		* VerifySignedDataCustomer
 		*/
-		public bool VerifySignedDataCustomer(string _customerPublicKey)
+        public void VerifySignedDataCustomer(string _customerPublicKey)
 		{
 			byte[] binaryRequest = GetBinaryData(true);
 			string dataRequest = Encoding.UTF8.GetString(binaryRequest);
@@ -793,14 +806,14 @@ namespace YourSharingEconomyApp
 				Debug.Log("	PublicKey[" + _customerPublicKey.Length + "]=" + _customerPublicKey);
 			}
 
-			return (YourBitcoinController.BitCoinController.Instance.VerifySignedData(dataRequest, m_signatureCustomer, _customerPublicKey));
+            BasicSystemEventController.Instance.DispatchBasicSystemEvent(BasicSystemEventController.EVENT_BASICSYSTEMEVENT_REQUEST_VERIFY_TEXT_DATA, dataRequest, m_signatureCustomer, _customerPublicKey, m_id, SIGNATURE_CUSTOMER);
 		}
 
 		// -------------------------------------------
 		/* 
 		* VerifySignedDataProvider
 		*/
-		public bool VerifySignedDataProvider(string _providerPublicKey)
+		public void VerifySignedDataProvider(string _providerPublicKey)
 		{
 			byte[] binaryRequest = GetBinaryData(false);
 			string dataRequest = Encoding.UTF8.GetString(binaryRequest);
@@ -812,8 +825,8 @@ namespace YourSharingEconomyApp
 				Debug.Log("	PublicKey[" + _providerPublicKey.Length + "]=" + _providerPublicKey);
 			}
 
-			return (YourBitcoinController.BitCoinController.Instance.VerifySignedData(dataRequest, m_signatureProvider, _providerPublicKey));
-		}
+            BasicSystemEventController.Instance.DispatchBasicSystemEvent(BasicSystemEventController.EVENT_BASICSYSTEMEVENT_REQUEST_VERIFY_TEXT_DATA, dataRequest, m_signatureProvider, _providerPublicKey, m_id, SIGNATURE_PROVIDER);
+        }
 
 	}
 }

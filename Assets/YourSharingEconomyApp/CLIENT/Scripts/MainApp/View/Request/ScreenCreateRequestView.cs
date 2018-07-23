@@ -7,6 +7,7 @@ using UnityEngine.UI;
 using YourBitcoinController;
 using YourBitcoinManager;
 using YourCommonTools;
+using YourEthereumManager;
 
 namespace YourSharingEconomyApp
 {
@@ -44,28 +45,31 @@ namespace YourSharingEconomyApp
 		// ----------------------------------------------
 		// SUB
 		// ----------------------------------------------	
-		public const string SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION = "SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING = "SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT = "SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_REMOVE = "SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_REMOVE";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_REMOVE_WITH_PENALTY = "SUB_EVENT_SCREENCREATEREQUEST_REMOVE_WITH_PENALTY";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_BECOME_A_PROVIDER = "SUB_EVENT_SCREENCREATEREQUEST_BECOME_A_PROVIDER";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_UPLOAD_FINAL_IMAGE = "SUB_EVENT_SCREENCREATEREQUEST_UPLOAD_FINAL_IMAGE";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER = "SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER = "SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER = "SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER = "SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_DEAL_BROKEN_CONFIRMATION = "SUB_EVENT_SCREENCREATEREQUEST_DEAL_BROKEN_CONFIRMATION";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION = "SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION";
-		public const string SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY = "SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION                      = "SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING               = "SUB_EVENT_SCREENCREATEREQUEST_EXIT_WITHOUT_SAVING";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT                      = "SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_EDIT";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_REMOVE                    = "SUB_EVENT_SCREENCREATEREQUEST_WANT_TO_REMOVE";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_REMOVE_WITH_PENALTY               = "SUB_EVENT_SCREENCREATEREQUEST_REMOVE_WITH_PENALTY";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_BECOME_A_PROVIDER                 = "SUB_EVENT_SCREENCREATEREQUEST_BECOME_A_PROVIDER";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_UPLOAD_FINAL_IMAGE                = "SUB_EVENT_SCREENCREATEREQUEST_UPLOAD_FINAL_IMAGE";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER   = "SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER   = "SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER      = "SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER      = "SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_DEAL_BROKEN_CONFIRMATION          = "SUB_EVENT_SCREENCREATEREQUEST_DEAL_BROKEN_CONFIRMATION";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION                 = "SUB_EVENT_SCREENCREATEREQUEST_EXIT_CONFIRMATION";
+		public const string SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY             = "SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY";
 
 		public const string SCOREEVENT_RATING_PROVIDER_TO_CUSTOMER = "SCOREEVENT_RATING_PROVIDER_TO_CUSTOMER";
 		public const string SCOREEVENT_RATING_CUSTOMER_TO_PROVIDER = "SCOREEVENT_RATING_CUSTOMER_TO_PROVIDER";
 
-		// ----------------------------------------------
-		// PRIVATE MEMBERS
-		// ----------------------------------------------	
-		private GameObject m_root;
+        public const int SCORE_CUSTOMER_TO_PROVIDER = 0;
+        public const int SCORE_PROVIDER_TO_CUSTOMER = 1;
+
+        // ----------------------------------------------
+        // PRIVATE MEMBERS
+        // ----------------------------------------------	
+        private GameObject m_root;
 		private Transform m_container;
 		private RequestModel m_requestData;
 		private bool m_isReadyToPublish = false;
@@ -121,7 +125,7 @@ namespace YourSharingEconomyApp
 		private Transform m_imageLoadingFinished;
 
 		private bool m_requestedPublicKeyProviderToPay = false;
-		private bool m_requestedPaymentInBitcoins = false;
+		private bool m_requestedPaymentInCryptocurrency = false;
 		private string m_publicKeyProvider = "";
 
 		private bool m_pressedCheckCustomerProfile = false;
@@ -130,7 +134,11 @@ namespace YourSharingEconomyApp
 
 		private bool m_loadedAllOffersData = false;
 
-		public bool IsReadyToPublish
+        private int m_scoreAfterBlockchainInit = -1;
+        private int m_typeAfterBlockchainInit = -1;
+        private UserModel m_userToCheckDataVerification = null;
+
+        public bool IsReadyToPublish
 		{
 			get { return m_isReadyToPublish; }
 			set
@@ -364,7 +372,7 @@ namespace YourSharingEconomyApp
 			if (m_buttonPayInBitcoins != null)
 			{
 				m_buttonPayInBitcoins.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.create.request.pay.proovider.in.bitcoins");
-				m_buttonPayInBitcoins.GetComponent<Button>().onClick.AddListener(OnPayProviderInBitcoins);
+				m_buttonPayInBitcoins.GetComponent<Button>().onClick.AddListener(OnPayProviderInCryptocurrency);
 				m_buttonPayInBitcoins.gameObject.SetActive(false);
 			}
 			
@@ -372,7 +380,7 @@ namespace YourSharingEconomyApp
 			// ++++ LOADING THE DATA ++++
 			LoadRequestData();
 
-			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
+			UIEventController.Instance.UIEvent += new UIEventHandler(OnUIEvent);
 			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
 		}
 
@@ -388,22 +396,53 @@ namespace YourSharingEconomyApp
 			ClearAllFinishedImages();
 			ClearAllProposals();
 			m_requestData = null;
-			UIEventController.Instance.UIEvent -= OnBasicEvent;
+			UIEventController.Instance.UIEvent -= OnUIEvent;
 			BasicSystemEventController.Instance.BasicSystemEvent -= OnBasicSystemEvent;
-			if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
+			if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() != null)
 			{
 				YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent -= new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
 			}
-			UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
+            if (GameObject.FindObjectOfType<YourEthereumController.EthereumController>() != null)
+            {
+                YourEthereumController.EthereumEventController.Instance.EthereumEvent -= new YourEthereumController.EthereumEventHandler(OnEthereumEvent);
+            }
+            UIEventController.Instance.DispatchUIEvent(UIEventController.EVENT_SCREENMANAGER_DESTROY_SCREEN, this.gameObject);
 
 			return false;
 		}
 
-		// -------------------------------------------
-		/* 
+        // -------------------------------------------
+        /* 
+		 * LoadBlockchainController
+		 */
+        private bool LoadBlockchainController()
+        {
+            bool mustWaitForInitialialitzation = false;
+#if ENABLE_BITCOIN
+            if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
+            {
+                mustWaitForInitialialitzation = true;
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent += new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
+            }
+            YourBitcoinController.BitCoinController.Instance.Init();
+#elif ENABLE_ETHEREUM
+            if (GameObject.FindObjectOfType<YourEthereumController.EthereumController>() == null)
+            {
+                mustWaitForInitialialitzation = true;
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                YourEthereumController.EthereumEventController.Instance.EthereumEvent += new YourEthereumController.EthereumEventHandler(OnEthereumEvent);
+            }
+            YourEthereumController.EthereumController.Instance.Init();
+#endif
+            return mustWaitForInitialialitzation;
+        }
+
+        // -------------------------------------------
+        /* 
 		 * SetActivation
 		 */
-		public override void SetActivation(bool _activation)
+        public override void SetActivation(bool _activation)
 		{
 			if (_activation && !this.gameObject.activeSelf)
 			{
@@ -770,18 +809,9 @@ namespace YourSharingEconomyApp
 			if ((m_requestData.FeedbackCustomerGivesToTheProvider.Length == 0)
 				&& (m_requestData.Customer == UsersController.Instance.CurrentUser.Id))
 			{
-				m_requestData.FeedbackCustomerGivesToTheProvider = _text;
-				if (m_requestData.SignDataCustomer(YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey))
-				{
-					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.feedback"), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER);
-				}
-				else
-				{
-					string info = LanguageController.Instance.GetText("message.error");
-					string description = LanguageController.Instance.GetText("message.create.request.failure.to.sign.data");
-					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
-				}
-			}
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.feedback"), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_CUSTOMER);
+                m_requestData.FeedbackCustomerGivesToTheProvider = _text;
+            }
 			else
 			{
 				m_editFieldFeedbackConsumer.GetComponent<InputField>().text = m_requestData.FeedbackCustomerGivesToTheProvider;
@@ -798,17 +828,8 @@ namespace YourSharingEconomyApp
 			if ((m_requestData.FeedbackProviderGivesToTheCustomer.Length == 0)
 				&& (m_requestData.Provider == UsersController.Instance.CurrentUser.Id))
 			{
-				m_requestData.FeedbackProviderGivesToTheCustomer = _text;
-				if (m_requestData.SignDataProvider(YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey))
-				{
-					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.feedback"), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER);
-				}
-				else
-				{
-					string info = LanguageController.Instance.GetText("message.error");
-					string description = LanguageController.Instance.GetText("message.create.request.failure.to.sign.data");
-					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
-				}
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.feedback"), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_FEEDBACK_PROVIDER);
+                m_requestData.FeedbackProviderGivesToTheCustomer = _text;
 			}
 			else
 			{
@@ -1831,11 +1852,122 @@ namespace YourSharingEconomyApp
 			}
 		}
 
-		// -------------------------------------------
-		/* 
-		 * OnBasicEvent
+        // -------------------------------------------
+        /* 
+		 * SetScoreToHuman
 		 */
-		private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
+        private void SetScoreToHuman()
+        {
+            bool privateKeyExist = false;
+
+#if ENABLE_BITCOIN
+            privateKeyExist = (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length > 0);
+#elif ENABLE_ETHEREUM
+            privateKeyExist = (YourEthereumController.EthereumController.Instance.CurrentPrivateKey.Length > 0);
+#endif
+            if (privateKeyExist)
+            {
+                if ((m_scoreAfterBlockchainInit != -1) && (m_typeAfterBlockchainInit != -1))
+                {
+                    switch (m_typeAfterBlockchainInit)
+                    {
+                        case SCORE_CUSTOMER_TO_PROVIDER:
+                            m_requestData.ScoreCustomerGivesToTheProvider = (int)m_scoreAfterBlockchainInit + 1;
+                            MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.score", m_requestData.ScoreCustomerGivesToTheProvider), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER);
+                            break;
+
+                        case SCORE_PROVIDER_TO_CUSTOMER:
+                            m_requestData.ScoreProviderGivesToTheCustomer = (int)m_scoreAfterBlockchainInit + 1;
+                            MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.score", m_requestData.ScoreCustomerGivesToTheProvider), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER);
+                            break;
+                    }
+                    m_scoreAfterBlockchainInit = -1;
+                    m_typeAfterBlockchainInit = -1;
+                }
+            }
+        }
+
+        // -------------------------------------------
+        /* 
+		 * HumanScoresHuman
+		 */
+        private void HumanScoresHuman(int _score, int _type)
+        {
+#if ENABLE_BITCOIN
+            if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
+            {
+                LoadBlockchainController();
+
+                m_scoreAfterBlockchainInit = _score;
+                m_typeAfterBlockchainInit = _type;
+            }
+            else
+            {
+                if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
+                {
+                    MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+                }
+                else
+                {
+                    m_scoreAfterBlockchainInit = _score;
+                    m_typeAfterBlockchainInit = _type;
+
+                    SetScoreToHuman();
+                }
+            }
+#elif ENABLE_ETHEREUM
+            if (GameObject.FindObjectOfType<YourEthereumController.EthereumController>() == null)
+            {
+                LoadBlockchainController();
+
+                m_scoreAfterBlockchainInit = _score;
+                m_typeAfterBlockchainInit = _type;
+            }
+            else
+            {
+                if (YourEthereumController.EthereumController.Instance.CurrentPrivateKey.Length == 0)
+                {
+                    MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+                }
+                else
+                {
+                    m_scoreAfterBlockchainInit = _score;
+                    m_typeAfterBlockchainInit = _type;
+
+                    SetScoreToHuman();
+                }
+            }
+#endif
+        }
+
+        // -------------------------------------------
+        /* 
+		 * VerifySignedData
+		 */
+        private void VerifySignedData()
+        {
+            if (m_userToCheckDataVerification != null)
+            {
+                if (m_pressedVerifySignatureCustomer)
+                {
+                    m_requestData.VerifySignedDataCustomer(m_userToCheckDataVerification.PublicKey);
+                }
+                else
+                {
+                    if (m_pressedVerifySignatureProvider)
+                    {
+                        m_requestData.VerifySignedDataProvider(m_userToCheckDataVerification.PublicKey);
+                    }
+                }
+                m_userToCheckDataVerification = null;
+            }
+        }
+
+        // -------------------------------------------
+        /* 
+         * OnBasicEvent
+         */
+        private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
 		{
 			if (_nameEvent == GoogleMap.EVENT_GOOGLEMAP_SELECTED_LOCATION)
 			{
@@ -1845,20 +1977,90 @@ namespace YourSharingEconomyApp
 
 				m_container.Find("Button_Maps/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.create.request.area.search") + '\n' + m_requestData.Village;
 			}
-		}
+            if (_nameEvent == BasicSystemEventController.EVENT_BASICSYSTEMEVENT_RESPONSE_SIGNED_TEXT_DATA)
+            {
+                UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+                string signedDataInformation = (string)_list[0];
+                if (signedDataInformation.Length > 0)
+                {
+                    long idRequest = (long)_list[1];
+                    int typeSigned = (int)_list[2];
+                    if (m_requestData.Id == idRequest)
+                    {
+                        switch (typeSigned)
+                        {
+                            case RequestModel.SIGNATURE_CUSTOMER:
+                                m_requestData.SignatureCustomer = signedDataInformation;
+                                break;
+                            case RequestModel.SIGNATURE_PROVIDER:
+                                m_requestData.SignatureProvider = signedDataInformation;
+                                break;
+                        }
+                        MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                        UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
+                        return;
+                    }
+                }
+
+                string info = LanguageController.Instance.GetText("message.error");
+                string description = LanguageController.Instance.GetText("message.create.request.failure.to.sign.data");
+                MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, info, description, null, "");
+            }
+            if (_nameEvent == BasicSystemEventController.EVENT_BASICSYSTEMEVENT_RESPONSE_VERIFICATION_TEXT_DATA)
+            {
+                UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+                if (m_pressedVerifySignatureCustomer)
+                {
+                    m_pressedVerifySignatureCustomer = false;
+                    if ((bool)_list[0])
+                    {
+                        if (!m_pressedVerifySignatureProvider)
+                        {
+                            m_pressedVerifySignatureProvider = true;
+                            if (MenusScreenController.Instance.DebugMode)
+                            {
+                                Debug.Log("VERIFYING PROVIDER ID[" + (long)m_requestData.Provider + "]");
+                            }
+                            UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)m_requestData.Provider);
+                        }
+                    }
+                    else
+                    {
+                        UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+                        MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.failure.to.verify.signature.customer"), null, "");
+                    }
+                }
+                else
+                {
+                    if (m_pressedVerifySignatureProvider)
+                    {
+                        m_pressedVerifySignatureProvider = false;
+                        UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+                        if ((bool)_list[0])
+                        {
+                            MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.success.both.signatures.verified"), null, "");
+                        }
+                        else
+                        {
+                            MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.failure.to.verify.signature.proovider"), null, "");
+                        }
+                    }
+                }
+            }
+        }
 
 		// -------------------------------------------
 		/* 
 		 * OnBasicEvent
 		 */
-		private void OnBasicEvent(string _nameEvent, params object[] _list)
+		private void OnUIEvent(string _nameEvent, params object[] _list)
 		{
 			if (!this.gameObject.activeSelf)
 			{
 				return;
 			}
-
-			if (_nameEvent == ScreenCalendarView.EVENT_SCREENCALENDAR_SELECT_DAY)
+            
+            if (_nameEvent == ScreenCalendarView.EVENT_SCREENCALENDAR_SELECT_DAY)
 			{
 				m_requestData.Deadline = (long)_list[0];
 				m_container.Find("Button_DeadlineCalendar/Title").GetComponent<Text>().text = DateConverter.TimeStampToDateTimeString(m_requestData.Deadline);
@@ -1872,9 +2074,13 @@ namespace YourSharingEconomyApp
 				{
 					if ((bool)_list[1])
 					{
-						ScreenBitcoinController.Instance.InitializeBitcoin(ScreenBitcoinPrivateKeyView.SCREEN_NAME);
-					}
-				}
+#if ENABLE_BITCOIN
+                        ScreenBitcoinController.Instance.InitializeBitcoin(ScreenBitcoinPrivateKeyView.SCREEN_NAME);
+#elif ENABLE_ETHEREUM
+                        ScreenEthereumController.Instance.InitializeEthereum(ScreenEthereumPrivateKeyView.SCREEN_NAME);
+#endif
+                    }
+                }
 				if (subEvent == SUB_EVENT_SCREENCREATEREQUEST_CONFIRMATION)
 				{
 					if ((bool)_list[1])
@@ -1956,10 +2162,13 @@ namespace YourSharingEconomyApp
 					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
-						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
-					}
-					else
+#if ENABLE_BITCOIN
+                        m_requestData.SignDataCustomer(YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey);
+#elif ENABLE_ETHEREUM
+                        m_requestData.SignDataCustomer(YourEthereumController.EthereumController.Instance.CurrentPrivateKey);
+#endif
+                    }
+                    else
 					{
 						m_requestData.FeedbackCustomerGivesToTheProvider = "";
 						m_editFieldFeedbackConsumer.GetComponent<InputField>().text = m_requestData.FeedbackCustomerGivesToTheProvider;
@@ -1970,8 +2179,11 @@ namespace YourSharingEconomyApp
 					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
-						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
+#if ENABLE_BITCOIN
+                        m_requestData.SignDataProvider(YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey);
+#elif ENABLE_ETHEREUM
+                        m_requestData.SignDataProvider(YourEthereumController.EthereumController.Instance.CurrentPrivateKey);
+#endif
 					}
 					else
 					{
@@ -1985,10 +2197,8 @@ namespace YourSharingEconomyApp
 					if ((bool)_list[1])
 					{
 						SetFeedbackConsumer(true);
-						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 						m_panelScoreConsumer.GetComponent<PanelRatingView>().SetScore(m_requestData.ScoreCustomerGivesToTheProvider, 1);
 						m_panelScoreConsumer.GetComponent<PanelRatingView>().IsInteractable = false;
-						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
 					}
 					else
 					{
@@ -2001,11 +2211,9 @@ namespace YourSharingEconomyApp
 					UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
 					if ((bool)_list[1])
 					{
-						m_editFieldFeedbackProvider.gameObject.SetActive(true);
-						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						m_panelScoreProvider.GetComponent<PanelRatingView>().SetScore(m_requestData.ScoreProviderGivesToTheCustomer, 1);
+                        m_editFieldFeedbackProvider.gameObject.SetActive(true);
+                        m_panelScoreProvider.GetComponent<PanelRatingView>().SetScore(m_requestData.ScoreProviderGivesToTheCustomer, 1);
 						m_panelScoreProvider.GetComponent<PanelRatingView>().IsInteractable = false;
-						UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
 					}
 					else
 					{
@@ -2312,24 +2520,7 @@ namespace YourSharingEconomyApp
 				}
 				else
 				{
-					if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
-					{
-						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent += new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
-						YourBitcoinController.BitCoinController.Instance.Init();
-					}
-					else
-					{
-						if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
-						{
-							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
-						}
-						else
-						{
-							m_requestData.ScoreCustomerGivesToTheProvider = (int)_list[1] + 1;
-							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.score", m_requestData.ScoreCustomerGivesToTheProvider), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_PROVIDER);
-						}
-					}
+                    HumanScoresHuman((int)_list[1], SCORE_CUSTOMER_TO_PROVIDER);
 				}
 			}
 			if (_nameEvent == SCOREEVENT_RATING_PROVIDER_TO_CUSTOMER)
@@ -2342,24 +2533,7 @@ namespace YourSharingEconomyApp
 				}
 				else
 				{
-					if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
-					{
-						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-						YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent += new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);
-						YourBitcoinController.BitCoinController.Instance.Init();
-					}
-					else
-					{
-						if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
-						{
-							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
-						}
-						else
-						{
-							m_requestData.ScoreProviderGivesToTheCustomer = (int)_list[1] + 1;
-							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.are.you.sure.score", m_requestData.ScoreProviderGivesToTheCustomer), null, SUB_EVENT_SCREENCREATEREQUEST_ARE_YOUR_SURE_SCORE_CUSTOMER);
-						}
-					}
+                    HumanScoresHuman((int)_list[1], SCORE_PROVIDER_TO_CUSTOMER);
 				}
 			}
 			if (_nameEvent == RequestsController.EVENT_REQUEST_RESULT_SCORE_AND_FEEDBACK_UPDATE)
@@ -2439,10 +2613,10 @@ namespace YourSharingEconomyApp
 			}
 			if (_nameEvent == UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD)
 			{
-				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
-				if (m_requestedPublicKeyProviderToPay)
+                UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+                if (m_requestedPublicKeyProviderToPay)
 				{
-					if (_list == null) return;
+                    if (_list == null) return;
 					if (_list.Length == 0) return;
 					UserModel providerToPay = (UserModel)_list[0];
 					m_requestedPublicKeyProviderToPay = false;
@@ -2453,59 +2627,26 @@ namespace YourSharingEconomyApp
 					else
 					{
 						m_publicKeyProvider = providerToPay.PublicKey;
-						m_requestedPaymentInBitcoins = true;
-						if (GameObject.FindObjectOfType<YourBitcoinController.BitCoinController>() == null)
-						{
-							MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
-							YourBitcoinController.BitcoinEventController.Instance.BitcoinEvent += new YourBitcoinController.BitcoinEventHandler(OnBitCoinEvent);							
-						}
-						YourBitcoinController.BitCoinController.Instance.Init();
-					}
-				}
+						m_requestedPaymentInCryptocurrency = true;
+
+                        if (!LoadBlockchainController())
+                        {
+                            RunPaymentCryptocurrency();
+                        }
+                    }
+                }
 				else
 				{
 					if (m_pressedVerifySignatureCustomer || m_pressedVerifySignatureProvider)
 					{
-						if (_list == null) return;
+                        if (_list == null) return;
 						if (_list.Length == 0) return;
-						UserModel userToCheckData = (UserModel)_list[0];
-						if (m_pressedVerifySignatureCustomer)
-						{
-							m_pressedVerifySignatureCustomer = false;
-							if (m_requestData.VerifySignedDataCustomer(userToCheckData.PublicKey))
-							{
-								if (!m_pressedVerifySignatureProvider)
-								{
-									m_pressedVerifySignatureProvider = true;
-									if (MenusScreenController.Instance.DebugMode)
-									{
-										Debug.Log("VERIFYING PROVIDER ID[" + (long)m_requestData.Provider + "]");
-									}
-									UIEventController.Instance.DispatchUIEvent(UsersController.EVENT_USER_CALL_CONSULT_SINGLE_RECORD, (long)m_requestData.Provider);
-								}
-							}
-							else
-							{
-								UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
-								MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.failure.to.verify.signature.customer"), null, "");
-							}
-						}
-						else
-						{
-							if (m_pressedVerifySignatureProvider)
-							{
-								m_pressedVerifySignatureProvider = false;
-								UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
-								if (m_requestData.VerifySignedDataProvider(userToCheckData.PublicKey))
-								{
-									MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("screen.create.request.success.both.signatures.verified"), null, "");
-								}
-								else
-								{
-									MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_INFORMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.error"), LanguageController.Instance.GetText("screen.create.request.failure.to.verify.signature.proovider"), null, "");
-								}
-							}
-						}
+						m_userToCheckDataVerification = (UserModel)_list[0];
+
+                        if (!LoadBlockchainController())
+                        {
+                            VerifySignedData();
+                        }
 					}
 					else
 					{
@@ -2555,11 +2696,11 @@ namespace YourSharingEconomyApp
 			}
 		}
 
-		// -------------------------------------------
-		/* 
+        // -------------------------------------------
+        /* 
 		 * OnCheckVerifySignature
 		 */
-		private void OnCheckVerifySignature()
+        private void OnCheckVerifySignature()
 		{
 			if (!(m_loadedAllOffersData && AreAllImagesLoaded()))
 			{
@@ -2582,11 +2723,11 @@ namespace YourSharingEconomyApp
 			}
 		}
 
-		// -------------------------------------------
-		/* 
-		 * OnPayProviderInBitcoins
+        // -------------------------------------------
+        /* 
+		 * OnPayProviderInCryptocurrency
 		 */
-		private void OnPayProviderInBitcoins()
+        private void OnPayProviderInCryptocurrency()
 		{
 			if (!(m_loadedAllOffersData && AreAllImagesLoaded()))
 			{
@@ -2608,47 +2749,118 @@ namespace YourSharingEconomyApp
 				}
 			}
 		}
-		
 
-		// -------------------------------------------
-		/* 
+
+        // -------------------------------------------
+        /* 
+		 * RunPaymentCryptocurrency
+		 */
+        private void RunPaymentCryptocurrency()
+        {
+#if ENABLE_BITCOIN
+            if (m_requestedPaymentInCryptocurrency)
+            {
+                m_requestedPaymentInCryptocurrency = false;
+                if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
+                {
+                    MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+                }
+                else
+                {
+                    YourBitcoinManager.ScreenBitcoinController.Instance.CreateNewScreen(ScreenBitcoinSendView.SCREEN_NAME, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS, true, m_publicKeyProvider, m_requestData.Price.ToString(), m_requestData.Currency, m_requestData.Title);
+                }
+            }
+            else
+            {
+                if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
+                {
+                    MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+                }
+            }
+#elif ENABLE_ETHEREUM
+            if (m_requestedPaymentInCryptocurrency)
+            {
+                m_requestedPaymentInCryptocurrency = false;
+                if (YourEthereumController.EthereumController.Instance.CurrentPrivateKey.Length == 0)
+                {
+                    MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+                }
+                else
+                {
+                    YourEthereumManager.ScreenEthereumController.Instance.CreateNewScreen(ScreenEthereumSendView.SCREEN_NAME, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS, true, m_publicKeyProvider, m_requestData.Price.ToString(), m_requestData.Currency, m_requestData.Title);
+                }
+            }
+            else
+            {
+                if (YourEthereumController.EthereumController.Instance.CurrentPrivateKey.Length == 0)
+                {
+                    MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
+                }
+            }
+#endif
+        }
+
+        // -------------------------------------------
+        /* 
 		 * Manager of bitcoin events
 		 */
-		private void OnBitCoinEvent(string _nameEvent, object[] _list)
+        private void OnBitCoinEvent(string _nameEvent, object[] _list)
 		{
 			if (_nameEvent == YourBitcoinController.BitCoinController.EVENT_BITCOINCONTROLLER_ALL_DATA_INITIALIZED)
 			{
 				UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
-				if (m_requestedPaymentInBitcoins)
-				{
-					m_requestedPaymentInBitcoins = false;
-					if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
-					{
-						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
-					}
-					else
-					{
-						YourBitcoinManager.ScreenBitcoinController.Instance.CreateNewScreen(ScreenBitcoinSendView.SCREEN_NAME, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS, true, m_publicKeyProvider, m_requestData.Price.ToString(), m_requestData.Currency, m_requestData.Title);
-					}
-				}
-				else
-				{					
-					if (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length == 0)
-					{
-						MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_CONFIRMATION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.warning"), LanguageController.Instance.GetText("screen.create.request.private.key.is.null.set.up.now"), null, SUB_EVENT_SCREENCREATEREQUEST_CREATE_BLOCKCHAIN_KEY);
-					}
-				}
-			}
-			if (_nameEvent == BitCoinController.EVENT_BITCOINCONTROLLER_TRANSACTION_USER_ACKNOWLEDGE)
+
+                // IF REQUESTED PAYMENT, THEN RESUME THE PROCESS
+                RunPaymentCryptocurrency();
+
+                // IF REQUESTED RATE, THEN RESUME THE PROCESS
+                SetScoreToHuman();
+
+                // IF REQUESTED VERIFY SIGNATURE, THEN RESUME PROCCESS
+                VerifySignedData();
+            }
+            if (_nameEvent == BitCoinController.EVENT_BITCOINCONTROLLER_TRANSACTION_USER_ACKNOWLEDGE)
 			{				
 				if ((bool)_list[0])
 				{
 					MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
 					BitCoinController.Instance.RefreshBalancePrivateKeys();
 					string transactionID = (string)_list[1];
-					CommsHTTPConstants.RequestUpdateTransactionBitcoin(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, transactionID);
+					CommsHTTPConstants.RequestUpdateTransactionBlockchain(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, transactionID);
 				}
 			}
 		}
-	}
+
+        // -------------------------------------------
+        /* 
+		 * Manager of ethereum events
+		 */
+        private void OnEthereumEvent(string _nameEvent, object[] _list)
+        {
+            if (_nameEvent == YourEthereumController.EthereumController.EVENT_ETHEREUMCONTROLLER_ALL_DATA_INITIALIZED)
+            {
+                // IF REQUESTED PAYMENT, THEN RESUME THE PROCESS
+                UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+                RunPaymentCryptocurrency();
+
+                // IF REQUESTED RATE, THEN RESUME THE PROCESS
+                SetScoreToHuman();
+
+                // IF REQUESTED VERIFY SIGNATURE, THEN RESUME PROCCESS
+                VerifySignedData();
+            }
+            if (_nameEvent == YourEthereumController.EthereumController.EVENT_ETHEREUMCONTROLLER_TRANSACTION_USER_ACKNOWLEDGE)
+            {
+                if ((bool)_list[0])
+                {
+                    MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                    YourEthereumController.EthereumController.Instance.RefreshBalancePrivateKeys();
+                    string transactionID = (string)_list[1];
+                    CommsHTTPConstants.RequestUpdateTransactionBlockchain(UsersController.Instance.CurrentUser.Id, UsersController.Instance.CurrentUser.Password, m_requestData.Id, transactionID);
+                }
+            }
+
+        }
+
+    }
 }
