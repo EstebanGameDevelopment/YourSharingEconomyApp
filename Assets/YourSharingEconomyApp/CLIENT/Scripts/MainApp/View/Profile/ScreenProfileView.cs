@@ -7,6 +7,8 @@ using UnityEngine.UI;
 using YourBitcoinController;
 using YourBitcoinManager;
 using YourCommonTools;
+using YourEthereumController;
+using YourEthereumManager;
 
 namespace YourSharingEconomyApp
 {
@@ -108,10 +110,24 @@ namespace YourSharingEconomyApp
 
 			m_container.Find("Button_Back").GetComponent<Button>().onClick.AddListener(OnBackButton);
 			
-			m_container.Find("Button_Blockchain").GetComponent<Button>().onClick.AddListener(OnBitcoinManager);
+			m_container.Find("Button_Blockchain").GetComponent<Button>().onClick.AddListener(OnBlockchainManager);
 			m_container.Find("Button_Blockchain/Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.profile.blockchain.identity");
-			
-			m_buttonSave = m_container.Find("Button_Save").gameObject;
+            bool isThereButtonBlockchain = false;
+#if ENABLE_BITCOIN
+            isThereButtonBlockchain = true;
+            m_container.Find("Button_Blockchain/BitcoinIcon").gameObject.SetActive(true);
+#else
+            m_container.Find("Button_Blockchain/BitcoinIcon").gameObject.SetActive(false);
+#endif
+#if ENABLE_ETHEREUM
+            isThereButtonBlockchain = true;
+            m_container.Find("Button_Blockchain/EthereumIcon").gameObject.SetActive(true);
+#else
+            m_container.Find("Button_Blockchain/EthereumIcon").gameObject.SetActive(false);
+#endif
+            m_container.Find("Button_Blockchain").gameObject.SetActive(isThereButtonBlockchain);
+
+            m_buttonSave = m_container.Find("Button_Save").gameObject;
 			m_buttonSave.GetComponent<Button>().onClick.AddListener(OnSaveButton);
 			HasChanged = false;
 
@@ -293,10 +309,14 @@ namespace YourSharingEconomyApp
 		/* 
 		 * OnBitcoinManager
 		 */
-		private void OnBitcoinManager()
+		private void OnBlockchainManager()
 		{
-			ScreenBitcoinController.Instance.InitializeBitcoin(ScreenBitcoinPrivateKeyView.SCREEN_NAME, UsersController.Instance.CurrentUser.PublicKey);
-		}
+#if ENABLE_BITCOIN
+            ScreenBitcoinController.Instance.InitializeBitcoin(ScreenBitcoinPrivateKeyView.SCREEN_NAME, UsersController.Instance.CurrentUser.PublicKey);
+#elif ENABLE_ETHEREUM
+            ScreenEthereumController.Instance.InitializeEthereum(ScreenEthereumPrivateKeyView.SCREEN_NAME, UsersController.Instance.CurrentUser.PublicKey);
+#endif
+        }
 
 		// -------------------------------------------
 		/* 
@@ -326,7 +346,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnBasicSystemEvent(string _nameEvent, params object[] _list)
 		{
-			if (_nameEvent == GoogleMap.EVENT_GOOGLEMAP_USER_UPDATE_VILLAGE)
+			if (_nameEvent == GoogleMap.EVENT_GOOGLEMAP_SELECTED_LOCATION)
 			{
 				HasChanged = true;
 				m_newVillage = (string)_list[0];
@@ -349,6 +369,22 @@ namespace YourSharingEconomyApp
 											UsersController.Instance.CurrentUser.Description,
 											UsersController.Instance.CurrentUser.PublicKey);
 			}
+            if (_nameEvent == EthereumController.EVENT_ETHEREUMCONTROLLER_PUBLIC_KEY_SELECTED)
+            {
+                // UPDATE DATABASE
+                UsersController.Instance.CurrentUser.PublicKey = (string)_list[0];
+                UIEventController.Instance.DispatchUIEvent(
+                                            UsersController.EVENT_USER_UPDATE_PROFILE_REQUEST,
+                                            UsersController.Instance.CurrentUser.Id.ToString(),
+                                            UsersController.Instance.CurrentUser.PasswordPlain,
+                                            UsersController.Instance.CurrentUser.Email,
+                                            UsersController.Instance.CurrentUser.Nickname,
+                                            UsersController.Instance.CurrentUser.Village,
+                                            UsersController.Instance.CurrentUser.Mapdata,
+                                            UsersController.Instance.CurrentUser.Skills,
+                                            UsersController.Instance.CurrentUser.Description,
+                                            UsersController.Instance.CurrentUser.PublicKey);
+            }
 		}
 
 		// -------------------------------------------
