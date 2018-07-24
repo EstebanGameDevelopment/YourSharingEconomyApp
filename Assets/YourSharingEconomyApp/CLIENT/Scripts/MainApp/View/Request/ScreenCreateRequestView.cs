@@ -368,21 +368,28 @@ namespace YourSharingEconomyApp
 				m_buttonVerifySignature.gameObject.SetActive(false);
 			}
 
-			m_buttonPayInBitcoins = m_container.Find("Button_PayInBitcoins");
+#if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
+            m_buttonVerifySignature.gameObject.SetActive(false);
+#endif
+
+            m_buttonPayInBitcoins = m_container.Find("Button_PayInBitcoins");
 			if (m_buttonPayInBitcoins != null)
 			{
 				m_buttonPayInBitcoins.Find("Title").GetComponent<Text>().text = LanguageController.Instance.GetText("screen.create.request.pay.proovider.in.bitcoins");
 				m_buttonPayInBitcoins.GetComponent<Button>().onClick.AddListener(OnPayProviderInCryptocurrency);
 				m_buttonPayInBitcoins.gameObject.SetActive(false);
 			}
-			
 
-			// ++++ LOADING THE DATA ++++
-			LoadRequestData();
+            #if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
+                m_buttonPayInBitcoins.gameObject.SetActive(false);
+            #endif
+
+            // ++++ LOADING THE DATA ++++
+            LoadRequestData();
 
 			UIEventController.Instance.UIEvent += new UIEventHandler(OnUIEvent);
 			BasicSystemEventController.Instance.BasicSystemEvent += new BasicSystemEventHandler(OnBasicSystemEvent);
-		}
+        }
 
 		// -------------------------------------------
 		/* 
@@ -641,8 +648,12 @@ namespace YourSharingEconomyApp
 
 				if (m_requestData.Deliverydate != -1)
 				{
-					if (m_requestData.TransactionIdBitcoin.Length == 0)
-					{
+                    bool isRequestPaid = (m_requestData.TransactionIdBitcoin.Length != 0);
+#if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
+                    isRequestPaid = true;
+#endif
+                    if (!isRequestPaid)
+                    {
 						SetPanelScoreConsumer(false);
 						if (isInteractable)
 						{
@@ -654,6 +665,7 @@ namespace YourSharingEconomyApp
 						SetVisibilityPayButton(false);
 						if (isInteractable)
 						{
+                            Debug.LogError("PUTA MIERDA************************************");
 							SetPanelScoreConsumer(true);
 						}
 						else
@@ -1675,20 +1687,22 @@ namespace YourSharingEconomyApp
 		 */
 		private void UpdateVisibleButtonCheckVerify()
 		{
-			if ((m_panelScoreConsumer != null) && (m_panelScoreProvider != null))
+#if ENABLE_BITCOIN || ENABLE_ETHEREUM
+            if ((m_panelScoreConsumer != null) && (m_panelScoreProvider != null))
 			{
 				if (m_panelScoreConsumer.gameObject.activeSelf && m_panelScoreProvider.gameObject.activeSelf)
 				{
 					if (m_buttonVerifySignature != null) m_buttonVerifySignature.gameObject.SetActive(true);
 				}
 			}
-		}
+#endif
+        }
 
-		// -------------------------------------------
-		/* 
+        // -------------------------------------------
+        /* 
 		 * SetFeedbackProvider
 		 */
-		private void SetFeedbackProvider(bool _value)
+        private void SetFeedbackProvider(bool _value)
 		{
 			if ((m_editFieldFeedbackProvider == null) && (m_containerScore != null))
 			{
@@ -1722,8 +1736,10 @@ namespace YourSharingEconomyApp
 		 */
 		private void SetVisibilityPayButton(bool _value)
 		{
-			if (m_buttonPayInBitcoins != null) m_buttonPayInBitcoins.gameObject.SetActive(_value);
-		}
+#if ENABLE_BITCOIN || ENABLE_ETHEREUM
+            if (m_buttonPayInBitcoins != null) m_buttonPayInBitcoins.gameObject.SetActive(_value);
+#endif
+        }
 		
 		// -------------------------------------------
 		/* 
@@ -1763,7 +1779,11 @@ namespace YourSharingEconomyApp
 						{
 							if (m_requestData.Deliverydate != -1)
 							{
-								if (m_requestData.TransactionIdBitcoin.Length == 0)
+                                bool isRequestPaid = (m_requestData.TransactionIdBitcoin.Length != 0);
+#if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
+                                isRequestPaid = true;
+#endif
+                                if (!isRequestPaid)
 								{
 									SetPanelScoreConsumer(false);
 									SetVisibilityPayButton(true);
@@ -1864,6 +1884,8 @@ namespace YourSharingEconomyApp
             privateKeyExist = (YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey.Length > 0);
 #elif ENABLE_ETHEREUM
             privateKeyExist = (YourEthereumController.EthereumController.Instance.CurrentPrivateKey.Length > 0);
+#else
+            privateKeyExist = true;
 #endif
             if (privateKeyExist)
             {
@@ -1937,6 +1959,11 @@ namespace YourSharingEconomyApp
                     SetScoreToHuman();
                 }
             }
+#else
+            m_scoreAfterBlockchainInit = _score;
+            m_typeAfterBlockchainInit = _type;
+
+            SetScoreToHuman();
 #endif
         }
 
@@ -2059,7 +2086,7 @@ namespace YourSharingEconomyApp
 			{
 				return;
 			}
-            
+
             if (_nameEvent == ScreenCalendarView.EVENT_SCREENCALENDAR_SELECT_DAY)
 			{
 				m_requestData.Deadline = (long)_list[0];
@@ -2166,6 +2193,9 @@ namespace YourSharingEconomyApp
                         m_requestData.SignDataCustomer(YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey);
 #elif ENABLE_ETHEREUM
                         m_requestData.SignDataCustomer(YourEthereumController.EthereumController.Instance.CurrentPrivateKey);
+#else
+                        MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                        UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
 #endif
                     }
                     else
@@ -2183,9 +2213,12 @@ namespace YourSharingEconomyApp
                         m_requestData.SignDataProvider(YourBitcoinController.BitCoinController.Instance.CurrentPrivateKey);
 #elif ENABLE_ETHEREUM
                         m_requestData.SignDataProvider(YourEthereumController.EthereumController.Instance.CurrentPrivateKey);
+#else
+                        MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                        UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
 #endif
-					}
-					else
+                    }
+                    else
 					{
 						m_requestData.FeedbackProviderGivesToTheCustomer = "";
 						m_editFieldFeedbackProvider.GetComponent<InputField>().text = m_requestData.FeedbackProviderGivesToTheCustomer;
@@ -2199,8 +2232,12 @@ namespace YourSharingEconomyApp
 						SetFeedbackConsumer(true);
 						m_panelScoreConsumer.GetComponent<PanelRatingView>().SetScore(m_requestData.ScoreCustomerGivesToTheProvider, 1);
 						m_panelScoreConsumer.GetComponent<PanelRatingView>().IsInteractable = false;
-					}
-					else
+#if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
+                        MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                        UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
+#endif
+                    }
+                    else
 					{
 						m_requestData.ScoreCustomerGivesToTheProvider = -1;
 						m_panelScoreConsumer.GetComponent<PanelRatingView>().SetScore(0, 1);
@@ -2214,8 +2251,12 @@ namespace YourSharingEconomyApp
                         m_editFieldFeedbackProvider.gameObject.SetActive(true);
                         m_panelScoreProvider.GetComponent<PanelRatingView>().SetScore(m_requestData.ScoreProviderGivesToTheCustomer, 1);
 						m_panelScoreProvider.GetComponent<PanelRatingView>().IsInteractable = false;
-					}
-					else
+#if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
+                        MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.please.wait"), null, "");
+                        UIEventController.Instance.DispatchUIEvent(RequestsController.EVENT_REQUEST_CALL_SCORE_AND_FEEDBACK_UPDATE, m_requestData.Id, m_requestData.ScoreCustomerGivesToTheProvider, m_requestData.FeedbackCustomerGivesToTheProvider, m_requestData.ScoreProviderGivesToTheCustomer, m_requestData.FeedbackProviderGivesToTheCustomer, m_requestData.SignatureCustomer, m_requestData.SignatureProvider);
+#endif
+                    }
+                    else
 					{
 						m_requestData.ScoreProviderGivesToTheCustomer = -1;
 						m_panelScoreProvider.GetComponent<PanelRatingView>().SetScore(0, 1);
