@@ -665,7 +665,6 @@ namespace YourSharingEconomyApp
 						SetVisibilityPayButton(false);
 						if (isInteractable)
 						{
-                            Debug.LogError("PUTA MIERDA************************************");
 							SetPanelScoreConsumer(true);
 						}
 						else
