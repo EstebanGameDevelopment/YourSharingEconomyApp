@@ -369,7 +369,7 @@ namespace YourSharingEconomyApp
 			}
 
 #if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
-            m_buttonVerifySignature.gameObject.SetActive(false);
+            if (m_buttonVerifySignature != null) m_buttonVerifySignature.gameObject.SetActive(false);
 #endif
 
             m_buttonPayInBitcoins = m_container.Find("Button_PayInBitcoins");
@@ -380,9 +380,9 @@ namespace YourSharingEconomyApp
 				m_buttonPayInBitcoins.gameObject.SetActive(false);
 			}
 
-            #if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
-                m_buttonPayInBitcoins.gameObject.SetActive(false);
-            #endif
+#if !ENABLE_BITCOIN && !ENABLE_ETHEREUM
+            if (m_buttonPayInBitcoins != null) m_buttonPayInBitcoins.gameObject.SetActive(false);
+#endif
 
             // ++++ LOADING THE DATA ++++
             LoadRequestData();
