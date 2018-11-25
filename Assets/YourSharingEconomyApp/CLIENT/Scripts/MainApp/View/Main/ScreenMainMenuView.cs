@@ -163,7 +163,8 @@ namespace YourSharingEconomyApp
 			}
 			if (_nameEvent == UsersController.EVENT_USER_RESULT_FORMATTED_SINGLE_RECORD)
 			{
-				if (m_consultType == CONSULT_TYPE_CUSTOMER)
+                UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+                if (m_consultType == CONSULT_TYPE_CUSTOMER)
 				{
 					MenusScreenController.Instance.CreateNewScreenNoParameters(ScreenRequestsView.SCREEN_REQUESTS, UIScreenTypePreviousAction.DESTROY_ALL_SCREENS);
 				}

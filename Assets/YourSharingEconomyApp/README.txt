@@ -6,6 +6,12 @@
 	 info@yoursharingeconomyapp.com
 ----------------------------------------------
 
+----------------------
+PLATFORM AGNOSTIC CODE
+----------------------
+
+Even if it has been developed with Unity, since it's been designed using design patterns it's easy to port this code to any exiting C++, Java, Unreal, etc...
+
 -----------------------------------
 TUTORIAL INSTALLATION
 Video Tutorial: https://youtu.be/xRwAmkJTWVo

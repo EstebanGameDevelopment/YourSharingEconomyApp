@@ -1553,7 +1553,7 @@ namespace YourSharingEconomyApp
 							{
 								if (m_requestData.Customer == UsersController.Instance.CurrentUser.Id)
 								{
-									MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_CREATE_PROPOSAL, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_requestData.Clone(), true);
+									MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_CREATE_PROPOSAL, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, m_requestData.Clone(), true);
 								}
 								else
 								{
@@ -1563,7 +1563,7 @@ namespace YourSharingEconomyApp
 									}
 									else
 									{
-										MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_CREATE_PROPOSAL, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_requestData.Clone());
+										MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_CREATE_PROPOSAL, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, m_requestData.Clone());
 									}
 								}
 							}
@@ -2539,11 +2539,11 @@ namespace YourSharingEconomyApp
 						switch (slotProposal.GetComponent<SlotOfferView>().Proposal.Type)
 						{
 							case ProposalModel.TYPE_INFO:
-								MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_QUESTION_PROPOSAL, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_slotOfferList[i].GetComponent<SlotOfferView>().Proposal, m_requestData);
+								MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_QUESTION_PROPOSAL, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, m_slotOfferList[i].GetComponent<SlotOfferView>().Proposal, m_requestData);
 								break;
 
 							case ProposalModel.TYPE_OFFER:
-								MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_DISPLAY_PROPOSAL, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_slotOfferList[i].GetComponent<SlotOfferView>().Proposal, m_requestData);
+								MenusScreenController.Instance.CreateNewScreen(ScreenProposalView.SCREEN_DISPLAY_PROPOSAL, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, m_slotOfferList[i].GetComponent<SlotOfferView>().Proposal, m_requestData);
 								break;
 						}
 						return;

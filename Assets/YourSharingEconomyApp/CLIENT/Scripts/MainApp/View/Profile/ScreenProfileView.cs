@@ -274,7 +274,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void OnCustomerProfile()
 		{
-			MenusScreenController.Instance.CreateNewScreen(ScreenCustomerProfileView.SCREEN_CUSTOMER_PROFILE, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, UsersController.Instance.CurrentUser);
+			MenusScreenController.Instance.CreateNewScreen(ScreenCustomerProfileView.SCREEN_CUSTOMER_PROFILE, UIScreenTypePreviousAction.HIDE_ALL_SCREENS, true, UsersController.Instance.CurrentUser);
 		}
 
 		// -------------------------------------------
@@ -522,7 +522,7 @@ namespace YourSharingEconomyApp
 				UserModel sUser = (UserModel)_list[0];
 				if (sUser != null)
 				{
-					MenusScreenController.Instance.CreateNewScreen(ScreenProviderProfileView.SCREEN_PROVIDER_PROFILE_DISPLAY, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, sUser);
+					MenusScreenController.Instance.CreateNewScreen(ScreenProviderProfileView.SCREEN_PROVIDER_PROFILE_DISPLAY, UIScreenTypePreviousAction.HIDE_ALL_SCREENS, true, sUser);
 				}
 			}
 			if (_nameEvent == UIEventController.EVENT_SCREENMANAGER_ANDROID_BACK_BUTTON)

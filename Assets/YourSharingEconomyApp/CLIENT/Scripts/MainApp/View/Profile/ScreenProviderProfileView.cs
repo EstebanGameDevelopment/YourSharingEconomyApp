@@ -371,7 +371,7 @@ namespace YourSharingEconomyApp
 		 */
 		private void EditPressed()
 		{
-			MenusScreenController.Instance.CreateNewScreen(ScreenProviderProfileView.SCREEN_PROVIDER_PROFILE_EDITION, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, m_userData);
+			MenusScreenController.Instance.CreateNewScreen(ScreenProviderProfileView.SCREEN_PROVIDER_PROFILE_EDITION, UIScreenTypePreviousAction.HIDE_ALL_SCREENS, true, m_userData);
 		}
 
 		// -------------------------------------------
@@ -523,7 +523,7 @@ namespace YourSharingEconomyApp
 				RequestModel request = (RequestModel)_list[0];
 				if (request != null)
 				{
-					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, request);
+					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, request);
 				}
 				else
 				{

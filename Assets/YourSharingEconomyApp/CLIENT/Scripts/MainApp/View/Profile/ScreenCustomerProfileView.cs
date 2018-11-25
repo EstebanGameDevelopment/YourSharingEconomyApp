@@ -81,7 +81,7 @@ namespace YourSharingEconomyApp
 
 			UIEventController.Instance.UIEvent += new UIEventHandler(OnBasicEvent);
 
-			MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
+			// MenusScreenController.Instance.CreateNewInformationScreen(ScreenInformationView.SCREEN_WAIT, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, LanguageController.Instance.GetText("message.info"), LanguageController.Instance.GetText("message.loading"), null, "");
 			UIEventController.Instance.DelayUIEvent(RequestsController.EVENT_REQUEST_CALL_CONSULT_RECORDS_BY_USER, 0.1f, m_userData.Id);
 		}
 
@@ -195,7 +195,7 @@ namespace YourSharingEconomyApp
 				RequestModel request = (RequestModel)_list[0];
 				if (request != null)
 				{
-					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, request);
+					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, request);
 				}
 				else
 				{

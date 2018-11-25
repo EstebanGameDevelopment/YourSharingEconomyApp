@@ -152,7 +152,8 @@ namespace YourSharingEconomyApp
 			}
 			if (_nameEvent == UsersController.EVENT_USER_IAP_RESULT_PURCHASE_RENT_PROVIDER)
 			{
-				if ((bool)_list[0])
+                UIEventController.Instance.DispatchUIEvent(ScreenController.EVENT_FORCE_DESTRUCTION_POPUP);
+                if ((bool)_list[0])
 				{
 					string title = LanguageController.Instance.GetText("message.info");
 					string description = LanguageController.Instance.GetText("message.iap.congratulations.proovider");

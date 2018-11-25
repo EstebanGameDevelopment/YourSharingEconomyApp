@@ -161,13 +161,13 @@ namespace YourSharingEconomyApp
 					{
 						if (RequestsController.Instance.CountActiveRequestByUser(UsersController.Instance.CurrentUser.Id) < MenusScreenController.Instance.TotalNumberOfFreeRequests)
 						{
-							MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_CREATE_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, null);
+							MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_CREATE_REQUEST, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, null);
 						}
 						else
 						{
 							if (UsersController.Instance.CurrentUser.Additionalrequest > 0)
 							{
-								MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_CREATE_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, null);
+								MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_CREATE_REQUEST, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, null);
 							}
 							else
 							{
@@ -289,7 +289,7 @@ namespace YourSharingEconomyApp
 				RequestModel request = (RequestModel)_list[0];
 				if (request != null)
 				{
-					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, request);
+					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, request);
 				}
 				else
 				{

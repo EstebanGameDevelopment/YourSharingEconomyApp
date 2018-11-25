@@ -149,7 +149,7 @@ namespace YourSharingEconomyApp
 				RequestModel request = (RequestModel)_list[0];
 				if (request != null)
 				{
-					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.KEEP_CURRENT_SCREEN, true, request);
+					MenusScreenController.Instance.CreateNewScreen(ScreenCreateRequestView.SCREEN_DISPLAY_REQUEST, UIScreenTypePreviousAction.HIDE_CURRENT_SCREEN, true, request);
 				}
 				else
 				{
